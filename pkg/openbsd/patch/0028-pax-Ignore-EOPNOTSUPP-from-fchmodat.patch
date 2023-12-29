@@ -1,0 +1,26 @@
+From 0f49ae38698a163f7954d28bbaba473b6bf28239 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Fri, 10 Jan 2020 21:40:03 -0800
+Subject: [PATCH] pax: Ignore EOPNOTSUPP from fchmodat
+
+Linux does not support changing the mode of symlinks.
+---
+ bin/pax/file_subs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bin/pax/file_subs.c b/bin/pax/file_subs.c
+index 8aa3d249923..2c0994feca6 100644
+--- a/bin/pax/file_subs.c
++++ b/bin/pax/file_subs.c
+@@ -795,7 +795,7 @@ void
+ set_pmode(char *fnm, mode_t mode)
+ {
+ 	mode &= ABITS;
+-	if (fchmodat(AT_FDCWD, fnm, mode, AT_SYMLINK_NOFOLLOW) == -1)
++	if (fchmodat(AT_FDCWD, fnm, mode, AT_SYMLINK_NOFOLLOW) == -1 && errno != EOPNOTSUPP)
+ 		syswarn(1, errno, "Could not set permissions on %s", fnm);
+ }
+ 
+-- 
+2.26.2
+

@@ -1,0 +1,72 @@
+From a9a8b003bc97952fcc47d84b2ba9c490d90985e3 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Fri, 18 Feb 2022 01:40:22 -0800
+Subject: [PATCH] Prevent zero-sized arrays
+
+---
+ src/xlat/btrfs_features_compat.h | 3 ++-
+ src/xlat/compat_ptrace_cmds.h    | 3 ++-
+ src/xlat/sigprof_codes.h         | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/src/xlat/btrfs_features_compat.h b/src/xlat/btrfs_features_compat.h
+index 12136c495..cc5804a1b 100644
+--- a/src/xlat/btrfs_features_compat.h
++++ b/src/xlat/btrfs_features_compat.h
+@@ -15,13 +15,14 @@ extern const struct xlat btrfs_features_compat[];
+ 
+ DIAG_PUSH_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
+ static const struct xlat_data btrfs_features_compat_xdata[] = {
++ {0}
+ };
+ #  if !(defined HAVE_M32_MPERS || defined HAVE_MX32_MPERS)
+ static
+ #  endif
+ const struct xlat btrfs_features_compat[1] = { {
+  .data = btrfs_features_compat_xdata,
+- .size = ARRAY_SIZE(btrfs_features_compat_xdata),
++ .size = ARRAY_SIZE(btrfs_features_compat_xdata) - 1,
+  .type = XT_NORMAL,
+  .flags_mask = 0
+   ,
+diff --git a/src/xlat/compat_ptrace_cmds.h b/src/xlat/compat_ptrace_cmds.h
+index 9a7fc96b1..a29567689 100644
+--- a/src/xlat/compat_ptrace_cmds.h
++++ b/src/xlat/compat_ptrace_cmds.h
+@@ -225,11 +225,12 @@ static const struct xlat_data compat_ptrace_cmds_xdata[] = {
+  #define XLAT_VAL_9 ((unsigned) (COMPAT_PTRACE_SETHBPREGS))
+  #define XLAT_STR_9 STRINGIFY(COMPAT_PTRACE_SETHBPREGS)
+ #endif
++ {0}
+ };
+ static
+ const struct xlat compat_ptrace_cmds[1] = { {
+  .data = compat_ptrace_cmds_xdata,
+- .size = ARRAY_SIZE(compat_ptrace_cmds_xdata),
++ .size = ARRAY_SIZE(compat_ptrace_cmds_xdata) - 1,
+  .type = XT_SORTED,
+  .flags_mask = 0
+ #  ifdef XLAT_VAL_0
+diff --git a/src/xlat/sigprof_codes.h b/src/xlat/sigprof_codes.h
+index bc61fdc8f..88f043ab9 100644
+--- a/src/xlat/sigprof_codes.h
++++ b/src/xlat/sigprof_codes.h
+@@ -20,13 +20,14 @@ static const struct xlat_data sigprof_codes_xdata[] = {
+  #define XLAT_VAL_0 ((unsigned) (PROF_SIG))
+  #define XLAT_STR_0 STRINGIFY(PROF_SIG)
+ #endif
++  {0}
+ };
+ #  if !(defined HAVE_M32_MPERS || defined HAVE_MX32_MPERS)
+ static
+ #  endif
+ const struct xlat sigprof_codes[1] = { {
+  .data = sigprof_codes_xdata,
+- .size = ARRAY_SIZE(sigprof_codes_xdata),
++ .size = ARRAY_SIZE(sigprof_codes_xdata) - 1,
+  .type = XT_NORMAL,
+  .flags_mask = 0
+ #  ifdef XLAT_VAL_0
+-- 
+2.34.1
+

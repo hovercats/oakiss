@@ -1,0 +1,62 @@
+From dab3e5da03770ba254c95d0c1d8c9f029dd57257 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Mon, 6 Sep 2021 18:51:05 -0700
+Subject: [PATCH] Remove support for long double in error formatter
+
+No bfd errors try to format long double, so there is no point in
+supporting it in the formatter.
+---
+ bfd/bfd.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/bfd/bfd.c b/bfd/bfd.c
+index a2f294da983..3e59057d07a 100644
+--- a/bfd/bfd.c
++++ b/bfd/bfd.c
+@@ -871,7 +871,6 @@ union _bfd_doprnt_args
+   long l;
+   long long ll;
+   double d;
+-  long double ld;
+   void *p;
+   enum
+   {
+@@ -880,7 +879,6 @@ union _bfd_doprnt_args
+     Long,
+     LongLong,
+     Double,
+-    LongDouble,
+     Ptr
+   } type;
+ };
+@@ -1066,7 +1064,7 @@ _bfd_doprnt (FILE *stream, const char *format, union _bfd_doprnt_args *args)
+ 		if (wide_width == 0)
+ 		  PRINT_TYPE (double, d);
+ 		else
+-		  PRINT_TYPE (long double, ld);
++		  abort();
+ 	      }
+ 	      break;
+ 	    case 's':
+@@ -1283,7 +1281,7 @@ _bfd_doprnt_scan (const char *format, union _bfd_doprnt_args *args)
+ 		if (wide_width == 0)
+ 		  arg_type = Double;
+ 		else
+-		  arg_type = LongDouble;
++		  abort();
+ 	      }
+ 	      break;
+ 	    case 's':
+@@ -1334,9 +1332,6 @@ error_handler_internal (const char *fmt, va_list ap)
+ 	case Double:
+ 	  args[i].d = va_arg (ap, double);
+ 	  break;
+-	case LongDouble:
+-	  args[i].ld = va_arg (ap, long double);
+-	  break;
+ 	case Ptr:
+ 	  args[i].p = va_arg (ap, void *);
+ 	  break;
+-- 
+2.34.1
+

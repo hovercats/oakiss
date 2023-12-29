@@ -1,0 +1,31 @@
+From 4673bf0d6a0eba5d363266a40cfb087e08a66e7f Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Thu, 30 Jan 2020 21:57:34 -0800
+Subject: [PATCH] Use alloca when VLAs aren't available
+
+---
+ src/evdev.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/evdev.c b/src/evdev.c
+index 81dd951cb..74a765469 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -164,9 +164,13 @@ decode_bitset(struct tcb *const tcp, const kernel_ulong_t arg,
+ 		return RVAL_IOCTL_DECODED;
+ 	}
+ 
++#ifndef __STDC_NO_VLA__
+ 	char decoded_arg[size];
++#else
++	char *decoded_arg = alloca(size);
++#endif
+ 
+-	if (umove_or_printaddr(tcp, arg, &decoded_arg))
++	if (umoven_or_printaddr(tcp, arg, size, decoded_arg))
+ 		return RVAL_IOCTL_DECODED;
+ 
+ 	if (xlat_verbose(xlat_verbosity) != XLAT_STYLE_RAW) {
+-- 
+2.34.1
+

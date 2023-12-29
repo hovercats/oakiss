@@ -1,0 +1,152 @@
+From 989bfd76544b4f62ade9e35d2476332934d27d86 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Sun, 7 Jul 2019 21:25:13 -0700
+Subject: [PATCH] Avoid pointer arithmetic on `void *`
+
+---
+ src/netlink_smc_diag.c |  4 ++--
+ src/print_timespec.h   |  6 ++++--
+ src/sockaddr.c         |  4 ++--
+ src/tee.c              |  2 +-
+ src/ucopy.c            | 12 ++++++------
+ 5 files changed, 15 insertions(+), 13 deletions(-)
+
+diff --git a/src/netlink_smc_diag.c b/src/netlink_smc_diag.c
+index f7ff06b6b..dbf5be980 100644
+--- a/src/netlink_smc_diag.c
++++ b/src/netlink_smc_diag.c
+@@ -42,7 +42,7 @@ DECL_NETLINK_DIAG_DECODER(decode_smc_diag_req)
+ 	if (len >= sizeof(req)) {
+ 		if (!umoven_or_printaddr(tcp, addr + offset,
+ 					 sizeof(req) - offset,
+-					 (void *) &req + offset)) {
++					 (char *) &req + offset)) {
+ 			PRINT_FIELD_FLAGS(req, diag_ext,
+ 					  smc_diag_extended_flags,
+ 					  "1<<SMC_DIAG_\?\?\?-1");
+@@ -250,7 +250,7 @@ DECL_NETLINK_DIAG_DECODER(decode_smc_diag_msg)
+ 	if (len >= sizeof(msg)) {
+ 		if (!umoven_or_printaddr(tcp, addr + offset,
+ 					 sizeof(msg) - offset,
+-					 (void *) &msg + offset)) {
++					 (char *) &msg + offset)) {
+ 			PRINT_FIELD_XVAL(msg, diag_state,
+ 					 smc_states, "SMC_???");
+ 			tprint_struct_next();
+diff --git a/src/print_timespec.h b/src/print_timespec.h
+index 9603a6bb6..f5f747c42 100644
+--- a/src/print_timespec.h
++++ b/src/print_timespec.h
+@@ -66,6 +66,8 @@ bool
+ PRINT_TIMESPEC_ARRAY_DATA_SIZE(const void *arg, const unsigned int nmemb,
+ 			       const size_t size)
+ {
++	const char *ts = arg;
++
+ 	if (nmemb > size / sizeof(TIMESPEC_T)) {
+ 		tprint_unavailable();
+ 		return false;
+@@ -73,10 +75,10 @@ PRINT_TIMESPEC_ARRAY_DATA_SIZE(const void *arg, const unsigned int nmemb,
+ 
+ 	tprint_array_begin();
+ 
+-	for (unsigned int i = 0; i < nmemb; i++, arg += sizeof(TIMESPEC_T)) {
++	for (unsigned int i = 0; i < nmemb; i++, ts += sizeof(TIMESPEC_T)) {
+ 		if (i)
+ 			tprint_array_next();
+-		print_unaligned_timespec_t(arg);
++		print_unaligned_timespec_t(ts);
+ 	}
+ 
+ 	tprint_array_end();
+diff --git a/src/sockaddr.c b/src/sockaddr.c
+index 9139da1cd..7126ad2fc 100644
+--- a/src/sockaddr.c
++++ b/src/sockaddr.c
+@@ -583,7 +583,7 @@ print_sockaddr_data_ll(struct tcb *tcp, const void *const buf,
+ static void
+ print_sockaddr_data_raw(const void *const buf, const int addrlen)
+ {
+-	const char *const data = buf + SIZEOF_SA_FAMILY;
++	const char *const data = (const char *)buf + SIZEOF_SA_FAMILY;
+ 	const int datalen = addrlen - SIZEOF_SA_FAMILY;
+ 
+ 	tprints_field_name("sa_data");
+@@ -780,7 +780,7 @@ print_sockaddr_data_rxrpc(struct tcb *tcp, const void *const buf,
+ 	tprints_field_name("transport");
+ 	tprint_struct_begin();
+ 
+-	const void *const transport_buf = (void *) &sa->transport
++	const void *const transport_buf = (char *) &sa->transport
+ 					  + sizeof(sa->transport.family);
+ 	const int transport_len = MIN(sa->transport_len,
+ 				      len - offsetof(struct sockaddr_rxrpc,
+diff --git a/src/tee.c b/src/tee.c
+index fc735e0da..f705a7a94 100644
+--- a/src/tee.c
++++ b/src/tee.c
+@@ -69,7 +69,7 @@ tee_fetch_buf_data(struct tcb *const tcp,
+ 		tee_print_buf(buf);
+ 		return RVAL_IOCTL_DECODED;
+ 	}
+-	uint32_t *num_params = (uint32_t *) (arg_struct + num_params_offs);
++	uint32_t *num_params = (uint32_t *) ((char *)arg_struct + num_params_offs);
+ 	if (entering(tcp) &&
+ 	    (arg_size + TEE_IOCTL_PARAM_SIZE(*num_params) != buf->buf_len)) {
+ 		/*
+diff --git a/src/ucopy.c b/src/ucopy.c
+index c769a1916..ed401ae74 100644
+--- a/src/ucopy.c
++++ b/src/ucopy.c
+@@ -186,7 +186,7 @@ vm_read_mem(const pid_t pid, void *laddr,
+ 			break;
+ 
+ 		len = next_len;
+-		laddr += copy_len;
++		laddr = (char *)laddr + copy_len;
+ 		page_start += page_size;
+ 		taddr = page_start;
+ 	}
+@@ -282,7 +282,7 @@ umoven_peekdata(const int pid, kernel_ulong_t addr, unsigned int len,
+ 		memcpy(laddr, &u.data[residue], m);
+ 		residue = 0;
+ 		addr += sizeof(long);
+-		laddr += m;
++		laddr = (char *)laddr + m;
+ 		nread += m;
+ 		len -= m;
+ 	}
+@@ -378,10 +378,10 @@ umovestr_peekdata(const int pid, kernel_ulong_t addr, unsigned int len,
+ 		memcpy(laddr, &u.data[residue], m);
+ 		while (residue < sizeof(long))
+ 			if (u.data[residue++] == '\0')
+-				return (laddr - orig_addr) + residue;
++				return nread + residue;
+ 		residue = 0;
+ 		addr += sizeof(long);
+-		laddr += m;
++		laddr = (char *)laddr + m;
+ 		nread += m;
+ 		len -= m;
+ 	}
+@@ -502,7 +502,7 @@ upoken_pokedata(const int pid, kernel_ulong_t addr, unsigned int len,
+ 
+ 		addr += sizeof(long);
+ 		nwritten += npoke;
+-		our_addr += npoke;
++		our_addr = (char *)our_addr + npoke;
+ 		len -= npoke;
+ 	}
+ 
+@@ -515,7 +515,7 @@ upoken_pokedata(const int pid, kernel_ulong_t addr, unsigned int len,
+ 
+ 		addr += sizeof(long);
+ 		nwritten += sizeof(long);
+-		our_addr += sizeof(long);
++		our_addr = (char *)our_addr + sizeof(long);
+ 		len -= sizeof(long);
+ 	}
+ 
+-- 
+2.37.3
+

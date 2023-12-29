@@ -1,0 +1,86 @@
+From fbf6dc8783f31408cc090cf42cf92008d4f2a455 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Mon, 18 Apr 2016 01:27:29 -0700
+Subject: [PATCH] pax: Add some includes
+
+---
+ bin/pax/ar_subs.c   | 3 ++-
+ bin/pax/buf_subs.c  | 1 +
+ bin/pax/file_subs.c | 2 ++
+ bin/pax/sel_subs.c  | 1 +
+ bin/pax/tables.c    | 1 +
+ 5 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/bin/pax/ar_subs.c b/bin/pax/ar_subs.c
+index 51dd6e085..f70ec4ed0 100644
+--- a/bin/pax/ar_subs.c
++++ b/bin/pax/ar_subs.c
+@@ -36,14 +36,15 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/time.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <signal.h>
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <string.h>
+ #include <time.h>
+ #include <unistd.h>
+-
+ #include "pax.h"
+ #include "extern.h"
+ 
+diff --git a/bin/pax/buf_subs.c b/bin/pax/buf_subs.c
+index 41f06ae31..30be3dc46 100644
+--- a/bin/pax/buf_subs.c
++++ b/bin/pax/buf_subs.c
+@@ -36,6 +36,7 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/time.h>
+ #include <stdio.h>
+ #include <errno.h>
+ #include <unistd.h>
+diff --git a/bin/pax/file_subs.c b/bin/pax/file_subs.c
+index 9f834bf17..57ebdb490 100644
+--- a/bin/pax/file_subs.c
++++ b/bin/pax/file_subs.c
+@@ -35,6 +35,8 @@
+  */
+ 
+ #include <sys/stat.h>
++#include <sys/time.h>
++#include <sys/types.h>
+ #include <err.h>
+ #include <errno.h>
+ #include <fcntl.h>
+diff --git a/bin/pax/sel_subs.c b/bin/pax/sel_subs.c
+index 17200b5a4..136f87c5d 100644
+--- a/bin/pax/sel_subs.c
++++ b/bin/pax/sel_subs.c
+@@ -43,6 +43,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <time.h>
++#include <unistd.h>
+ 
+ #include "pax.h"
+ #include "extern.h"
+diff --git a/bin/pax/tables.c b/bin/pax/tables.c
+index b700f1649..99790f986 100644
+--- a/bin/pax/tables.c
++++ b/bin/pax/tables.c
+@@ -36,6 +36,7 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/time.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <limits.h>
+-- 
+2.12.2
+

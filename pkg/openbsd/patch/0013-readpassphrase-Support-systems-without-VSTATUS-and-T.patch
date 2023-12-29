@@ -1,0 +1,38 @@
+From d36036bbd959091b6442d003128342ed515af01b Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Sun, 26 Feb 2017 17:01:33 -0800
+Subject: [PATCH] readpassphrase: Support systems without VSTATUS and TCSASOFT
+
+---
+ lib/libc/gen/readpassphrase.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/lib/libc/gen/readpassphrase.c b/lib/libc/gen/readpassphrase.c
+index a1aeb342b..a50eaf003 100644
+--- a/lib/libc/gen/readpassphrase.c
++++ b/lib/libc/gen/readpassphrase.c
+@@ -32,6 +32,10 @@
+ #include <unistd.h>
+ #include <readpassphrase.h>
+ 
++#ifndef TCSASOFT
++#define TCSASOFT 0
++#endif
++
+ static volatile sig_atomic_t signo[_NSIG];
+ 
+ static void handler(int);
+@@ -81,8 +85,10 @@ restart:
+ 		memcpy(&term, &oterm, sizeof(term));
+ 		if (!(flags & RPP_ECHO_ON))
+ 			term.c_lflag &= ~(ECHO | ECHONL);
++#ifdef VSTATUS
+ 		if (term.c_cc[VSTATUS] != _POSIX_VDISABLE)
+ 			term.c_cc[VSTATUS] = _POSIX_VDISABLE;
++#endif
+ 		(void)tcsetattr(input, TCSAFLUSH|TCSASOFT, &term);
+ 	} else {
+ 		memset(&term, 0, sizeof(term));
+-- 
+2.12.2
+

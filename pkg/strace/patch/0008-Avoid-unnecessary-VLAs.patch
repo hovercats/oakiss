@@ -1,0 +1,100 @@
+From a98e58cc36d6df5935dbedd9e1c2947262b8b67c Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Sun, 7 Jul 2019 21:58:46 -0700
+Subject: [PATCH] Avoid unnecessary VLAs
+
+---
+ src/count.c       | 2 +-
+ src/nlattr.c      | 2 +-
+ src/socketutils.c | 4 ++--
+ src/syscall.c     | 2 +-
+ src/util.c        | 5 ++---
+ 5 files changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/src/count.c b/src/count.c
+index e4f362787..ad203748b 100644
+--- a/src/count.c
++++ b/src/count.c
+@@ -414,7 +414,7 @@ call_summary_pers(FILE *outf)
+ 		fprintf(outf, column_fmts[i], (val_), cwidths[c]); \
+ 		break
+ 
+-	const char *column_fmts[last_column + 1];
++	const char *column_fmts[ARRAY_SIZE(columns)];
+ 	for (size_t i = 0; i <= last_column; ++i) {
+ 		const size_t c = columns[i];
+ 
+diff --git a/src/nlattr.c b/src/nlattr.c
+index 1fb394d7c..6f2d54979 100644
+--- a/src/nlattr.c
++++ b/src/nlattr.c
+@@ -357,7 +357,7 @@ decode_nla_hwaddr(struct tcb *const tcp,
+ 	if (len > MAX_ADDR_LEN)
+ 		return false;
+ 
+-	uint8_t buf[len];
++	uint8_t buf[MAX_ADDR_LEN];
+ 	const uintptr_t arphrd = (uintptr_t) opaque_data;
+ 
+ 	if (!umoven_or_printaddr(tcp, addr, len, buf)) {
+diff --git a/src/socketutils.c b/src/socketutils.c
+index d3a3b9283..e0079456f 100644
+--- a/src/socketutils.c
++++ b/src/socketutils.c
+@@ -133,7 +133,7 @@ inet_parse_response(const void *const data, const int data_len,
+ 			return -1;
+ 	}
+ 
+-	char src_buf[text_size];
++	char src_buf[INET6_ADDRSTRLEN];
+ 	char *details;
+ 
+ 	/* open/closing brackets for IPv6 addresses */
+@@ -146,7 +146,7 @@ inet_parse_response(const void *const data, const int data_len,
+ 
+ 	if (diag_msg->id.idiag_dport ||
+ 	    memcmp(zero_addr, diag_msg->id.idiag_dst, addr_size)) {
+-		char dst_buf[text_size];
++		char dst_buf[INET6_ADDRSTRLEN];
+ 
+ 		if (!inet_ntop(diag_msg->idiag_family, diag_msg->id.idiag_dst,
+ 			       dst_buf, text_size))
+diff --git a/src/syscall.c b/src/syscall.c
+index c636ba37c..687d08bc0 100644
+--- a/src/syscall.c
++++ b/src/syscall.c
+@@ -287,7 +287,7 @@ decode_socket_subcall(struct tcb *tcp)
+ 
+ 	const kernel_ulong_t scno = SYS_socket_subcall + call;
+ 	const unsigned int nargs = sysent[scno].nargs;
+-	uint64_t buf[nargs];
++	uint64_t buf[MAX_ARGS];
+ 
+ 	if (umoven(tcp, tcp->u_arg[1], nargs * current_wordsize, buf) < 0)
+ 		return;
+diff --git a/src/util.c b/src/util.c
+index a63d80678..a3bea5b76 100644
+--- a/src/util.c
++++ b/src/util.c
+@@ -556,8 +556,7 @@ enum sock_proto
+ getfdproto(struct tcb *tcp, int fd)
+ {
+ #ifdef HAVE_SYS_XATTR_H
+-	size_t bufsize = 256;
+-	char buf[bufsize];
++	char buf[256];
+ 	ssize_t r;
+ 	char path[sizeof("/proc/%u/fd/%u") + 2 * sizeof(int)*3];
+ 
+@@ -565,7 +564,7 @@ getfdproto(struct tcb *tcp, int fd)
+ 		return SOCK_PROTO_UNKNOWN;
+ 
+ 	xsprintf(path, "/proc/%u/fd/%u", get_proc_pid(tcp->pid), fd);
+-	r = getxattr(path, "system.sockprotoname", buf, bufsize - 1);
++	r = getxattr(path, "system.sockprotoname", buf, sizeof(buf) - 1);
+ 	if (r <= 0)
+ 		return SOCK_PROTO_UNKNOWN;
+ 	else {
+-- 
+2.37.3
+

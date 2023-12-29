@@ -1,0 +1,92 @@
+From ab480e176692b91f2fb6fb9ea2e1725d980d805d Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Fri, 14 Apr 2017 11:25:01 -0700
+Subject: [PATCH] pwcache: Don't use fixed buffer sizes
+
+---
+ lib/libc/gen/pwcache.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/lib/libc/gen/pwcache.c b/lib/libc/gen/pwcache.c
+index d54daa08cc7..2f30f4b966b 100644
+--- a/lib/libc/gen/pwcache.c
++++ b/lib/libc/gen/pwcache.c
+@@ -202,8 +202,7 @@ grptb_start(void)
+ const char *
+ user_from_uid(uid_t uid, int noname)
+ {
+-	struct passwd pwstore, *pw = NULL;
+-	char pwbuf[_PW_BUF_LEN];
++	struct passwd *pw;
+ 	UIDC **pptr, *ptr = NULL;
+ 
+ 	if ((uidtb != NULL) || (uidtb_start() == 0)) {
+@@ -226,7 +225,7 @@ user_from_uid(uid_t uid, int noname)
+ 			*pptr = ptr = malloc(sizeof(UIDC));
+ 	}
+ 
+-	getpwuid_r(uid, &pwstore, pwbuf, sizeof(pwbuf), &pw);
++	pw = getpwuid(uid);
+ 	if (pw == NULL) {
+ 		/*
+ 		 * no match for this uid in the local password file
+@@ -263,8 +262,7 @@ user_from_uid(uid_t uid, int noname)
+ const char *
+ group_from_gid(gid_t gid, int noname)
+ {
+-	struct group grstore, *gr = NULL;
+-	char grbuf[_GR_BUF_LEN];
++	struct group *gr;
+ 	GIDC **pptr, *ptr = NULL;
+ 
+ 	if ((gidtb != NULL) || (gidtb_start() == 0)) {
+@@ -287,7 +285,7 @@ group_from_gid(gid_t gid, int noname)
+ 			*pptr = ptr = malloc(sizeof(GIDC));
+ 	}
+ 
+-	getgrgid_r(gid, &grstore, grbuf, sizeof(grbuf), &gr);
++	gr = getgrgid(gid);
+ 	if (gr == NULL) {
+ 		/*
+ 		 * no match for this gid in the local group file, put in
+@@ -322,8 +320,7 @@ group_from_gid(gid_t gid, int noname)
+ int
+ uid_from_user(const char *name, uid_t *uid)
+ {
+-	struct passwd pwstore, *pw = NULL;
+-	char pwbuf[_PW_BUF_LEN];
++	struct passwd *pw;
+ 	UIDC **pptr, *ptr = NULL;
+ 	size_t namelen;
+ 
+@@ -357,7 +354,7 @@ uid_from_user(const char *name, uid_t *uid)
+ 	 * no match, look it up, if no match store it as an invalid entry,
+ 	 * or store the matching uid
+ 	 */
+-	getpwnam_r(name, &pwstore, pwbuf, sizeof(pwbuf), &pw);
++	pw = getpwnam(name);
+ 	if (ptr == NULL) {
+ 		if (pw == NULL)
+ 			return -1;
+@@ -383,8 +380,7 @@ uid_from_user(const char *name, uid_t *uid)
+ int
+ gid_from_group(const char *name, gid_t *gid)
+ {
+-	struct group grstore, *gr = NULL;
+-	char grbuf[_GR_BUF_LEN];
++	struct group *gr;
+ 	GIDC **pptr, *ptr = NULL;
+ 	size_t namelen;
+ 
+@@ -418,7 +414,7 @@ gid_from_group(const char *name, gid_t *gid)
+ 	 * no match, look it up, if no match store it as an invalid entry,
+ 	 * or store the matching gid
+ 	 */
+-	getgrnam_r(name, &grstore, grbuf, sizeof(grbuf), &gr);
++	gr = getgrnam(name);
+ 	if (ptr == NULL) {
+ 		if (gr == NULL)
+ 			return -1;
+-- 
+2.19.0
+

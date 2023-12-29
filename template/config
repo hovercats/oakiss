@@ -1,0 +1,8 @@
+[core]
+	sharedRepository = 0664
+	sparseCheckout = true
+[oasis]
+	root = .
+[merge "perms"]
+	name = .perms merge driver
+	driver = ./libexec/mergeperms %O %A %B

@@ -1,0 +1,114 @@
+[submodule "pkg/awk/src"]
+	path = pkg/awk/src
+	url = https://github.com/onetrueawk/awk
+[submodule "pkg/b3sum/src"]
+	path = pkg/b3sum/src
+	url = https://git.sr.ht/~mcf/b3sum
+[submodule "pkg/bearssl/src"]
+	path = pkg/bearssl/src
+	url = https://www.bearssl.org/git/BearSSL
+	ignore = all
+[submodule "pkg/bzip2/src"]
+	path = pkg/bzip2/src
+	url = git://sourceware.org/git/bzip2.git
+[submodule "pkg/catgirl/src"]
+	path = pkg/catgirl/src
+	url = https://git.causal.agency/catgirl
+	ignore = all
+[submodule "pkg/dosfstools/src"]
+	path = pkg/dosfstools/src
+	url = https://github.com/dosfstools/dosfstools
+	ignore = all
+[submodule "pkg/e2fsprogs/src"]
+	path = pkg/e2fsprogs/src
+	url = https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+	ignore = all
+[submodule "pkg/elftoolchain/elftoolchain"]
+	path = pkg/elftoolchain/src
+	url = https://github.com/elftoolchain/elftoolchain.git
+	ignore = all
+[submodule "pkg/file/src"]
+	path = pkg/file/src
+	url = https://github.com/file/file
+[submodule "pkg/fspec-sync/src"]
+	path = pkg/fspec-sync/src
+	url = https://github.com/oasislinux/fspec-sync.git
+[submodule "pkg/git/src"]
+	path = pkg/git/src
+	url = https://github.com/git/git
+	ignore = all
+[submodule "pkg/iproute2/src"]
+	path = pkg/iproute2/src
+	url = https://git.kernel.org/pub/scm/linux/kernel/git/shemminger/iproute2.git
+	ignore = all
+[submodule "pkg/libcbor/src"]
+	path = pkg/libcbor/src
+	url = https://github.com/PJK/libcbor.git
+[submodule "pkg/libevent/src"]
+	path = pkg/libevent/src
+	url = https://github.com/libevent/libevent
+[submodule "pkg/libfido2/src"]
+	path = pkg/libfido2/src
+	url = https://github.com/oasislinux/libfido2.git
+[submodule "pkg/libnl/src"]
+	path = pkg/libnl/src
+	url = https://github.com/thom311/libnl
+	ignore = all
+[submodule "pkg/libtls-bearssl/src"]
+	path = pkg/libtls-bearssl/src
+	url = https://git.sr.ht/~mcf/libtls-bearssl
+	ignore = all
+[submodule "pkg/libutp/src"]
+	path = pkg/libutp/src
+	url = https://github.com/oasislinux/libutp.git
+[submodule "pkg/musl/src"]
+	path = pkg/musl/src
+	url = git://git.musl-libc.org/musl
+	ignore = all
+[submodule "pkg/netbsd-curses/src"]
+	path = pkg/netbsd-curses/src
+	url = https://github.com/oasislinux/netbsd-curses.git
+	ignore = all
+[submodule "pkg/oksh/src"]
+	path = pkg/oksh/src
+	url = https://github.com/ibara/oksh.git
+[submodule "pkg/openssh/src"]
+	path = pkg/openssh/src
+	url = https://github.com/oasislinux/openssh.git
+[submodule "pkg/pigz/src"]
+	path = pkg/pigz/src
+	url = https://github.com/madler/pigz
+[submodule "pkg/rc/src"]
+	path = pkg/rc/src
+	url = https://github.com/benavento/rc.git
+	ignore = all
+[submodule "pkg/samurai/src"]
+	path = pkg/samurai/src
+	url = https://github.com/michaelforney/samurai
+[submodule "pkg/sbase/src"]
+	path = pkg/sbase/src
+	url = https://github.com/michaelforney/sbase
+[submodule "pkg/sdhcp/src"]
+	path = pkg/sdhcp/src
+	url = https://github.com/michaelforney/sdhcp
+[submodule "pkg/tz/src"]
+	path = pkg/tz/src
+	url = https://github.com/eggert/tz
+[submodule "pkg/ubase/src"]
+	path = pkg/ubase/src
+	url = https://github.com/michaelforney/ubase
+[submodule "pkg/util-linux/src"]
+	path = pkg/util-linux/src
+	url = https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git
+	ignore = all
+[submodule "pkg/vis/src"]
+	path = pkg/vis/src
+	url = https://github.com/martanne/vis
+	ignore = all
+[submodule "pkg/xz/src"]
+	path = pkg/xz/src
+	url = https://git.tukaani.org/xz.git
+	ignore = all
+[submodule "pkg/zlib/src"]
+	path = pkg/zlib/src
+	url = https://github.com/madler/zlib

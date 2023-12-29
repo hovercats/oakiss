@@ -1,0 +1,6 @@
+/config.ninja
+/config.lua
+/out
+fetch
+local.ninja
+.*.swp

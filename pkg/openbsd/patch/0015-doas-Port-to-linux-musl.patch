@@ -1,0 +1,581 @@
+From 8fa1e97f6927bf1afddb5923fff3d29c3389817d Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Sun, 26 Feb 2017 16:50:55 -0800
+Subject: [PATCH] doas: Port to linux/musl
+
+Remove -a login style option and BSD authentication. Instead, compare
+against shadow file.
+
+Use timestamp files in /run/doas instead of TIOC*VERAUTH to implement
+persist.
+
+Use initgroups/setgid/setuid instead of setusercontext.
+
+Provide UID_MAX and GID_MAX defaults.
+
+Use LOGIN_NAME_MAX instead of _PW_NAME_LEN.
+
+Remove call to closefrom.
+
+Replace calls to errc with err after setting errno.
+
+Call openlog at start to set syslog identity.
+
+Remove unveil/pledge since they aren't supported on Linux.
+
+Simplify handling of PATH in the environment since we don't have
+login.conf with per-user default PATH.
+---
+ usr.bin/doas/doas.1    |   9 ---
+ usr.bin/doas/doas.c    | 168 +++++++++++++----------------------------
+ usr.bin/doas/doas.h    |   6 +-
+ usr.bin/doas/env.c     |  17 ++---
+ usr.bin/doas/parse.y   |   1 +
+ usr.bin/doas/persist.c | 133 ++++++++++++++++++++++++++++++++
+ 6 files changed, 198 insertions(+), 136 deletions(-)
+ create mode 100644 usr.bin/doas/persist.c
+
+diff --git a/usr.bin/doas/doas.1 b/usr.bin/doas/doas.1
+index 25827cc7104..3542680faf5 100644
+--- a/usr.bin/doas/doas.1
++++ b/usr.bin/doas/doas.1
+@@ -22,7 +22,6 @@
+ .Sh SYNOPSIS
+ .Nm doas
+ .Op Fl Lns
+-.Op Fl a Ar style
+ .Op Fl C Ar config
+ .Op Fl u Ar user
+ .Ar command
+@@ -67,14 +66,6 @@ The working directory is not changed.
+ .Pp
+ The options are as follows:
+ .Bl -tag -width tenletters
+-.It Fl a Ar style
+-Use the specified authentication style when validating the user,
+-as allowed by
+-.Pa /etc/login.conf .
+-A list of doas-specific authentication methods may be configured by adding an
+-.Sq auth-doas
+-entry in
+-.Xr login.conf 5 .
+ .It Fl C Ar config
+ Parse and check the configuration file
+ .Ar config ,
+diff --git a/usr.bin/doas/doas.c b/usr.bin/doas/doas.c
+index 8b684d6006c..27d7b01014e 100644
+--- a/usr.bin/doas/doas.c
++++ b/usr.bin/doas/doas.c
+@@ -20,8 +20,6 @@
+ #include <sys/ioctl.h>
+ 
+ #include <limits.h>
+-#include <login_cap.h>
+-#include <bsd_auth.h>
+ #include <readpassphrase.h>
+ #include <string.h>
+ #include <stdio.h>
+@@ -33,13 +31,22 @@
+ #include <syslog.h>
+ #include <errno.h>
+ #include <fcntl.h>
++#include <shadow.h>
+ 
+ #include "doas.h"
+ 
++#ifndef UID_MAX
++#define UID_MAX 65535
++#endif
++
++#ifndef GID_MAX
++#define GID_MAX 65535
++#endif
++
+ static void __dead
+ usage(void)
+ {
+-	fprintf(stderr, "usage: doas [-Lns] [-a style] [-C config] [-u user]"
++	fprintf(stderr, "usage: doas [-Lns] [-C config] [-u user]"
+ 	    " command [arg ...]\n");
+ 	exit(1);
+ }
+@@ -200,16 +207,28 @@ checkconfig(const char *confpath, int argc, char **argv,
+ }
+ 
+ static int
+-authuser_checkpass(char *myname, char *login_style)
++verifypasswd(const char *user, const char *pass)
++{
++	struct spwd *sp;
++	char *p1, *p2;
++
++	sp = getspnam(user);
++	if (!sp)
++		return 0;
++	p1 = sp->sp_pwdp;
++	if (p1[0] == '!' || p1[0] == '*')
++		return 0;
++	p2 = crypt(pass, p1);
++	if (!p2)
++		return 0;
++	return strcmp(p1, p2) == 0;
++}
++
++static int
++authuser_checkpass(char *myname)
+ {
+ 	char *challenge = NULL, *response, rbuf[1024], cbuf[128];
+-	auth_session_t *as;
+ 
+-	if (!(as = auth_userchallenge(myname, login_style, "auth-doas",
+-	    &challenge))) {
+-		warnx("Authentication failed");
+-		return AUTH_FAILED;
+-	}
+ 	if (!challenge) {
+ 		char host[HOST_NAME_MAX + 1];
+ 
+@@ -222,14 +241,12 @@ authuser_checkpass(char *myname, char *login_style)
+ 	response = readpassphrase(challenge, rbuf, sizeof(rbuf),
+ 	    RPP_REQUIRE_TTY);
+ 	if (response == NULL && errno == ENOTTY) {
+-		syslog(LOG_AUTHPRIV | LOG_NOTICE,
+-		    "tty required for %s", myname);
++		syslog(LOG_NOTICE, "tty required for %s", myname);
+ 		errx(1, "a tty is required");
+ 	}
+-	if (!auth_userresponse(as, response, 0)) {
++	if (!verifypasswd(myname, response)) {
+ 		explicit_bzero(rbuf, sizeof(rbuf));
+-		syslog(LOG_AUTHPRIV | LOG_NOTICE,
+-		    "failed auth for %s", myname);
++		syslog(LOG_NOTICE, "failed auth for %s", myname);
+ 		warnx("Authentication failed");
+ 		return AUTH_FAILED;
+ 	}
+@@ -238,79 +255,36 @@ authuser_checkpass(char *myname, char *login_style)
+ }
+ 
+ static void
+-authuser(char *myname, char *login_style, int persist)
++authuser(char *myname, int persist)
+ {
+-	int i, fd = -1;
++	int i, fd = -1, valid = 0;
+ 
+-	if (persist)
+-		fd = open("/dev/tty", O_RDWR);
+-	if (fd != -1) {
+-		if (ioctl(fd, TIOCCHKVERAUTH) == 0)
++	if (persist) {
++		fd = openpersist(&valid);
++		if (valid)
+ 			goto good;
+ 	}
+ 	for (i = 0; i < AUTH_RETRIES; i++) {
+-		if (authuser_checkpass(myname, login_style) == AUTH_OK)
++		if (authuser_checkpass(myname) == AUTH_OK)
+ 			goto good;
+ 	}
+ 	exit(1);
+ good:
+ 	if (fd != -1) {
+-		int secs = 5 * 60;
+-		ioctl(fd, TIOCSETVERAUTH, &secs);
++		setpersist(fd);
+ 		close(fd);
+ 	}
+ }
+ 
+-int
+-unveilcommands(const char *ipath, const char *cmd)
+-{
+-	char *path = NULL, *p;
+-	int unveils = 0;
+-
+-	if (strchr(cmd, '/') != NULL) {
+-		if (unveil(cmd, "x") != -1)
+-			unveils++;
+-		goto done;
+-	}
+-
+-	if (!ipath) {
+-		errno = ENOENT;
+-		goto done;
+-	}
+-	path = strdup(ipath);
+-	if (!path) {
+-		errno = ENOENT;
+-		goto done;
+-	}
+-	for (p = path; p && *p; ) {
+-		char buf[PATH_MAX];
+-		char *cp = strsep(&p, ":");
+-
+-		if (cp) {
+-			int r = snprintf(buf, sizeof buf, "%s/%s", cp, cmd);
+-			if (r >= 0 && r < sizeof buf) {
+-				if (unveil(buf, "x") != -1)
+-					unveils++;
+-			}
+-		}
+-	}
+-done:
+-	free(path);
+-	return (unveils);
+-}
+-
+ int
+ main(int argc, char **argv)
+ {
+-	const char *safepath = "/bin:/sbin:/usr/bin:/usr/sbin:"
+-	    "/usr/local/bin:/usr/local/sbin";
+ 	const char *confpath = NULL;
+ 	char *shargv[] = { NULL, NULL };
+ 	char *sh;
+-	const char *p;
+ 	const char *cmd;
+ 	char cmdline[LINE_MAX];
+-	char mypwbuf[_PW_BUF_LEN], targpwbuf[_PW_BUF_LEN];
++	char mypwbuf[1024], targpwbuf[1024];
+ 	struct passwd mypwstore, targpwstore;
+ 	struct passwd *mypw, *targpw;
+ 	const struct rule *rule;
+@@ -323,28 +297,20 @@ main(int argc, char **argv)
+ 	int nflag = 0;
+ 	char cwdpath[PATH_MAX];
+ 	const char *cwd;
+-	char *login_style = NULL;
+ 	char **envp;
+ 
+ 	setprogname("doas");
+-
+-	closefrom(STDERR_FILENO + 1);
++	openlog("doas", 0, LOG_AUTHPRIV);
+ 
+ 	uid = getuid();
+ 
+-	while ((ch = getopt(argc, argv, "a:C:Lnsu:")) != -1) {
++	while ((ch = getopt(argc, argv, "C:Lnsu:")) != -1) {
+ 		switch (ch) {
+-		case 'a':
+-			login_style = optarg;
+-			break;
+ 		case 'C':
+ 			confpath = optarg;
+ 			break;
+ 		case 'L':
+-			i = open("/dev/tty", O_RDWR);
+-			if (i != -1)
+-				ioctl(i, TIOCCLRVERAUTH);
+-			exit(i == -1);
++			exit(clearpersist() != 0);
+ 		case 'u':
+ 			if (parseuid(optarg, &target) != 0)
+ 				errx(1, "unknown user");
+@@ -414,50 +380,30 @@ main(int argc, char **argv)
+ 	cmd = argv[0];
+ 	if (!permit(uid, groups, ngroups, &rule, target, cmd,
+ 	    (const char **)argv + 1)) {
+-		syslog(LOG_AUTHPRIV | LOG_NOTICE,
+-		    "command not permitted for %s: %s", mypw->pw_name, cmdline);
+-		errc(1, EPERM, NULL);
++		syslog(LOG_NOTICE, "command not permitted for %s: %s", mypw->pw_name, cmdline);
++		errno = EPERM;
++		err(1, NULL);
+ 	}
+ 
+ 	if (!(rule->options & NOPASS)) {
+ 		if (nflag)
+ 			errx(1, "Authentication required");
+ 
+-		authuser(mypw->pw_name, login_style, rule->options & PERSIST);
++		authuser(mypw->pw_name, rule->options & PERSIST);
+ 	}
+ 
+-	if ((p = getenv("PATH")) != NULL)
+-		formerpath = strdup(p);
+-	if (formerpath == NULL)
+-		formerpath = "";
+-
+-	if (unveil(_PATH_LOGIN_CONF, "r") == -1)
+-		err(1, "unveil %s", _PATH_LOGIN_CONF);
+-	if (unveil(_PATH_LOGIN_CONF ".db", "r") == -1)
+-		err(1, "unveil %s.db", _PATH_LOGIN_CONF);
+-	if (unveil(_PATH_LOGIN_CONF_D, "r") == -1)
+-		err(1, "unveil %s", _PATH_LOGIN_CONF_D);
+-	if (rule->cmd) {
+-		if (setenv("PATH", safepath, 1) == -1)
+-			err(1, "failed to set PATH '%s'", safepath);
+-	}
+-	if (unveilcommands(getenv("PATH"), cmd) == 0)
+-		goto fail;
+-
+-	if (pledge("stdio rpath getpw exec id", NULL) == -1)
+-		err(1, "pledge");
+-
+ 	rv = getpwuid_r(target, &targpwstore, targpwbuf, sizeof(targpwbuf), &targpw);
+ 	if (rv != 0)
+ 		err(1, "getpwuid_r failed");
+ 	if (targpw == NULL)
+ 		errx(1, "no passwd entry for target");
+ 
+-	if (setusercontext(NULL, targpw, target, LOGIN_SETGROUP |
+-	    LOGIN_SETPATH |
+-	    LOGIN_SETPRIORITY | LOGIN_SETRESOURCES | LOGIN_SETUMASK |
+-	    LOGIN_SETUSER | LOGIN_SETENV | LOGIN_SETRTABLE) != 0)
+-		errx(1, "failed to set user context for target");
++	if (initgroups(targpw->pw_name, targpw->pw_gid) == -1)
++		err(1, "initgroups");
++	if (setgid(targpw->pw_gid) == -1)
++		err(1, "setgid");
++	if (setuid(targpw->pw_uid) == -1)
++		err(1, "setuid");
+ 
+ 	if (pledge("stdio rpath exec", NULL) == -1)
+ 		err(1, "pledge");
+@@ -471,23 +417,17 @@ main(int argc, char **argv)
+ 		err(1, "pledge");
+ 
+ 	if (!(rule->options & NOLOG)) {
+-		syslog(LOG_AUTHPRIV | LOG_INFO,
+-		    "%s ran command %s as %s from %s",
++		syslog(LOG_INFO, "%s ran command %s as %s from %s",
+ 		    mypw->pw_name, cmdline, targpw->pw_name, cwd);
+ 	}
+ 
+ 	envp = prepenv(rule, mypw, targpw);
+ 
+-	/* setusercontext set path for the next process, so reset it for us */
+ 	if (rule->cmd) {
+ 		if (setenv("PATH", safepath, 1) == -1)
+ 			err(1, "failed to set PATH '%s'", safepath);
+-	} else {
+-		if (setenv("PATH", formerpath, 1) == -1)
+-			err(1, "failed to set PATH '%s'", formerpath);
+ 	}
+ 	execvpe(cmd, argv, envp);
+-fail:
+ 	if (errno == ENOENT)
+ 		errx(1, "%s: command not found", cmd);
+ 	err(1, "%s", cmd);
+diff --git a/usr.bin/doas/doas.h b/usr.bin/doas/doas.h
+index b98fe353b18..6567625c471 100644
+--- a/usr.bin/doas/doas.h
++++ b/usr.bin/doas/doas.h
+@@ -29,13 +29,17 @@ extern struct rule **rules;
+ extern size_t nrules;
+ extern int parse_error;
+ 
+-extern const char *formerpath;
++extern const char *safepath;
+ 
+ struct passwd;
+ 
+ char **prepenv(const struct rule *, const struct passwd *,
+     const struct passwd *);
+ 
++int openpersist(int *valid);
++int setpersist(int fd);
++int clearpersist(void);
++
+ #define PERMIT	1
+ #define DENY	2
+ 
+diff --git a/usr.bin/doas/env.c b/usr.bin/doas/env.c
+index 2d93a4089b6..dc9be691955 100644
+--- a/usr.bin/doas/env.c
++++ b/usr.bin/doas/env.c
+@@ -28,7 +28,7 @@
+ 
+ #include "doas.h"
+ 
+-const char *formerpath;
++const char *safepath = "/bin";
+ 
+ struct envnode {
+ 	RB_ENTRY(envnode) node;
+@@ -103,7 +103,7 @@ createenv(const struct rule *rule, const struct passwd *mypw,
+ 	addnode(env, "DOAS_USER", mypw->pw_name);
+ 	addnode(env, "HOME", targpw->pw_dir);
+ 	addnode(env, "LOGNAME", targpw->pw_name);
+-	addnode(env, "PATH", getenv("PATH"));
++	addnode(env, "PATH", safepath);
+ 	addnode(env, "SHELL", targpw->pw_shell);
+ 	addnode(env, "USER", targpw->pw_name);
+ 
+@@ -200,17 +200,10 @@ fillenv(struct env *env, const char **envlist)
+ 		/* assign value or inherit from environ */
+ 		if (eq) {
+ 			val = eq + 1;
+-			if (*val == '$') {
+-				if (strcmp(val + 1, "PATH") == 0)
+-					val = formerpath;
+-				else
+-					val = getenv(val + 1);
+-			}
++			if (*val == '$')
++				val = getenv(val + 1);
+ 		} else {
+-			if (strcmp(name, "PATH") == 0)
+-				val = formerpath;
+-			else
+-				val = getenv(name);
++			val = getenv(name);
+ 		}
+ 		/* at last, we have something to insert */
+ 		if (val) {
+diff --git a/usr.bin/doas/parse.y b/usr.bin/doas/parse.y
+index 604becb5445..e5fc912a9c4 100644
+--- a/usr.bin/doas/parse.y
++++ b/usr.bin/doas/parse.y
+@@ -20,6 +20,7 @@
+ #include <ctype.h>
+ #include <limits.h>
+ #include <unistd.h>
++#include <stdlib.h>
+ #include <stdint.h>
+ #include <stdarg.h>
+ #include <stdio.h>
+diff --git a/usr.bin/doas/persist.c b/usr.bin/doas/persist.c
+new file mode 100644
+index 00000000000..4ad1bf1efbf
+--- /dev/null
++++ b/usr.bin/doas/persist.c
+@@ -0,0 +1,133 @@
++#include <errno.h>
++#include <fcntl.h>
++#include <limits.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <time.h>
++#include <unistd.h>
++
++#include "doas.h"
++
++#define PERSIST_DIR "/run/doas"
++#define PERSIST_TIMEOUT 5 * 60
++
++static int
++ttyid(dev_t *tty)
++{
++	int fd, i;
++	char buf[BUFSIZ], *p;
++	ssize_t n;
++
++	fd = open("/proc/self/stat", O_RDONLY);
++	if (fd == -1)
++		return -1;
++	n = read(fd, buf, sizeof(buf) - 1);
++	if (n >= 0)
++		buf[n] = '\0';
++	/* check that we read the whole file */
++	n = read(fd, buf, 1);
++	close(fd);
++	if (n != 0)
++		return -1;
++	p = strrchr(buf, ')');
++	if (!p)
++		return -1;
++	++p;
++	/* ttr_nr is the 5th field after executable name, so skip the next 4 */
++	for (i = 0; i < 4; ++i) {
++		p = strchr(++p, ' ');
++		if (!p)
++			return -1;
++	}
++	*tty = strtol(p, &p, 10);
++	if (*p != ' ')
++		return -1;
++	return 0;
++}
++
++static int
++persistpath(char *buf, size_t len)
++{
++	dev_t tty;
++	int n;
++
++	if (ttyid(&tty) < 0)
++		return -1;
++	n = snprintf(buf, len, PERSIST_DIR "/%ju-%ju", (uintmax_t)getuid(), (uintmax_t)tty);
++	if (n < 0 || n >= (int)len)
++		return -1;
++	return 0;
++}
++
++int
++openpersist(int *valid)
++{
++	char path[256];
++	struct stat st;
++	struct timespec ts;
++	int fd;
++
++	if (stat(PERSIST_DIR, &st) < 0) {
++		if (errno != ENOENT)
++			return -1;
++		if (mkdir(PERSIST_DIR, 0700) < 0)
++			return -1;
++	} else if (st.st_uid != 0 || st.st_mode != (S_IFDIR | 0700)) {
++		return -1;
++	}
++	if (persistpath(path, sizeof(path)) < 0)
++		return -1;
++	fd = open(path, O_RDONLY);
++	if (fd == -1) {
++		char tmp[256];
++		struct timespec ts[2] = { { .tv_nsec = UTIME_OMIT }, { 0 } };
++		int n;
++
++		n = snprintf(tmp, sizeof(tmp), PERSIST_DIR "/.tmp-%d", getpid());
++		if (n < 0 || n >= (int)sizeof(tmp))
++			return -1;
++		fd = open(tmp, O_RDONLY | O_CREAT | O_EXCL, 0);
++		if (fd == -1)
++			return -1;
++		if (futimens(fd, ts) < 0 || rename(tmp, path) < 0) {
++			close(fd);
++			unlink(tmp);
++			return -1;
++		}
++		*valid = 0;
++	} else {
++		*valid = clock_gettime(CLOCK_BOOTTIME, &ts) == 0 &&
++		         fstat(fd, &st) == 0 &&
++		         (ts.tv_sec < st.st_mtim.tv_sec ||
++		          (ts.tv_sec == st.st_mtim.tv_sec && ts.tv_nsec < st.st_mtim.tv_nsec)) &&
++		         st.st_mtime - ts.tv_sec <= PERSIST_TIMEOUT;
++	}
++	return fd;
++}
++
++int
++setpersist(int fd)
++{
++	struct timespec times[2];
++
++	if (clock_gettime(CLOCK_BOOTTIME, &times[1]) < 0)
++		return -1;
++	times[0].tv_nsec = UTIME_OMIT;
++	times[1].tv_sec += PERSIST_TIMEOUT;
++	return futimens(fd, times);
++}
++
++int
++clearpersist(void)
++{
++	char path[256];
++
++	if (persistpath(path, sizeof(path)) < 0)
++		return -1;
++	if (unlink(path) < 0 && errno != ENOENT)
++		return -1;
++	return 0;
++}
+-- 
+2.37.3
+

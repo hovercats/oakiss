@@ -1,0 +1,42 @@
+From d423093f8dec64533733deb0762353f68b0adeb2 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Fri, 14 Jun 2019 12:40:56 -0700
+Subject: [PATCH] rsync: Add missing includes
+
+- stdio.h in socket.c for sscanf
+- stdint.h in extern.h for fixed-width integer types
+- sys/types.h in extern.h for various type definitions
+---
+ usr.bin/rsync/extern.h | 3 +++
+ usr.bin/rsync/socket.c | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/usr.bin/rsync/extern.h b/usr.bin/rsync/extern.h
+index 2815f82cf89..a3f2a15b959 100644
+--- a/usr.bin/rsync/extern.h
++++ b/usr.bin/rsync/extern.h
+@@ -17,6 +17,9 @@
+ #ifndef EXTERN_H
+ #define EXTERN_H
+ 
++#include <stdint.h>
++#include <sys/types.h>
++
+ /*
+  * This is the rsync protocol version that we support.
+  */
+diff --git a/usr.bin/rsync/socket.c b/usr.bin/rsync/socket.c
+index 953b229afbc..aa95cce9369 100644
+--- a/usr.bin/rsync/socket.c
++++ b/usr.bin/rsync/socket.c
+@@ -28,6 +28,7 @@
+ #include <poll.h>
+ #include <resolv.h>
+ #include <stdlib.h>
++#include <stdio.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <err.h>
+-- 
+2.34.1
+

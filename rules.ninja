@@ -1,0 +1,132 @@
+rule gen
+  command = lua $basedir/setup.lua $gendir
+  generator = 1
+
+# toolchain
+rule cc
+  command = $cc -MD -MF $out.d $cflags -c -o $out $in
+  depfile = $out.d
+  deps = gcc
+  description = 	CC	$out
+
+rule cpp
+  command = $cc -MD -MF $out.d $cflags -E -P -o $out $in
+  depfile = $out.d
+  deps = gcc
+  description = 	CPP	$out
+
+rule as
+  command = $as $asflags -o $out $in
+  description = 	AS	$out
+
+rule link
+  command = $cc $ldflags -o $out $in $ldlibs
+  description = 	LINK	$out
+
+rule ar
+  command = rm -f $out && $ar crs $out $in
+  description = 	AR	$out
+
+rule ld
+  command = $ld -o $out $in
+  description = 	LD	$out
+
+rule objcopy
+  command = $objcopy $objcopyflags $in $out
+
+rule rsp
+  command = ln -f $rspfile $out
+  description = 	RSP	$out
+  rspfile = $out.tmp
+  rspfile_content = $in_newline
+
+# TODO: Enable dependency-tracking for nasm when
+# https://bugzilla.nasm.us/show_bug.cgi?id=3392280#c6 is fixed.
+rule nasm
+  command = nasm $nasmflags -o $out $in
+
+rule mc
+  command = $mc $mcflags -o $out $in
+
+rule muse
+  command = muse $museflags -o $out $in
+
+rule probe
+  command = sh $basedir/scripts/probe.sh $var $out $cc $cflags $ldflags -o /dev/null -x c $in
+
+rule probe-size
+  command = sh $basedir/scripts/probe-size.sh $var $out $cc $cflags -c -o /dev/null -x c $in
+
+# misc tools
+rule touch
+  command = touch $out
+
+rule empty
+  command = >$out
+  description = 	EMPTY	$out
+
+rule copy
+  command = ln -f $in $out
+  description = 	COPY	$out
+
+rule cat
+  command = cat $in >$out
+
+rule gzip
+  command = gzip -c -9 -n <$in >$out
+  description = 	GZIP	$out
+
+rule yacc
+  command = yacc $yaccflags $in
+  description = 	YACC	$out
+
+rule sed
+  command = sed $expr $in >$out
+  description = 	SED	$out
+
+rule awk
+  command = awk $expr $in >$out
+  description = 	AWK	$out
+
+rule grep
+  command = grep $expr $in >$out
+
+rule printf
+  command = printf $args >$out
+
+rule tic
+  command = tic $ticflags $in
+
+rule wayland-proto
+  command = wayland-scanner $type <$in >$out
+
+rule git-hash
+  command = sh $basedir/scripts/hash.sh $repo $args $in >$out
+  description = 	HASH	$args
+
+rule git-tree
+  command = sh $basedir/scripts/tree.sh $repo $repo_tag $in $out
+  description = 	TREE	$out
+  restat = 1
+
+rule git-commit
+  command = sh $basedir/scripts/commit.sh $repo $repo_branch $repo_tag $out
+
+rule git-init
+  command = git init $repo_flags $repo && touch $out
+
+rule fspec-hash
+  command = $builddir/pkg/fspec-sync/host/fspec-hash <$in >$out
+
+rule fspec-sort
+  command = $builddir/pkg/fspec-sync/host/fspec-sort -p <$in >$out
+
+rule fspec-tar
+  command = $builddir/pkg/fspec-sync/host/fspec-tar <$in | zstd >$out
+
+rule fetch
+  command = cd $basedir && sh $$OLDPWD/$script $gendir && touch $$OLDPWD/$out
+  description = 	FETCH	$gendir
+  restat = 1
+  generator = 1
+  pool = console
