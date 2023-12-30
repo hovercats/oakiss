@@ -82,6 +82,9 @@
 	path = pkg/rc/src
 	url = https://github.com/benavento/rc.git
 	ignore = all
+[submodule "pkg/rcinit/src"]
+	path = pkg/rcinit/src
+	url = https://github.com/hovercats/rcinit
 [submodule "pkg/rcsm/src"]
 	path = pkg/rcsm/src
 	url = https://github.com/hovercats/rcsm

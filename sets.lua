@@ -12,6 +12,7 @@ return {
 		'openbsd',
 		'pigz',
 		'rc',
+		'rcinit',
 		'rcsm',
 		'samurai',
 		'sbase',
