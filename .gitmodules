@@ -82,6 +82,9 @@
 	path = pkg/rc/src
 	url = https://github.com/benavento/rc.git
 	ignore = all
+[submodule "pkg/rcsm/src"]
+	path = pkg/rcsm/src
+	url = https://github.com/hovercats/rcsm
 [submodule "pkg/samurai/src"]
 	path = pkg/samurai/src
 	url = https://github.com/michaelforney/samurai
