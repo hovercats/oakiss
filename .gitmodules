@@ -37,6 +37,10 @@
 	path = pkg/git/src
 	url = https://github.com/git/git
 	ignore = all
+[submodule "pkg/kiss/src"]
+	path = pkg/kiss/src
+	url = https://codeberg.org/kiss-community/kiss
+	ignore = all
 [submodule "pkg/iproute2/src"]
 	path = pkg/iproute2/src
 	url = https://git.kernel.org/pub/scm/linux/kernel/git/shemminger/iproute2.git
