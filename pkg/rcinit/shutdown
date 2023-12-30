@@ -1,0 +1,11 @@
+#!/bin/rc
+
+switch($1) {
+case p
+	 /etc/rc.shutdown -p &
+case r
+	 /etc/rc.shutdown -r &
+case *
+	printf 'Usage: p|r\n'
+	exit 1
+}
