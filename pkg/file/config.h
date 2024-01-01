@@ -27,15 +27,18 @@
 #define HAVE_INTTYPES_H 1
 /* #undef HAVE_LIBBZ2 */
 /* #undef HAVE_LIBGNURX */
+/* #undef HAVE_LIBLZ */
 /* #undef HAVE_LIBLZMA */
 /* #undef HAVE_LIBSECCOMP */
 #define HAVE_LIBZ 1
+/* #undef HAVE_LIBZSTD */
 #define HAVE_LOCALTIME_R 1
+/* #undef HAVE_LZLIB_H */
 /* #undef HAVE_LZMA_H */
 #define HAVE_MBRTOWC 1
 #define HAVE_MBSTATE_T 1
 #define HAVE_MEMMEM 1
-#define HAVE_MEMORY_H 1
+/* #undef HAVE_MINIX_CONFIG_H */
 #define HAVE_MKOSTEMP 1
 #define HAVE_MKSTEMP 1
 #define HAVE_MMAP 1
@@ -46,6 +49,7 @@
 #define HAVE_SIG_T 1
 #define HAVE_SPAWN_H 1
 #define HAVE_STDINT_H 1
+#define HAVE_STDIO_H 1
 #define HAVE_STDLIB_H 1
 #define HAVE_STRCASESTR 1
 #define HAVE_STRINGS_H 1
@@ -68,8 +72,11 @@
 #define HAVE_SYS_TYPES_H 1
 /* #undef HAVE_SYS_UTIME_H */
 #define HAVE_SYS_WAIT_H 1
+/* HAVE_TM_ISDST */
 #define HAVE_TM_ISDST 1
+/* HAVE_TM_ZONE */
 #define HAVE_TM_ZONE 1
+/* HAVE_TZNAME */
 #define HAVE_TZNAME 1
 #define HAVE_UINTPTR_T 1
 #define HAVE_UNISTD_H 1
@@ -88,16 +95,19 @@
 #define HAVE_WORKING_VFORK 1
 /* #undef HAVE_XLOCALE_H */
 #define HAVE_ZLIB_H 1
+/* #undef HAVE_ZSTD_ERRORS_H */
+/* #undef HAVE_ZSTD_H */
 #define LT_OBJDIR ".libs/"
+/* #undef LZLIBSUPPORT */
 /* #undef MAJOR_IN_MKDEV */
 #define MAJOR_IN_SYSMACROS 1
 #define PACKAGE "file"
 #define PACKAGE_BUGREPORT "christos@astron.com"
 #define PACKAGE_NAME "file"
-#define PACKAGE_STRING "file 5.42"
+#define PACKAGE_STRING "file 5.45"
 #define PACKAGE_TARNAME "file"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "5.42"
+#define PACKAGE_VERSION "5.45"
 #define STDC_HEADERS 1
 /* #undef TM_IN_SYS_TIME */
 #ifndef _ALL_SOURCE
@@ -109,33 +119,21 @@
 #ifndef _POSIX_PTHREAD_SEMANTICS
 # define _POSIX_PTHREAD_SEMANTICS 1
 #endif
-#ifndef _TANDEM_SOURCE
-# define _TANDEM_SOURCE 1
-#endif
-#ifndef __EXTENSIONS__
-# define __EXTENSIONS__ 1
-#endif
-#define VERSION "5.42"
+#define VERSION "5.45"
 #if defined AC_APPLE_UNIVERSAL_BUILD
 # if defined __BIG_ENDIAN__
 #  define WORDS_BIGENDIAN 1
 # endif
 #else
 # ifndef WORDS_BIGENDIAN
-/* #  undef WORDS_BIGENDIAN */
 # endif
 #endif
 /* #undef XZLIBSUPPORT */
 #define ZLIBSUPPORT 1
-#ifndef _DARWIN_USE_64_BIT_INODE
-# define _DARWIN_USE_64_BIT_INODE 1
-#endif
+/* #undef ZSTDLIBSUPPORT */
 /* #undef _FILE_OFFSET_BITS */
 /* #undef _LARGEFILE_SOURCE */
 /* #undef _LARGE_FILES */
-/* #undef _MINIX */
-/* #undef _POSIX_1_SOURCE */
-/* #undef _POSIX_SOURCE */
 /* #undef _UINT32_T */
 /* #undef _UINT64_T */
 /* #undef _UINT8_T */
