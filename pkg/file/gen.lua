@@ -1,4 +1,4 @@
-local version = '5.42'
+local version = '5.45'
 cflags{
 	'-Wall',
 	'-Wno-maybe-uninitialized',  -- false positive in src/readelf.c
