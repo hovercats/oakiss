@@ -66,6 +66,5 @@ ln -sf x86_64-linux-musl-gcc-ar "$1/bin/x86_64-linux-musl-ar"
 ln -sf x86_64-linux-musl-gcc-ranlib "$1/bin/x86_64-linux-musl-ranlib"
 cp -f ../c99 "$1/bin"
 
-for p in "$1/share/man/man*/*"; do
-	gzip -9 -n "$p"
-done
+# Compress manpages
+gzip -9 -n "$1/share/man/man*/*"
