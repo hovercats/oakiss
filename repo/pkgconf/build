@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+export LDFLAGS="$LDFLAGS -static-pie"
+export CFLAGS="$CFLAGS -fPIE"
+
+./configure \
+    --prefix=/ \
+    --sysconfdir=/etc \
+    --mandir=/share/man \
+    --disable-shared
+
+make bin_PROGRAMS=pkgconf
+make bin_PROGRAMS=pkgconf DESTDIR="$1" install
+
+ln -s pkgconf "$1/bin/pkg-config"
+
+# Remove documentation (README, etc).
+rm -rf "$1/share/doc"
