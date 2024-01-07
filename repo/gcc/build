@@ -65,6 +65,7 @@ ln -sf x86_64-linux-musl-gcc "$1/bin/x86_64-linux-musl-cc"
 ln -sf x86_64-linux-musl-gcc-ar "$1/bin/x86_64-linux-musl-ar"
 ln -sf x86_64-linux-musl-gcc-ranlib "$1/bin/x86_64-linux-musl-ranlib"
 cp -f ../c99 "$1/bin"
+cp -f ../c11 "$1/bin"
 
 # Compress manpages
 gzip -9 -n "$1/share/man/man*/*"
