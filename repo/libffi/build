@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/ \
+    --disable-exec-static-tramp \
+    --disable-shared \
+    --enable-static
+
+make
+make DESTDIR="$1" install

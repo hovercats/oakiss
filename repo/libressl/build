@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+./configure \
+	PROG_LDADD=-all-static \
+    --prefix=/ \
+    --sysconfdir=/etc \
+    --disable-tests
+
+make
+make DESTDIR="$1" install
+
+# Certs is provided elsewhere
+rm -rf "$1/etc/ssl"

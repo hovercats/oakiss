@@ -1,0 +1,5 @@
+https://python.org/ftp/python/3.11.7/Python-3.11.7.tar.xz
+https://bootstrap.pypa.io/get-pip.py
+patches/libressl-support.patch
+patches/python3-always-pip.patch
+patches/python3-pyc-hash.patch
