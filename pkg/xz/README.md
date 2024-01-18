@@ -1,6 +1,7 @@
 # xz
 
-## Generated with
+## config.h
+Generated with
 ```
 ./configure \
 	--disable-nls \
