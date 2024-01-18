@@ -35,12 +35,14 @@ return {
 	},
 	devel={
 		'binutils',
+		'cproc',
 		'flex',
 		'linux-headers',
 		'make',
 		'man-pages-posix',
 		'musl',
 		'strace',
+		'qbe',
 	},
 	net={
 		'iproute2',
