@@ -122,3 +122,6 @@
 [submodule "pkg/zlib/src"]
 	path = pkg/zlib/src
 	url = https://github.com/madler/zlib
+[submodule "pkg/qbe/src"]
+	path = pkg/qbe/src
+	url = git://c9x.me/qbe.git
