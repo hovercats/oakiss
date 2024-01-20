@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+export LDFLAGS="$LDFLAGS -static -lxcb -lXau"
+
+make
+make DESTDIR="$1" PREFIX=/ install

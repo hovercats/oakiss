@@ -1,0 +1,3 @@
+libXau make
+libxcb make
+xcb-util-keysyms make
