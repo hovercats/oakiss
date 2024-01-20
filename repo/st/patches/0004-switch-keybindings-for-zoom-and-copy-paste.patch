@@ -1,0 +1,35 @@
+From 5c0786247cb0dc5774a60df83b8798e088eb7fa7 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Mon, 28 Aug 2023 21:50:05 +0000
+Subject: [PATCH 4/5] switch keybindings for zoom and copy/paste
+
+---
+ config.def.h | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index baaf407..bd75078 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -198,13 +198,11 @@ static Shortcut shortcuts[] = {
+ 	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
+ 	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
+ 	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
+-	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
+-	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
+-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
+-	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
+-	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
+-	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
+-	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
++	{ MODKEY,               XK_KP_Add,      zoom,           {.f = +1} },
++	{ MODKEY,               XK_KP_Subtract, zoom,           {.f = -1} },
++	{ MODKEY,               XK_equal,       zoomreset,      {.f =  0} },
++	{ MODKEY,               XK_c,           clipcopy,       {.i =  0} },
++	{ MODKEY,               XK_v,           clippaste,      {.i =  0} },
+ 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+ };
+ 
+-- 
+2.42.0
+

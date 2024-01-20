@@ -1,0 +1,25 @@
+From b4883c0ee8d8d942aabfb05784175f493c1275ae Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Mon, 28 Aug 2023 21:44:42 +0000
+Subject: [PATCH 2/5] set borderpx to 5
+
+---
+ config.def.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config.def.h b/config.def.h
+index 6129b7a..56061ca 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -11,7 +11,7 @@ static char *font2[] = {
+ "Liberation Mono:pixelsize=12:antialias=true:autohint=true",
+ };
+ 
+-static int borderpx = 2;
++static int borderpx = 5;
+ 
+ /*
+  * What program is execed by st depends of these precedence rules:
+-- 
+2.42.0
+

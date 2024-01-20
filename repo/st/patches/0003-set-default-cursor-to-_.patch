@@ -1,0 +1,25 @@
+From cee38be0ca69b3c4ad972808720af935c64ed2fd Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Mon, 28 Aug 2023 21:47:50 +0000
+Subject: [PATCH 3/5] set default cursor to _
+
+---
+ config.def.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config.def.h b/config.def.h
+index 56061ca..baaf407 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -146,7 +146,7 @@ static unsigned int defaultrcs = 257;
+  * 6: Bar ("|")
+  * 7: Snowman ("☃")
+  */
+-static unsigned int cursorshape = 2;
++static unsigned int cursorshape = 4;
+ 
+ /*
+  * Default columns and rows numbers
+-- 
+2.42.0
+

@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+for p in *.patch; do
+	patch -p1 < "$p"
+done
+
+# uncomment everything here to build it statically
+sed 's/--libs fontconfig/--libs --static fontconfig/' config.mk > _
+mv -f _ config.mk 
+sed 's/--libs freetype2/--libs --static freetype2/' config.mk > _
+mv -f _ config.mk
+
+make \
+	LDFLAGS="$LDFLAGS -static-pie -lX11 -lXft \
+	-lxcb -lX11-xcb -lXrender -lXau" \
+	CFLAGS="$CFLAGS -fPIE"
+make PREFIX=/ DESTDIR="$1" install
