@@ -17,11 +17,12 @@ export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
 ./configure \
     --prefix=/ \
-    --enable-static \
-    --with-system-expat \
+    --libdir=/lib \
+    --enable-shared \
     --with-system-ffi \
     --with-ensurepip=yes \
     --without-pymalloc \
+    --disable-ipv6 \
     --with-builtin-hashlib-hashes="sha3,blake2,sha1,sha512,sha256,md5" \
     --with-ssl-default-suites="TLSv1.3:TLSv1.2+AEAD+ECDHE:TLSv1.2+AEAD+DHE" \
     ax_cv_c_float_words_bigendian=no

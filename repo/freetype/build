@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+muon setup \
+    -Dprefix=/ \
+    -Ddefault_library=static \
+    -Dbzip2=disabled \
+    -Dzlib=disabled \
+    -Dpng=disabled \
+    -Dtests=disabled \
+    build
+
+samu -C build
+muon -C build install

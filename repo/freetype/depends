@@ -1,0 +1,14 @@
+expat
+libX11
+libXau
+libXdamage
+libXext
+libXfixes
+libXrender
+libXxf86vm
+libdrm
+libxcb
+libxshmfence
+muon   make
+pixman
+pkgconf make

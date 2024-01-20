@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+# fix sx for tinyx
+sed -e 's/-keeptty//' \
+	-e 's/exec Xorg/exec Xfbdev/' \
+	sx > _
+mv -f _ sx
+
+mkdir -p \
+	"$1/bin" \
+	"$1/share/man/man1"
+
+chmod 755 sx
+chmod 655 sx.1
+
+cp -f sx "$1/bin"
+cp -f sx.1 "$1/share/man/man1"

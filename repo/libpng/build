@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+patch -p1 < apng.patch
+
+./configure \
+    --prefix=/ \
+    --disable-shared \
+    --enable-static
+
+make
+make DESTDIR="$1" install

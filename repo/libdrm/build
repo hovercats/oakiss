@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+muon setup \
+	-Dprefix=/ \
+	-Dintel=disabled \
+	-Dnouveau=disabled \
+	-Damdgpu=disabled \
+	-Dradeon=disabled \
+	-Dvalgrind=disabled \
+	-Ddefault_library=static \
+	-Dman-pages=disabled \
+	build
+
+samu -C build
+muon -C build install
