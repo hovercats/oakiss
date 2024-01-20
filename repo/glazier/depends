@@ -1,0 +1,5 @@
+libXau make
+libxcb make
+xcb-util make
+xcb-util-cursor make
+xcb-util-image make

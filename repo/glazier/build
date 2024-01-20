@@ -1,0 +1,22 @@
+#!/bin/sh -e
+
+# vendor libwm, as its not needed elsewhere at all
+(
+cd libwm
+
+export CFLAGS="$CFLAGS -I/."
+export LDFLAGS="$LDFLAGS -L/."
+
+make
+)
+
+# change bordercolor
+sed 's/deadca7/836421/' config.def.h > _
+mv _ config.def.h
+
+make
+make DESTDIR="$1" PREFIX=/ install
+
+# Makefile doesnt install manpages
+mkdir -p     "$1/share/man/man1"
+cp glazier.1 "$1/share/man/man1"
