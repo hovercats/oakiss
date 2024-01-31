@@ -5,5 +5,5 @@ Generated with
 ```
 ./configure \
 	--disable-nls \
-	--disable-microlzmadecoder
+	--disable-microlzma
 ```

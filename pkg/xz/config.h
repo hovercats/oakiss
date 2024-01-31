@@ -114,10 +114,10 @@
 #define PACKAGE "xz"
 #define PACKAGE_BUGREPORT "xz@tukaani.org"
 #define PACKAGE_NAME "XZ Utils"
-#define PACKAGE_STRING "XZ Utils 5.4.5"
+#define PACKAGE_STRING "XZ Utils 5.4.6"
 #define PACKAGE_TARNAME "xz"
-#define PACKAGE_URL "https://tukaani.org/xz/"
-#define PACKAGE_VERSION "5.4.5"
+#define PACKAGE_URL "https://xz.tukaani.org/xz-utils/"
+#define PACKAGE_VERSION "5.4.6"
 /* #undef PTHREAD_CREATE_JOINABLE */
 #define SIZEOF_SIZE_T 8
 #define STDC_HEADERS 1
@@ -134,6 +134,7 @@
 #define TUKLIB_PHYSMEM_SYSCONF 1
 /* #undef TUKLIB_PHYSMEM_SYSCTL */
 /* #undef TUKLIB_PHYSMEM_SYSINFO */
+/* #undef TUKLIB_USE_UNSAFE_TYPE_PUNNING */
 #ifndef _ALL_SOURCE
 # define _ALL_SOURCE 1
 #endif
@@ -194,7 +195,7 @@
 #ifndef _XOPEN_SOURCE
 /* # undef _XOPEN_SOURCE */
 #endif
-#define VERSION "5.4.5"
+#define VERSION "5.4.6"
 #if defined AC_APPLE_UNIVERSAL_BUILD
 # if defined __BIG_ENDIAN__
 #  define WORDS_BIGENDIAN 1
