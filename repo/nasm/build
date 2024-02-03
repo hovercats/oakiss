@@ -1,7 +1,0 @@
-#!/bin/sh -e
-
-./configure \
-    --prefix=/
-
-make LDFLAGS="$LDFLAGS -static"
-make DESTDIR="$1" install

@@ -41,6 +41,7 @@ return {
 		'make',
 		'man-pages-posix',
 		'musl',
+		'nasm', 
 		'strace',
 		'qbe',
 	},
