@@ -1,0 +1,43 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+# stolen from sabotage linux. should fix linking issues with static netbsd-curses libs
+sed 's,curses_version,baudrate,' Source/Checks/Curses/CheckCurses.c > _
+mv -f _ Source/Checks/Curses/CheckCurses.c
+sed 's,defined(HAVE_LIBCRYPTO),0,' Utilities/cmlibarchive/libarchive/archive_hmac.c > _
+mv -f _ Utilities/cmlibarchive/libarchive/archive_hmac.c
+
+if kiss l cmake; then
+    cmake -B build \
+        -DCMAKE_INSTALL_PREFIX=/ \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_USE_SYSTEM_CURL=False \
+        -DCMAKE_USE_SYSTEM_EXPAT=True \
+        -DCMAKE_USE_SYSTEM_ZLIB=True \
+        -DCMAKE_USE_SYSTEM_BZIP2=True \
+        -DCMAKE_USE_SYSTEM_NGHTTP2=False \
+        -DBUILD_CursesDialog=OFF \
+        -DBUILD_TESTING=OFF
+
+    cmake --build   build
+    cmake --install build
+
+else
+    ./configure \
+        --prefix=/ \
+        --no-system-curl \
+        --system-expat \
+        --system-zlib \
+        --system-bzip2 \
+        --parallel="$(grep -scF 'core id' /proc/cpuinfo)" -- \
+        -DBUILD_CursesDialog=OFF
+
+    make
+    make install
+fi
+
+rm -rf \
+    "$1/doc" \
+    "$1/share/cmake"*/Help \
+    "$1/share/bash-completion"

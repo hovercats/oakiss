@@ -1,9 +1,7 @@
 #!/bin/sh -e
 
-patch -p1 < apng.patch
-
 ./configure \
     --prefix=/
 
-make
+make LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" install

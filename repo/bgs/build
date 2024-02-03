@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+# shellcheck disable=SC2016
+
+# dont use xinerama
+sed -e 's/\${XINERAMALIBS}//' \
+	-e 's/\${XINERAMAFLAGS}//' \
+	config.mk > _
+mv -f _ config.mk
+
+make
+make DESTDIR="$1" PREFIX=/ install
