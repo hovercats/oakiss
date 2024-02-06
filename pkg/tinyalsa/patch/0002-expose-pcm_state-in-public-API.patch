@@ -1,0 +1,25 @@
+From a307284f4d4dce9974444f9b304c6bcbbf039780 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Tue, 31 Aug 2021 14:24:09 -0700
+Subject: [PATCH] expose pcm_state in public API
+
+---
+ include/tinyalsa/pcm.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/tinyalsa/pcm.h b/include/tinyalsa/pcm.h
+index 9fca92d..ddf58f0 100644
+--- a/include/tinyalsa/pcm.h
++++ b/include/tinyalsa/pcm.h
+@@ -363,6 +363,8 @@ int pcm_start(struct pcm *pcm);
+ 
+ int pcm_stop(struct pcm *pcm);
+ 
++int pcm_state(struct pcm *pcm);
++
+ int pcm_wait(struct pcm *pcm, int timeout);
+ 
+ long pcm_get_delay(struct pcm *pcm);
+-- 
+2.37.3
+
