@@ -265,11 +265,11 @@
 #define SIZEOF_CURL_OFF_T 8
 #define SIZEOF_CURL_SOCKET_T 4
 #define SIZEOF_INT 4
-#define SIZEOF_LONG 8
+/* probe SIZEOF_LONG */
 /* #undef SIZEOF_LONG_LONG */
 #define SIZEOF_OFF_T 8
-#define SIZEOF_SIZE_T 8
-#define SIZEOF_TIME_T 8
+/* probe SIZEOF_SIZE_T */
+/* probe SIZEOF_TIME_T */
 #define STDC_HEADERS 1
 /* #undef USE_AMISSL */
 /* #undef USE_ARES */
