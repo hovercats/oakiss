@@ -50,7 +50,7 @@
 #define HAVE_GETOPT_LONG 1
 /* #undef HAVE_GETTEXT */
 /* #undef HAVE_ICONV */
-#define HAVE_IMMINTRIN_H 1
+/* probe HAVE_IMMINTRIN_H */
 #define HAVE_INTTYPES_H 1
 #define HAVE_LIMITS_H 1
 #define HAVE_LZIP_DECODER 1
@@ -103,8 +103,8 @@
 #define HAVE_WCWIDTH 1
 #define HAVE__BOOL 1
 /* #undef HAVE__FUTIME */
-#define HAVE__MM_MOVEMASK_EPI8 1
-#define HAVE___BUILTIN_ASSUME_ALIGNED 1
+/* probe HAVE__MM_MOVEMASK_EPI8 */
+/* probe HAVE___BUILTIN_ASSUME_ALIGNED */
 #define HAVE___BUILTIN_BSWAPXX 1
 #define LT_OBJDIR ".libs/"
 #define MYTHREAD_POSIX 1
@@ -119,7 +119,7 @@
 #define PACKAGE_URL "https://xz.tukaani.org/xz-utils/"
 #define PACKAGE_VERSION "5.4.6"
 /* #undef PTHREAD_CREATE_JOINABLE */
-#define SIZEOF_SIZE_T 8
+/* probe SIZEOF_SIZE_T */
 #define STDC_HEADERS 1
 /* #undef TUKLIB_CPUCORES_CPUSET */
 /* #undef TUKLIB_CPUCORES_PSTAT_GETDYNAMIC */
