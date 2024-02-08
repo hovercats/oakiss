@@ -95,7 +95,9 @@
 #define HAVE_SYS_TYPES_H 1
 #define HAVE_UINTPTR_T 1
 #define HAVE_UNISTD_H 1
-#define HAVE_USABLE_CLMUL 1
+#ifdef HAVE__MM_CLMULEPI64_SI128 /* probe */
+# define HAVE_USABLE_CLMUL 1
+#endif
 /* #undef HAVE_UTIME */
 /* #undef HAVE_UTIMES */
 #define HAVE_VISIBILITY 1
@@ -105,7 +107,9 @@
 /* #undef HAVE__FUTIME */
 /* probe HAVE__MM_MOVEMASK_EPI8 */
 /* probe HAVE___BUILTIN_ASSUME_ALIGNED */
-#define HAVE___BUILTIN_BSWAPXX 1
+#ifdef HAVE___BUILTIN_BSWAP16 /* probe */
+# define HAVE___BUILTIN_BSWAPXX 1
+#endif
 #define LT_OBJDIR ".libs/"
 #define MYTHREAD_POSIX 1
 /* #undef MYTHREAD_VISTA */
