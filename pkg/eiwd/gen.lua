@@ -70,8 +70,6 @@ exe('iwd', [[
 		crypto.c simutil.c simauth.c
 		watchlist.c eap-tls-common.c
 		mschaputil.c
-
-		ofono.c
 	)
 		libell-internal.a
 ]])
