@@ -1,38 +1,16 @@
 Oakiss
 ------
 
-Oasis[0], but with a KISS[1] repo attached.
-I really like Oasis Linux, but I also wanted to utilize kiss for its simple 
-package management.
-Hence this repos existence.
+A play on words. Oasis Linux, with a KISS repo included.
 
-Goals for this repo:
-- Stay close to upstream if relevant
-	- aswell as contributing with ours if relevant
-- Piggyback opkg[2] when its relevant for this project
-- Prefer Oasis' buildsystem where its feasable
-
-
-Installation
-------------
-
-Installation follow the same steps as Oasis.
-Please see Oasis' relevant documentation for this.
-
-Regarding KISS, see relevant documentation[3][4][5]
-
-
-Contact
--------
-
-Should there be any questions related to either KISS or Oasis ask in their
-respective irc channels:
-#oasis and #kisslinux @ irc.libera.chat
+Whats this?
+-----------
+This is for the most part an attempt to replicate my setup on Kiss Linux[1].
+However, instead of using kiss to build the entire system, use oasis' 
+buildsystem to bootstrap a bootable system.
+Then use kiss to extend the system.
 
 
 [0] https://github.com/oasislinux/oasis
-[1] https://codeberg.org/kiss-community/kiss
+[1] https://github.com/hovercats/kiss-dumpsterfire
 [2] https://github.com/rnpnr/opkg
-[3] https://kisslinux.org/wiki/package-system
-[4] https://kisslinux.org/wiki/package-manager
-[5] https://kisscommunity.org/kiss/package-manager/
