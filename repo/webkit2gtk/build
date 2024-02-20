@@ -1,0 +1,106 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+for p in *.patch; do
+	patch -p1 < "$p"
+done
+
+export CCACHE_SLOPPINESS=time_macros,include_file_mtime
+
+# Enable streaming related options if gstreamer is installed.
+pkg-config --exists gstreamer-video-1.0 && video=ON
+pkg-config --exists gstreamer-audio-1.0 && audio=ON
+
+# Enable the use of openjpeg if the package is installed.
+pkg-config --exists openjpeg2 && jpeg=ON
+
+# Enable WEB_CRYPTO if libtasn1 is installed.
+pkg-config --exists libtasn1 && tasn=ON
+
+# Use clang if installed, decreases compilation time by 25%.
+if command -v clang; then
+	export CC=clang 
+	export CXX=clang++
+fi
+
+# fix unsupported -n or -h flag for sbase ln
+sed 's/ln -sfh/ln -sf/g' Source/WebCore/Scripts/generate-derived-sources.sh > _
+mv -f _ Source/WebCore/Scripts/generate-derived-sources.sh
+chmod 755 Source/WebCore/Scripts/generate-derived-sources.sh
+
+sed 's/ln -n -s -f/ln -sf/g' Source/JavaScriptCore/GLib.cmake > _
+mv -f _ Source/JavaScriptCore/GLib.cmake
+
+sed 's/ln -n -s -f/ln -sf/g' Source/WebKit/PlatformGTK.cmake > _
+mv -f _ Source/WebKit/PlatformGTK.cmake
+
+sed 's/ln -n -s -f/ln -sf/g' Source/WebKit/PlatformWPEDeprecated.cmake > _
+mv -f _ Source/WebKit/PlatformWPEDeprecated.cmake
+
+sed 's/ln -n -s -f/ln -sf/g' Source/WebKit/PlatformGTKDeprecated.cmake  > _
+mv -f _ Source/WebKit/PlatformGTKDeprecated.cmake
+ 
+
+# Remove gettext requirement.
+sed 's/ngettext/printf/g' Tools/MiniBrowser/gtk/BrowserDownloadsBar.c > _
+mv -f _ Tools/MiniBrowser/gtk/BrowserDownloadsBar.c
+sed '/po_files \*\.po/d' Source/WebCore/platform/gtk/po/CMakeLists.txt > _
+mv -f _ Source/WebCore/platform/gtk/po/CMakeLists.txt
+sed '/if.*GETTEXT_FOUND/,/^endif/d' Source/WebCore/platform/gtk/po/CMakeLists.txt > _
+mv -f _ Source/WebCore/platform/gtk/po/CMakeLists.txt
+sed '/^GETTEXT_C/d' Source/WebCore/platform/gtk/po/CMakeLists.txt > _
+mv -f _ Source/WebCore/platform/gtk/po/CMakeLists.txt
+
+# Fix clang build.
+sed -e '/LC_ALL/d' -e '/WTFLogAlways/d' Source/JavaScriptCore/jsc.cpp > _
+mv -f _ Source/JavaScriptCore/jsc.cpp
+
+# Webkit's CMake configuration forces color output using clang-specific flags
+# when using Ninja as the CMAKE_GENERATOR. We should disable them.
+sed -e "s/-fcolor-diagnostics//"  \
+	-e "s/-fdiagnostics-color=always/-fdiagnostics-color=never/" \
+	Source/cmake/WebKitCompilerFlags.cmake > _
+mv -f _ Source/cmake/WebKitCompilerFlags.cmake
+
+# Reduce memory usage.
+export LDFLAGS="$LDFLAGS -Wl,--no-keep-memory"
+
+cmake -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/ \
+    -DCMAKE_INSTALL_LIBEXECDIR=/lib \
+    -DLIB_INSTALL_DIR=/lib \
+    -DPORT=GTK \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DENABLE_BUBBLEWRAP_SANDBOX=OFF \
+    -DENABLE_SAMPLING_PROFILER=OFF \
+    -DENABLE_GEOLOCATION=OFF \
+    -DENABLE_API_TESTS=OFF \
+    -DENABLE_PDFJS=OFF \
+    -DENABLE_DOCUMENTATION=OFF \
+    -DENABLE_GLES2=ON \
+    -DENABLE_INTROSPECTION=OFF \
+    -DENABLE_MINIBROWSER=OFF \
+    -DENABLE_SPELLCHECK=OFF \
+    -DUSE_GSTREAMER_GL=OFF \
+    -DUSE_LIBHYPHEN=OFF \
+    -DUSE_LIBNOTIFY=OFF \
+    -DUSE_LIBSECRET=OFF \
+    -DUSE_OPENJPEG="${jpeg:-OFF}" \
+    -DUSE_SYSTEMD=OFF \
+    -DUSE_WOFF2=OFF \
+    -DUSE_JPEGXL=OFF \
+    -DUSE_WPE_RENDERER=OFF \
+    -DENABLE_WEB_CRYPTO="${tasn:-OFF}" \
+    -DENABLE_VIDEO="${video:-OFF}" \
+    -DENABLE_WEB_AUDIO="${audio:-OFF}" \
+    -DENABLE_GAMEPAD=OFF \
+    -DUSE_SOUP2=OFF \
+    -DENABLE_JOURNALD_LOG=OFF \
+    -DUSE_LCMS=OFF \
+    -DENABLE_WAYLAND_TARGET=OFF \
+    -DUSE_AVIF=OFF \
+    -Wno-dev
+cmake --build build
+cmake --install build

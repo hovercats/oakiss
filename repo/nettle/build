@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/ \
+    --enable-static \
+    --enable-mini-gmp \
+    --disable-documentation
+
+make
+make DESTDIR="$1" install

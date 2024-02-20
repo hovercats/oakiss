@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+meson setup \
+    -Dprefix=/ \
+    -Dsysconfdir=/etc \
+    -Dmandir=/share/man \
+    -Ddebug=false \
+    -Djpeg=enabled \
+    -Dpng=enabled \
+    -Dtiff=disabled \
+    -Dgtk_doc=false \
+    -Dman=false \
+    -Dgio_sniffing=false \
+    -Dtests=false \
+    -Dinstalled_tests=false \
+    -Dbuiltin_loaders=all \
+    -Dwrap_mode=nofallback \
+    output
+
+samu -C output
+samu -C output install

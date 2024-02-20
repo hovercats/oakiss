@@ -1,0 +1,17 @@
+#icu
+expat
+icu
+libX11
+libXau
+libXdamage
+libXext
+libXfixes
+libXrender
+libXxf86vm
+libdrm
+libpng
+libxcb
+libxshmfence
+meson   make
+pixman
+pkgconf make

@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+for p in *.patch; do
+	patch -p1 < "$p"
+done
+
+# force use webkit 4.1
+sed 's/4.0/4.1/g' config.mk > _
+mv -f _ config.mk
+
+make
+make DESTDIR="$1" PREFIX=/ install

@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+python packaging/create_zipapp.py \
+	--outfile meson \
+	--compress
+
+chmod 755 meson
+chmod 655 man/meson.1
+
+mkdir -p \
+	"$1/bin" \
+	"$1/share/man/man1"
+
+cp -f meson "$1/bin"
+cp -f man/meson.1 "$1/share/man/man1"

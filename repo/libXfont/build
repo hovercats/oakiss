@@ -5,12 +5,14 @@ export DESTDIR="$1"
 TMPDIR="$1/tmp"
 
 ./configure \
-    --prefix=/usr \
+    --prefix=/ \
     --sysconfdir=/etc \
-    --mandir=/usr/share/man \
+    --mandir=/share/man \
     --localstatedir=/var \
     --without-xmlto \
-    --disable-specs
+    --disable-specs \
+    --disable-shared \
+    --enable-static
 
 make
 make install

@@ -1,0 +1,7 @@
+https://dl.suckless.org/surf/surf-2.1.tar.gz
+patches/0001-remove-the-need-for-gcr.patch
+patches/0002-set-cache-cookiedir-to-tmp-and-the-rest-to-etc-surf.patch
+patches/0003-add-quit-hotkey.patch
+patches/0004-apply-searchengines-patch.patch
+patches/0005-use-clipboard.patch
+patches/0006-add-bookmarking-using-bmks.patch

@@ -4,10 +4,10 @@ patch -p1 < lfs64.patch
 
 export DESTDIR="$1"
 
-muon setup \
+meson setup \
     -Dprefix=/ \
     -Ddefault_library=static \
     build
 
 samu -C build
-muon -C build install
+samu -C build install

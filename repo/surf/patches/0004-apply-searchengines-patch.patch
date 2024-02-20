@@ -1,0 +1,84 @@
+From 444ac633cedab97d6227b63665fa43a65aebca70 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Tue, 29 Aug 2023 23:34:53 +0200
+Subject: [PATCH 4/4] apply searchengines patch
+
+---
+ config.def.h |  6 ++++++
+ surf.c       | 22 +++++++++++++++++++++-
+ 2 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/config.def.h b/config.def.h
+index a6a4692..6c26c34 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -7,6 +7,12 @@ static char *certdir        = "~/etc/surf/certificates/";
+ static char *cachedir       = "/tmp/cache/";
+ static char *cookiefile     = "/tmp/cookies.txt";
+ 
++static SearchEngine searchengines[] = {
++	{ " ", "https://duckduckgo.com/?q=%s" },
++	{ "yt ", "https://yewtu.be/search?q=%s" },
++
++};
++
+ /* Webkit default features */
+ /* Highest priority value will be used.
+  * Default parameters are priority 0
+diff --git a/surf.c b/surf.c
+index 7abb207..f0e361f 100644
+--- a/surf.c
++++ b/surf.c
+@@ -162,6 +162,11 @@ typedef struct {
+ 	unsigned int stopevent;
+ } Button;
+ 
++typedef struct {
++	char *token;
++	char *uri;
++} SearchEngine;
++
+ typedef struct {
+ 	const char *uri;
+ 	Parameter config[ParameterLast];
+@@ -248,6 +253,7 @@ static void webprocessterminated(WebKitWebView *v,
+                                  Client *c);
+ static void closeview(WebKitWebView *v, Client *c);
+ static void destroywin(GtkWidget* w, Client *c);
++static gchar *parseuri(const gchar *uri);
+ 
+ /* Hotkeys */
+ static void pasteuri(GtkClipboard *clipboard, const char *text, gpointer d);
+@@ -609,7 +615,7 @@ loaduri(Client *c, const Arg *a)
+ 			url = g_strdup_printf("file://%s", path);
+ 			free(path);
+ 		} else {
+-			url = g_strdup_printf("http://%s", uri);
++			url = parseuri(uri);
+ 		}
+ 		if (apath != uri)
+ 			free(apath);
+@@ -1809,6 +1815,20 @@ destroywin(GtkWidget* w, Client *c)
+ 		gtk_main_quit();
+ }
+ 
++gchar *
++parseuri(const gchar *uri)
++{
++	guint i;
++
++	for (i = 0; i < LENGTH(searchengines); i++) {
++		if (g_str_has_prefix(uri, searchengines[i].token))
++			return g_strdup_printf(searchengines[i].uri,
++					       uri + strlen(searchengines[i].token));
++	}
++
++	return g_strdup_printf("http://%s", uri);
++}
++
+ void
+ pasteuri(GtkClipboard *clipboard, const char *text, gpointer d)
+ {
+-- 
+2.42.0
+

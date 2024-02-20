@@ -1,0 +1,29 @@
+#!/bin/sh -e
+
+patch -p1 < musl.patch
+
+# Build sometimes forces -Werror.
+export CFLAGS="$CFLAGS -Wno-error"
+
+sh ./configure \
+    --prefix=/ \
+    --disable-symbol-versioning \
+    --disable-debuginfod \
+    --disable-libdebuginfod \
+    --disable-nls \
+    ac_cv_c99=yes # Override check for Clang.
+
+# Utility functions that need argp and fts, not strictly necessary
+# for the library to function
+:>libdwfl/argp-std.c
+:>libdwfl/linux-kernel-modules.c
+
+# Useless stuff
+printf '%s\n' "all:" "install:" > src/Makefile
+
+# linux-lts will error out on unknown type name for Relr
+sed '/Relr/d' libelf/gelf.h > _
+mv -f _ libelf/gelf.h
+
+make
+make DESTDIR="$1" install

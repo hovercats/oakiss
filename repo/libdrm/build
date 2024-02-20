@@ -2,7 +2,7 @@
 
 export DESTDIR="$1"
 
-muon setup \
+meson setup \
 	-Dprefix=/ \
 	-Dintel=disabled \
 	-Dnouveau=disabled \
@@ -14,4 +14,4 @@ muon setup \
 	build
 
 samu -C build
-muon -C build install
+samu -C build install

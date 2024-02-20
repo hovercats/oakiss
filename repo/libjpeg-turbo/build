@@ -7,6 +7,9 @@ patch -p1 < no-docs.patch
 cmake -B build \
     -DCMAKE_INSTALL_PREFIX=/ \
     -DCMAKE_INSTALL_LIBDIR=/lib \
+    -DCMAKE_INSTALL_BINDIR=/bin \
+    -DCMAKE_INSTALL_INCLUDEDIR=/bin \
+    -DCMAKE_INSTALL_MANDIR=/share \
     -DCMAKE_SHARED_LIBS=False \
     -DCMAKE_STATIC_LIBS=True \
     -DCMAKE_BUILD_TYPE=Release \

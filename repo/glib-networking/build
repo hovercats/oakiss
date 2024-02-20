@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+# Don't build tests that fail due to `gnutls` not being built with `p11-kit`.
+sed "/subdir('tests')/d" tls/meson.build > _
+mv -f _ tls/meson.build
+
+meson setup \
+    -Dprefix=/usr \
+    -Dsysconfdir=/etc \
+    -Dlocalstatedir=/var \
+    -Dlibproxy=disabled \
+    -Dopenssl=disabled \
+    -Dgnutls=enabled \
+    -Dgnome_proxy=disabled \
+    output
+
+samu -C output
+samu -C output install

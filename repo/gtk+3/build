@@ -1,0 +1,46 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+# Some packages in community/ requrire that gtk+3 have atk methods.
+# So if atk is installed, then we don't patch it out of gtk, just fribidi.
+if pkg-config --exists atk; then
+    patch -p1 < 01-no-fribidi.patch
+else
+    for p in *.patch; do
+        patch -p1 < "$p"
+    done
+fi
+
+# Disable native language support, disable atk-bridge, don't compile schemas.
+sed -e '/compile_schemas/s/true/false/' \
+    -e '/ENABLE_NLS/s/1/0/' \
+    -e "/subdir('po/d" \
+    -e "/atk-bridge/d" \
+    meson.build > _
+mv -f _ meson.build
+
+# Remove atk-bridge code.
+sed '/<atk-bridge.h>/d;/atk_bridge_adaptor_init/d' \
+    gtk/a11y/gtkaccessibility.c > _
+mv -f _ gtk/a11y/gtkaccessibility.c
+
+meson setup \
+    -Dprefix=/ \
+    -Dx11_backend=true \
+    -Dwayland_backend=false \
+    -Dxinerama=yes \
+    -Dprint_backends=file,lpr \
+    -Dcolord=no \
+    -Dintrospection=false \
+    -Ddemos=false \
+    -Dexamples=false \
+    -Dtests=false \
+    output
+
+ninja -C output
+ninja -C output install
+
+# We don't compile with librsvg which leads to this utility solely causing
+# compiler errors for some packages. It has no use at all.
+rm -f "$1/bin/gtk-encode-symbolic-svg"

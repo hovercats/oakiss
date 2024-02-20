@@ -1,0 +1,31 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+# Disable building 'cairo-sphinx'.
+sed -e "s/\(BUILD_SPHINX_TRUE=\)/\1'#'/" \
+    -e "s/\(BUILD_SPHINX_FALSE=\)'#'/\1=/" \
+    configure > _
+mv -f _ configure
+
+# Disable building tests and documentation.
+sed 's/boilerplate test perf//g;s/src doc/src/g' Makefile.in > _
+mv -f _ Makefile.in
+
+sh ./configure \
+    --prefix=/ \
+    --disable-static \
+    --enable-tee \
+    --enable-gl \
+    --enable-egl \
+    --enable-xlib-xcb \
+    --enable-xcb \
+    --enable-xlib-xrender \
+    --enable-xlib \
+    --disable-trace \
+    --disable-valgrind \
+    --disable-gtk-doc-html \
+    ax_cv_c_float_words_bigendian=no
+
+make
+make install

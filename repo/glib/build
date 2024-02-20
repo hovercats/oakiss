@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+: > fuzzing/meson.build
+
+meson setup \
+    -Dprefix=/ \
+    -Dlibexecdir=/lib \
+    -Dlibmount=disabled \
+    -Dinstalled_tests=false \
+    -Dman=false \
+    -Dtests=false \
+    -Dlibelf=disabled \
+    -Dnls=disabled \
+    build
+
+samu -C build
+samu -C build install
+
+rm -rf "$1/bin/gdbus"

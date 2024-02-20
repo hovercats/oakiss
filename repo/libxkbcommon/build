@@ -1,0 +1,16 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+meson setup \
+    -Dprefix=/ \
+    -Dlibexecdir=/usr/lib \
+    -Ddefault_library=static \
+    -Denable-docs=false \
+    -Denable-wayland=false \
+    -Denable-xkbregistry=false \
+    -Dpkg_config_path=/lib/pkgconfig \
+    output
+
+samu -C output
+samu -C output install

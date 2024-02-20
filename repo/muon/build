@@ -21,4 +21,4 @@ muon setup \
       build
 
 samu -C build
-muon  -C build install
+muon -C build install

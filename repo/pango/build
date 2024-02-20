@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+for p in *.patch; do
+    patch -p1 < "$p"
+done
+
+# Disable download of missing (optional) dependencies
+# during the build. This cannot be turned off otherwise.
+rm -rf subprojects
+
+: > tests/meson.build
+: > examples/meson.build
+: > docs/meson.build
+
+meson setup \
+    -Dprefix=/ \
+    -Dgtk_doc=false \
+    -Dintrospection=disabled \
+    output
+
+samu -C output
+samu -C output install

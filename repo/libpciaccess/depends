@@ -1,3 +1,2 @@
-muon make
-#samurai make
+meson make
 zlib

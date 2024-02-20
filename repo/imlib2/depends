@@ -2,7 +2,7 @@
 # both formats by uncommenting giflib and tiff.
 # giflib
 # tiff
-freetype
+freetype-harfbuzz
 libXext
 libjpeg-turbo
 libpng

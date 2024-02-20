@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/ \
+    --sysconfdir=/etc \
+    --mandir=/share/man \
+    --localstatedir=/var
+
+make
+make DESTDIR="$1" install

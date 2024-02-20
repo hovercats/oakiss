@@ -2,11 +2,11 @@
 
 export DESTDIR="$1"
 
-muon setup \
-    -Dprefix=/usr \
+meson setup \
+    -Dprefix=/ \
     -Dgtk=disabled \
     -Ddefault_library=static \
     output
 
 samu -C output
-muon -C output install
+samu -C output install

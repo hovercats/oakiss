@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+# Disable building tests.
+: > test/meson.build
+
+meson setup \
+    -Dprefix=/ \
+    -Dsysconfdir=/etc \
+    -Dmandir=/usr/share/man \
+    -Dpkg_config_path=/lib/pkgconfig \
+    -Dx11=true \
+    output
+
+samu -C output
+samu -C output install

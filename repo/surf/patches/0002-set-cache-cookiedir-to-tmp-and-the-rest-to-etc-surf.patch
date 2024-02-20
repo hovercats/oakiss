@@ -1,0 +1,33 @@
+From f79c9427db7f671362dbae79ca03d0b149cb8037 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Tue, 29 Aug 2023 22:58:53 +0200
+Subject: [PATCH 2/4] set cache/cookiedir to /tmp, and the rest to ~/etc/surf
+
+---
+ config.def.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index 2745e79..71d5890 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -1,11 +1,11 @@
+ /* modifier 0 means no modifier */
+ static int surfuseragent    = 1;  /* Append Surf version to default WebKit user agent */
+ static char *fulluseragent  = ""; /* Or override the whole user agent string */
+-static char *scriptfile     = "~/.surf/script.js";
+-static char *styledir       = "~/.surf/styles/";
+-static char *certdir        = "~/.surf/certificates/";
+-static char *cachedir       = "~/.surf/cache/";
+-static char *cookiefile     = "~/.surf/cookies.txt";
++static char *scriptfile     = "~/etc/surf/script.js";
++static char *styledir       = "~/etc/surf/styles/";
++static char *certdir        = "~/etc/surf/certificates/";
++static char *cachedir       = "/tmp/cache/";
++static char *cookiefile     = "/tmp/cookies.txt";
+ 
+ /* Webkit default features */
+ /* Highest priority value will be used.
+-- 
+2.42.0
+

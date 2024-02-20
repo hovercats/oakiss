@@ -5,8 +5,7 @@
     --without-xmlwf \
     --without-examples \
     --without-tests \
-    --without-docbook \
-    --disable-shared
+    --without-docbook
 
 make
 make DESTDIR="$1" install

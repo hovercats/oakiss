@@ -1,4 +1,4 @@
-freetype
+freetype-harfbuzz
 imlib2
 libX11
 libXau

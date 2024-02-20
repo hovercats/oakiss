@@ -1,9 +1,8 @@
-freetype make
+freetype-harfbuzz make
 libXdmcp make make
 libXfont make
 libXtst make
 libfontenc make
 libpng make
-#linux-headers make
 xtrans make
 zlib make
