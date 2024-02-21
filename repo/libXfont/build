@@ -17,20 +17,20 @@ TMPDIR="$1/tmp"
 make
 make install
 
-# Some X11 packages install to /usr/share.
-! [ -d "$1/usr/share/pkgconfig" ] || {
-    mkdir -p "$1/usr/lib"
-    mv -f "$1/usr/share/pkgconfig" "$1/usr/lib"
+# Some X11 packages install to /share.
+! [ -d "$1/share/pkgconfig" ] || {
+    mkdir -p "$1/lib"
+    mv -f "$1/share/pkgconfig" "$1/lib"
 }
 
 # We need to keep this around.
-! [ -d "$1/usr/share/aclocal" ] || {
+! [ -d "$1/share/aclocal" ] || {
     mkdir -p "$TMPDIR"
-    mv -f "$1/usr/share/aclocal" "$TMPDIR"
+    mv -f "$1/share/aclocal" "$TMPDIR"
 }
 
 # Restore kept directories.
 ! [ -d "$TMPDIR" ] || {
-    mv -f "$TMPDIR/"* "$1/usr/share"
+    mv -f "$TMPDIR/"* "$1/share"
     rm -rf "$TMPDIR"
 }
