@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+# LDFLAGS isnt specified, but LIBS is.
+make LIBS="$LIBS -static"
+make \
+	DESTDIR="$1" \
+    PREFIX=/ \
+    MANDIR=/share/man/man1 \
+    install
