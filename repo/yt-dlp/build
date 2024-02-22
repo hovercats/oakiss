@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+make lazy-extractors
+make yt-dlp
+
+chmod 755 yt-dlp
+
+cp -f yt-dlp "$1/bin"
