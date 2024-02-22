@@ -1,0 +1,29 @@
+From df687b9478c0de1f2d7fd1288d214a0812499c58 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sat, 1 Apr 2023 05:38:34 +0200
+Subject: [PATCH 4/4] change colorscheme
+
+---
+ config.def.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index be7f0d2..6a40966 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -11,9 +11,9 @@ static const char *fonts[] = {
+ static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
+ static const char *colors[SchemeLast][2] = {
+ 	/*     fg         bg       */
+-	[SchemeNorm] = { "#bbbbbb", "#222222" },
+-	[SchemeSel] = { "#eeeeee", "#005577" },
+-	[SchemeOut] = { "#000000", "#00ffff" },
++	[SchemeNorm] = { "#e8e9ca", "#222222" },
++	[SchemeSel] = { "#e8e9ca", "#4a708b" },
++	[SchemeOut] = { "#4c4c4c", "#00ffff" },
+ };
+ /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
+ static unsigned int lines      = 0;
+-- 
+2.42.0
+
