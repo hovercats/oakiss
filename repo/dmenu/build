@@ -6,3 +6,6 @@ done
 
 make LDFLAGS="$LDFLAGS -static"
 make DESTDIR="$1" PREFIX=/ install
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
