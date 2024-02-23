@@ -20,3 +20,6 @@ make DESTDIR="$1" PREFIX=/ install
 # Makefile doesnt install manpages
 mkdir -p     "$1/share/man/man1"
 cp glazier.1 "$1/share/man/man1"
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
