@@ -10,3 +10,6 @@ mv -f _ config.mk
 
 make
 make DESTDIR="$1" PREFIX=/ install
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
