@@ -47,3 +47,6 @@ find "$1" -name \*.0 -type f -exec rm -f {} +
 
 # Fix permissions.
 find "$1/lib" -type f -exec chmod 644 {} \;
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
