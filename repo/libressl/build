@@ -11,3 +11,6 @@ make DESTDIR="$1" install
 
 # Certs is provided elsewhere
 rm -rf "$1/etc/ssl"
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
