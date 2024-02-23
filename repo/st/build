@@ -15,3 +15,6 @@ make \
 	-lxcb -lX11-xcb -lXrender -lXau" \
 	CFLAGS="$CFLAGS -fPIE"
 make PREFIX=/ DESTDIR="$1" install
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
