@@ -7,3 +7,6 @@ make DESTDIR="$1" PREFIX=/ install
 
 # Remove docs
 rm -rf "$1/share/doc"
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
