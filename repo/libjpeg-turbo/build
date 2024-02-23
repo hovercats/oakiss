@@ -17,3 +17,6 @@ cmake -B build \
 
 cmake --build   build
 cmake --install build
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
