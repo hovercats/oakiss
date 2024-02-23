@@ -16,3 +16,6 @@ ln -s pkgconf "$1/bin/pkg-config"
 
 # Remove documentation (README, etc).
 rm -rf "$1/share/doc"
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
