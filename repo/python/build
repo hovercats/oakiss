@@ -47,3 +47,6 @@ ln -s pip3    "$1/bin/pip"
     cd "$1/bin"
     rm -f pydoc* idle*
 }
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
