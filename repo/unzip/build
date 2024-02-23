@@ -29,3 +29,6 @@ make \
     prefix="$1/"  \
     MANDIR=/share/man/man1 \
     -f unix/Makefile install
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
