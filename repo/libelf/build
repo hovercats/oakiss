@@ -27,3 +27,6 @@ mv -f _ libelf/gelf.h
 
 make
 make DESTDIR="$1" install
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
