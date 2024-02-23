@@ -13,3 +13,6 @@ mkdir -p \
 
 cp -f meson "$1/bin"
 cp -f man/meson.1 "$1/share/man/man1"
+
+# Compress manpages
+find "$1/share/man" -type f | xargs gzip -n -9
