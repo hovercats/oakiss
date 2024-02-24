@@ -15,11 +15,11 @@ sed 's/deadca7/836421/' config.def.h > _
 mv _ config.def.h
 
 make
-make DESTDIR="$1" PREFIX=/ install
+make DESTDIR="$1" PREFIX=/pkg install
 
 # Makefile doesnt install manpages
-mkdir -p     "$1/share/man/man1"
-cp glazier.1 "$1/share/man/man1"
+mkdir -p     "$1/pkg/share/man/man1"
+cp glazier.1 "$1/pkg/share/man/man1"
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

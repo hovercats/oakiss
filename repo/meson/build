@@ -8,11 +8,11 @@ chmod 755 meson
 chmod 655 man/meson.1
 
 mkdir -p \
-	"$1/bin" \
-	"$1/share/man/man1"
+	"$1/pkg/bin" \
+	"$1/pkg/share/man/man1"
 
-cp -f meson "$1/bin"
-cp -f man/meson.1 "$1/share/man/man1"
+cp -f meson "$1/pkg/bin"
+cp -f man/meson.1 "$1/pkg/share/man/man1"
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

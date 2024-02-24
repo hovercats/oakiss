@@ -1,8 +1,8 @@
 #!/bin/sh -e
 
 ./configure \
-    --prefix=/ \
-    --with-fontrootdir=/share/fonts/X11 \
+    --prefix=/pkg \
+    --with-fontrootdir=/pkg/share/fonts/X11 \
     --disable-shared
 
 make

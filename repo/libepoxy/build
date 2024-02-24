@@ -6,10 +6,10 @@ export DESTDIR="$1"
 : > test/meson.build
 
 meson setup \
-    -Dprefix=/ \
+    -Dprefix=/pkg \
     -Dsysconfdir=/etc \
-    -Dmandir=/share/man \
-    -Dpkg_config_path=/lib/pkgconfig \
+    -Dmandir=/pkg/share/man \
+    -Dpkg_config_path=/pkg/lib/pkgconfig \
     -Dx11=true \
     output
 

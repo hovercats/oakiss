@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 ./configure \
-    --prefix=/ \
+    --prefix=/pkg \
     --enable-pcre2-16 \
     --enable-pcre2-32 \
     --enable-pcre2grep-libz \
@@ -11,4 +11,4 @@ make
 make DESTDIR="$1" install
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

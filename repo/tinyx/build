@@ -2,22 +2,22 @@
 
 export LDFLAGS="$LDFLAGS -static-pie"
 export XSERVERCFLAGS_CFLAGS="-fPIE"
-export XSERVERLIBS_LIBS="/lib/*.a -lz -lfreetype -lpng16"
+export XSERVERLIBS_LIBS="/pkg/lib/*.a -lz -lfreetype -lpng16"
 
 ./configure \
-  --prefix=/ \
-  --with-fontdir=/share/fonts \
+  --prefix=/pkg \
+  --with-fontdir=/pkg/share/fonts \
   --disable-xdmcp \
   --disable-xdm-auth-1
 
 make
 make DESTDIR="$1" install
 
-chmod u+s "$1/bin/Xfbdev"
+chmod u+s "$1/pkg/bin/Xfbdev"
 
 # not compatible
-rm -rf    "$1/bin/Xvesa"
+rm -rf    "$1/pkg/bin/Xvesa"
 
 #install minimum requirement for bitmap fonts
-mkdir -p "$1/share/fonts/misc"
-cp ./*.pcf.gz fonts.alias fonts.dir "$1/share/fonts/misc"
+mkdir -p "$1/pkg/share/fonts/misc"
+cp ./*.pcf.gz fonts.alias fonts.dir "$1/pkg/share/fonts/misc"

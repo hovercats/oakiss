@@ -3,13 +3,13 @@
 export DESTDIR="$1"
 
 ./configure \
-    --prefix=/
+    --prefix=/pkg
 
 make
 make install
 
 # Remove HTML documentation.
-rm -rf "$1/share/doc"
+rm -rf "$1/pkg/share/doc"
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 ./configure \
-    --prefix=/ \
+    --prefix=/pkg \
     --with-threads \
     --with-history \
     --without-python \
@@ -11,4 +11,4 @@ make
 make DESTDIR="$1" install
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

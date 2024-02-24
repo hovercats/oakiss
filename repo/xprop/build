@@ -5,9 +5,9 @@ export DESTDIR="$1"
 TMPDIR="$1/tmp"
 
 ./configure \
-    --prefix=/ \
+    --prefix=/pkg \
     --sysconfdir=/etc \
-    --mandir=/share/man \
+    --mandir=/pkg/share/man \
     --localstatedir=/var \
     --without-xmlto \
     --disable-specs
@@ -15,23 +15,23 @@ TMPDIR="$1/tmp"
 make
 make install
 
-# Some X11 packages install to /share.
-! [ -d "$1/share/pkgconfig" ] || {
-    mkdir -p "$1/lib"
-    mv -f "$1/share/pkgconfig" "$1/lib"
+# Some X11 packages install to /pkg/share.
+! [ -d "$1/pkg/share/pkgconfig" ] || {
+    mkdir -p "$1/pkg/lib"
+    mv -f "$1/pkg/share/pkgconfig" "$1/pkg/lib"
 }
 
 # We need to keep this around.
-! [ -d "$1/share/aclocal" ] || {
+! [ -d "$1/pkg/share/aclocal" ] || {
     mkdir -p "$TMPDIR"
-    mv -f "$1/share/aclocal" "$TMPDIR"
+    mv -f "$1/pkg/share/aclocal" "$TMPDIR"
 }
 
 # Restore kept directories.
 ! [ -d "$TMPDIR" ] || {
-    mv -f "$TMPDIR/"* "$1/share"
+    mv -f "$TMPDIR/"* "$1/pkg/share"
     rm -rf "$TMPDIR"
 }
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

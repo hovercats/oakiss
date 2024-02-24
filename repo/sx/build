@@ -7,11 +7,11 @@ sed -e 's/-keeptty//' \
 mv -f _ sx
 
 mkdir -p \
-	"$1/bin" \
-	"$1/share/man/man1"
+	"$1/pkg/bin" \
+	"$1/pkg/share/man/man1"
 
 chmod 755 sx
 chmod 655 sx.1
 
-cp -f sx "$1/bin"
-cp -f sx.1 "$1/share/man/man1"
+cp -f sx "$1/pkg/bin"
+cp -f sx.1 "$1/pkg/share/man/man1"

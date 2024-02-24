@@ -12,11 +12,11 @@ sed '/LICENSE/d' icu4c/source/Makefile.in > _
 mv -f _ icu4c/source/Makefile.in
 
 sh icu4c/source/configure \
-    --prefix=/ \
-    --sbindir=/bin
+    --prefix=/pkg \
+    --sbindir=/pkg/bin
 
 make
 make DESTDIR="$1" install
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

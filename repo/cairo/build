@@ -13,7 +13,7 @@ sed 's/boilerplate test perf//g;s/src doc/src/g' Makefile.in > _
 mv -f _ Makefile.in
 
 sh ./configure \
-    --prefix=/ \
+    --prefix=/pkg \
     --disable-static \
     --enable-tee \
     --enable-gl \

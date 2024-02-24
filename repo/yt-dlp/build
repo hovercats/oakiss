@@ -5,4 +5,4 @@ make yt-dlp
 
 chmod 755 yt-dlp
 
-cp -f yt-dlp "$1/bin"
+cp -f yt-dlp "$1/pkg/bin"

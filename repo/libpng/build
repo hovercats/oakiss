@@ -3,10 +3,10 @@
 patch -p1 < apng.patch
 
 ./configure \
-    --prefix=/
+    --prefix=/pkg
 
 make
 make DESTDIR="$1" install
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

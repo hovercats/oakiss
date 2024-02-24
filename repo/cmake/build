@@ -10,7 +10,7 @@ mv -f _ Utilities/cmlibarchive/libarchive/archive_hmac.c
 
 if kiss l cmake; then
     cmake -B build \
-        -DCMAKE_INSTALL_PREFIX=/ \
+        -DCMAKE_INSTALL_PREFIX=/pkg \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_USE_SYSTEM_CURL=False \
         -DCMAKE_USE_SYSTEM_EXPAT=True \
@@ -25,7 +25,7 @@ if kiss l cmake; then
 
 else
     ./configure \
-        --prefix=/ \
+        --prefix=/pkg \
         --no-system-curl \
         --system-expat \
         --system-zlib \
@@ -39,5 +39,5 @@ fi
 
 rm -rf \
     "$1/doc" \
-    "$1/share/cmake"*/Help \
-    "$1/share/bash-completion"
+    "$1/pkg/share/cmake"*/Help \
+    "$1/pkg/share/bash-completion"

@@ -4,18 +4,18 @@ export LDFLAGS="$LDFLAGS -static-pie"
 export CFLAGS="$CFLAGS -fPIE"
 
 ./configure \
-    --prefix=/ \
+    --prefix=/pkg \
     --sysconfdir=/etc \
-    --mandir=/share/man \
+    --mandir=/pkg/share/man \
     --disable-shared
 
 make bin_PROGRAMS=pkgconf
 make bin_PROGRAMS=pkgconf DESTDIR="$1" install
 
-ln -s pkgconf "$1/bin/pkg-config"
+ln -s pkgconf "$1/pkg/bin/pkg-config"
 
 # Remove documentation (README, etc).
-rm -rf "$1/share/doc"
+rm -rf "$1/pkg/share/doc"
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

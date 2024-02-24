@@ -7,7 +7,7 @@ sed "/subdir('tests')/d" tls/meson.build > _
 mv -f _ tls/meson.build
 
 meson setup \
-    -Dprefix=/ \
+    -Dprefix=/pkg \
     -Dsysconfdir=/etc \
     -Dlocalstatedir=/var \
     -Dlibproxy=disabled \

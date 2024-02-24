@@ -7,14 +7,14 @@ for p in *.patch; do
 done
 
 make \
-    prefix=/ \
+    prefix=/pkg \
     CC="$CC -static $LDFLAGS $CFLAGS $CXXFLAGS" \
     -f unix/Makefile generic
 
 make \
     prefix="$1/" \
-    MANDIR="$1/share/man/man1" \
+    MANDIR="$1/pkg/share/man/man1" \
     -f unix/Makefile install
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

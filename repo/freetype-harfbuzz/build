@@ -7,7 +7,7 @@ build_freetype() (
     cd freetype
 
     meson setup \
-        -Dprefix=/ \
+        -Dprefix=/pkg \
         -Ddefault_library=both \
         -Dbzip2=disabled \
         -Dzlib=disabled \
@@ -28,8 +28,8 @@ build_harfbuzz() (
 kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
 
     meson setup \
-        -Dprefix=/ \
-        -Dpkg_config_path="$DESTDIR/lib/pkgconfig" \
+        -Dprefix=/pkg \
+        -Dpkg_config_path="$DESTDIR/pkg/lib/pkgconfig" \
         -Ddefault_library=both \
         -Dglib=disabled \
         -Dfreetype=enabled \
@@ -46,13 +46,13 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
 )
 
 # Point Freetype to the Harfbuzz files.
-export CFLAGS="$CFLAGS -I$DESTDIR/include/harfbuzz"
-export CFLAGS="$CFLAGS -L$DESTDIR/lib "
-export PKG_CONFIG_PATH="$DESTDIR/lib/pkgconfig"
+export CFLAGS="$CFLAGS -I$DESTDIR/pkg/include/harfbuzz"
+export CFLAGS="$CFLAGS -L$DESTDIR/pkg/lib "
+export PKG_CONFIG_PATH="$DESTDIR/pkg/lib/pkgconfig"
 
 # Point Harfbuzz to the Freetype files.
-export CXXFLAGS="$CXXFLAGS -I$DESTDIR/include/freetype2"
-export CXXFLAGS="$CXXFLAGS -L$DESTDIR/lib"
+export CXXFLAGS="$CXXFLAGS -I$DESTDIR/pkg/include/freetype2"
+export CXXFLAGS="$CXXFLAGS -L$DESTDIR/pkg/lib"
 
 build_freetype -Dharfbuzz=disabled
 build_harfbuzz

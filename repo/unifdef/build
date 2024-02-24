@@ -3,7 +3,7 @@
 export DESTDIR="$1"
 
 make
-make prefix=/ install
+make prefix=/pkg install
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

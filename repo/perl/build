@@ -7,8 +7,8 @@ export CFLAGS="$CFLAGS -DNO_POSIX_2008_LOCALE -D_GNU_SOURCE"
 
 ./Configure \
     -des \
-    -Dprefix=/ \
-    -Dvendorprefix=/ \
+    -Dprefix=/pkg \
+    -Dvendorprefix=/pkg \
     -Dusevendorprefix \
     -Duseshrplib \
     -Dusesoname \
@@ -24,10 +24,10 @@ export CFLAGS="$CFLAGS -DNO_POSIX_2008_LOCALE -D_GNU_SOURCE"
     -Dar="$AR" \
     -Dnm="$NM" \
     -Dranlib="$RANLIB" \
-    -Dman1dir=/share/man/man1 \
-    -Dman3dir=/share/man/man3 \
-    -Dinstallman1dir=/share/man/man1 \
-    -Dinstallman3dir=/share/man/man3 \
+    -Dman1dir=/pkg/share/man/man1 \
+    -Dman3dir=/pkg/share/man/man3 \
+    -Dinstallman1dir=/pkg/share/man/man1 \
+    -Dinstallman3dir=/pkg/share/man/man3 \
     -Dman1ext=1 \
     -Dman3ext=3pm \
     -Dperl_static_inline="static __inline__" \
@@ -46,7 +46,7 @@ find "$1" -name \*.bs        -exec rm -f {} +
 find "$1" -name \*.0 -type f -exec rm -f {} +
 
 # Fix permissions.
-find "$1/lib" -type f -exec chmod 644 {} \;
+find "$1/pkg/lib" -type f -exec chmod 644 {} \;
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

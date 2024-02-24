@@ -9,7 +9,7 @@ sed -e 's/\${XINERAMALIBS}//' \
 mv -f _ config.mk
 
 make
-make DESTDIR="$1" PREFIX=/ install
+make DESTDIR="$1" PREFIX=/pkg install
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

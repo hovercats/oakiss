@@ -4,7 +4,7 @@
 export CPPFLAGS="$CPPFLAGS -DSQLITE_ENABLE_COLUMN_METADATA"
 
 ./configure \
-    --prefix=/ \
+    --prefix=/pkg \
     --enable-threadsafe \
     --enable-dynamic-extensions \
     --enable-fts5 \

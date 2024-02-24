@@ -4,9 +4,9 @@
 make LIBS="$LIBS -static"
 make \
 	DESTDIR="$1" \
-    PREFIX=/ \
-    MANDIR=/share/man/man1 \
+    PREFIX=/pkg \
+    MANDIR=/pkg/share/man/man1 \
     install
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9

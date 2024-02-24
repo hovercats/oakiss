@@ -1,13 +1,13 @@
 #!/bin/sh -e
 
 ./configure \
-    --prefix=/ \
+    --prefix=/pkg \
     --sysconfdir=/etc \
-    --mandir=/share/man \
+    --mandir=/pkg/share/man \
     --localstatedir=/var
 
 make
 make DESTDIR="$1" install
 
 # Compress manpages
-find "$1/share/man" -type f | xargs gzip -n -9
+find "$1/pkg/share/man" -type f | xargs gzip -n -9
