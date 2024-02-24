@@ -1,6 +1,8 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
+export XAU_CFLAGS=-I/pkg/include
+export XAU_LIBS=-L/pkg/lib
 
 TMPDIR="$1/tmp"
 
