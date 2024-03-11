@@ -1,8 +1,8 @@
 #!/bin/sh -e
 
 export LDFLAGS="$LDFLAGS -static-pie"
-export XSERVERCFLAGS_CFLAGS="-fPIE"
-export XSERVERLIBS_LIBS="/pkg/lib/*.a -lz -lfreetype -lpng16"
+export XSERVERCFLAGS_CFLAGS="-fPIE -I/pkg/include"
+export XSERVERLIBS_LIBS="-L/pkg/lib /pkg/lib/*.a -lz -lfreetype -lpng16"
 
 ./configure \
   --prefix=/pkg \
