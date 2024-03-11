@@ -9,9 +9,9 @@ TMPDIR="$1/tmp"
     --sysconfdir=/etc \
     --mandir=/pkg/share/man \
     --localstatedir=/var \
-    XAUTH_CFLAGS="-static"
+    XAUTH_CFLAGS="-static -I/pkg/include"
 
-make LIBS="/pkg/lib/*.a /pkg/lib/libXau.a /pkg/lib/libxcb.a"
+make LIBS="-L/pkg/lib /pkg/lib/*.a /pkg/lib/libXau.a /pkg/lib/libxcb.a"
 make install
 
 # Some X11 packages install to /pkg/share.
