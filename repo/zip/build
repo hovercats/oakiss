@@ -12,7 +12,7 @@ make \
     -f unix/Makefile generic
 
 make \
-    prefix="$1/" \
+    prefix="$1/pkg" \
     MANDIR="$1/pkg/share/man/man1" \
     -f unix/Makefile install
 
