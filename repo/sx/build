@@ -15,3 +15,6 @@ chmod 655 sx.1
 
 cp -f sx "$1/pkg/bin"
 cp -f sx.1 "$1/pkg/share/man/man1"
+
+# Compress manpages
+find "$1/pkg/share/man" -type f | xargs gzip -n -9
