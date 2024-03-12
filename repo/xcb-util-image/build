@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+export CFLAGS="$CFLAGS -I/pkg/include"
+export LDFLAGS="$LDFLAGS -L/pkg/lib"
+
 ./configure \
     --prefix=/pkg \
     --disable-shared
