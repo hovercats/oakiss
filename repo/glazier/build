@@ -4,15 +4,18 @@
 (
 cd libwm
 
-export CFLAGS="$CFLAGS -I/."
-export LDFLAGS="$LDFLAGS -L/."
+make \
+	CFLAGS="$CFLAGS -I/. -I/pkg/include" \
+	LDFLAGS="$LDFLAGS -L/. -L/pkg/lib"
 
-make
 )
 
 # change bordercolor
 sed 's/deadca7/836421/' config.def.h > _
 mv _ config.def.h
+
+export CFLAGS="$CFLAGS -I/. -I/pkg/include"
+export LDFLAGS="$LDFLAGS -L/. -L/pkg/lib"
 
 make
 make DESTDIR="$1" PREFIX=/pkg install
