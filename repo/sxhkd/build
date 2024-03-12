@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
-export LDFLAGS="$LDFLAGS -static -lxcb -lXau"
+export LDFLAGS="$LDFLAGS -static -L/pkg/lib -lxcb -lXau"
+export CFLAGS="$CFLAGS -I/pkg/include"
 
 make
 make DESTDIR="$1" PREFIX=/pkg install
