@@ -1,7 +1,4 @@
-libX11    make
-libXau    make
-libXext   make
-libXfixes make
-libXi     make
-libXt     make
-libxcb    make
+libX11
+libXfixes
+libXi
+libXt

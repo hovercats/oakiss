@@ -1,12 +1,8 @@
 #!/bin/sh -e
 
-# LDFLAGS isnt specified, but LIBS is.
-make LIBS="$LIBS -static"
+make
 make \
-	DESTDIR="$1" \
     PREFIX=/pkg \
     MANDIR=/pkg/share/man/man1 \
+	DESTDIR="$1" \
     install
-
-# Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
