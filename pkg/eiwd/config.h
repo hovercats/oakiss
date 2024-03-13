@@ -23,12 +23,12 @@
 #define PACKAGE "iwd"
 #define PACKAGE_BUGREPORT ""
 #define PACKAGE_NAME "iwd"
-#define PACKAGE_STRING "iwd 2.10"
+#define PACKAGE_STRING "iwd 2.14"
 #define PACKAGE_TARNAME "iwd"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "2.10"
+#define PACKAGE_VERSION "2.14"
 #define STDC_HEADERS 1
-#define VERSION "2.10"
+#define VERSION "2.14"
 #define WIRED_STORAGEDIR "/var/lib/ead"
 /* #undef _FILE_OFFSET_BITS */
 /* #undef _LARGE_FILES */
