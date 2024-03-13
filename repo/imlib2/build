@@ -1,11 +1,15 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
+export LIBS="-L/pkg/lib"
+export CFLAGS="$CFLAGS -I/pkg/include"
 
 
 ./configure \
     --prefix=/pkg \
     --sysconfdir=/etc/imlib2 \
+	--x-libraries-=/pkg/lib \
+	--x-includes=/pkg/include  \
     --enable-visibility-hiding
 
 make
