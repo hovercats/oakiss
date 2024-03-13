@@ -13,6 +13,7 @@ mv -f _ src/Makefile.in
     --prefix=/pkg \
     --localstatedir=/var \
     --sysconfdir=/etc \
+    --with-default-fonts=/pkg/share/fonts \
     --with-xmldir=/etc/fonts \
     --enable-static \
     --disable-docs \
