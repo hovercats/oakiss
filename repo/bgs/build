@@ -1,5 +1,8 @@
 #!/bin/sh -e
 
+export CFLAGS="$CFLAGS -I/pkg/include"
+export LDFLAGS="$LDFLAGS -L/pkg/lib -Wl,-rpath=/pkg/lib"
+
 # shellcheck disable=SC2016
 
 # dont use xinerama
