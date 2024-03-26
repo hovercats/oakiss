@@ -50,6 +50,6 @@ return {
 		'catgirl',
 		'sdhcp',
 		'transmission',
-		'eiwd',
+		'wpa_supplicant',
 	},
 }
