@@ -15,6 +15,9 @@
 	path = pkg/catgirl/src
 	url = https://git.causal.agency/catgirl
 	ignore = all
+[submodule "pkg/cproc/src"]
+	path = pkg/cproc/src
+	url = https://git.sr.ht/~mcf/cproc
 [submodule "pkg/dosfstools/src"]
 	path = pkg/dosfstools/src
 	url = https://github.com/dosfstools/dosfstools
@@ -129,6 +132,3 @@
 	path = pkg/qbe/src
 	url = git://c9x.me/qbe.git
 	ignore = all
-[submodule "pkg/cproc/src"]
-	path = pkg/cproc/src
-	url = https://git.sr.ht/~mcf/cproc
