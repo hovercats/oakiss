@@ -54,6 +54,10 @@
 [submodule "pkg/libfido2/src"]
 	path = pkg/libfido2/src
 	url = https://github.com/oasislinux/libfido2.git
+[submodule "pkg/libnl/src"]
+	path = pkg/libnl/src
+	url = https://github.com/thom311/libnl
+	ignore = all
 [submodule "pkg/libtls-bearssl/src"]
 	path = pkg/libtls-bearssl/src
 	url = https://git.sr.ht/~mcf/libtls-bearssl
