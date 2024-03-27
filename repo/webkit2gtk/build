@@ -68,9 +68,9 @@ export LDFLAGS="$LDFLAGS -Wl,--no-keep-memory"
 
 cmake -B build \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/pkg \
-    -DCMAKE_INSTALL_LIBEXECDIR=/pkg/lib \
-    -DLIB_INSTALL_DIR=/pkg/lib \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib \
+    -DLIB_INSTALL_DIR=/usr/lib \
     -DPORT=GTK \
     -DCMAKE_SKIP_RPATH=ON \
     -DENABLE_BUBBLEWRAP_SANDBOX=OFF \

@@ -1,11 +1,8 @@
 #!/bin/sh -e
 
-export LIBS="-L/pkg/lib"
-export CFLAGS="$CFLAGS -I/pkg/include"
-
 ./configure \
-    --prefix=/pkg \
-    --with-fontrootdir=/pkg/share/fonts/X11 \
+    --prefix=/usr \
+    --with-fontrootdir=/usr/share/fonts/X11 \
     --disable-shared
 
 make

@@ -6,7 +6,7 @@ patch -p1 < musl.patch
 export CFLAGS="$CFLAGS -Wno-error"
 
 sh ./configure \
-    --prefix=/pkg \
+    --prefix=/usr \
     --disable-symbol-versioning \
     --disable-debuginfod \
     --disable-libdebuginfod \
@@ -29,4 +29,4 @@ make
 make DESTDIR="$1" install
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

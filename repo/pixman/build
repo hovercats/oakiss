@@ -3,7 +3,7 @@
 export DESTDIR="$1"
 
 meson setup \
-    -Dprefix=/pkg \
+    -Dprefix=/usr \
     -Dgtk=disabled \
     -Ddefault_library=static \
     output

@@ -5,8 +5,8 @@ export DESTDIR="$1"
 : > fuzzing/meson.build
 
 meson setup \
-    -Dprefix=/pkg \
-    -Dlibexecdir=/pkg/lib \
+    -Dprefix=/usr \
+    -Dlibexecdir=/usr/lib \
     -Dlibmount=disabled \
     -Dinstalled_tests=false \
     -Dman=false \
@@ -18,4 +18,4 @@ meson setup \
 samu -C build
 samu -C build install
 
-rm -rf "$1/pkg/bin/gdbus"
+rm -rf "$1/usr/bin/gdbus"

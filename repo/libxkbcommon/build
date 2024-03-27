@@ -3,17 +3,17 @@
 export DESTDIR="$1"
 
 meson setup \
-    -Dprefix=/pkg \
-    -Dlibexecdir=/pkg/lib \
+    -Dprefix=/usr \
+    -Dlibexecdir=/usr/lib \
     -Ddefault_library=static \
     -Denable-docs=false \
     -Denable-wayland=false \
     -Denable-xkbregistry=false \
-    -Dpkg_config_path=/pkg/lib/pkgconfig \
+    -Dpkg_config_path=/usr/lib/pkgconfig \
     output
 
 samu -C output
 samu -C output install
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

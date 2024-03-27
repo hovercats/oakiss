@@ -1,13 +1,12 @@
 #!/bin/sh -e
 
-export LDFLAGS="$LDFLAGS -static -L/pkg/lib -lxcb -lXau"
-export CFLAGS="$CFLAGS -I/pkg/include"
+export LDFLAGS="$LDFLAGS -static -lxcb -lXau"
 
 make
-make DESTDIR="$1" PREFIX=/pkg install
+make DESTDIR="$1" PREFIX=/usr install
 
 # Remove docs
-rm -rf "$1/pkg/share/doc"
+rm -rf "$1/usr/share/doc"
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

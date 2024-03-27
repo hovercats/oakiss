@@ -4,9 +4,10 @@
 (
 cd libwm
 
-make \
-	CFLAGS="$CFLAGS -I/. -I/pkg/include" \
-	LDFLAGS="$LDFLAGS -L/. -L/pkg/lib"
+export CFLAGS="$CFLAGS -I/."
+export LDFLAGS="$LDFLAGS -L/."
+
+make
 
 )
 
@@ -14,15 +15,15 @@ make \
 sed 's/deadca7/836421/' config.def.h > _
 mv _ config.def.h
 
-export CFLAGS="$CFLAGS -I/. -I/pkg/include"
-export LDFLAGS="$LDFLAGS -L/. -L/pkg/lib"
+export CFLAGS="$CFLAGS -I/. -I/usr/include"
+export LDFLAGS="$LDFLAGS -L/. -L/usr/lib"
 
 make
-make DESTDIR="$1" PREFIX=/pkg install
+make DESTDIR="$1" PREFIX=/usr install
 
 # Makefile doesnt install manpages
-mkdir -p     "$1/pkg/share/man/man1"
-cp glazier.1 "$1/pkg/share/man/man1"
+mkdir -p     "$1/usr/share/man/man1"
+cp glazier.1 "$1/usr/share/man/man1"
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

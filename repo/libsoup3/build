@@ -17,7 +17,7 @@ export CFLAGS="$CFLAGS -w"
 export CXXFLAGS="$CXXFLAGS -w"
 
 meson setup \
-    -Dprefix=/pkg \
+    -Dprefix=/usr \
     -Dsysconfdir=/etc \
     -Dlocalstatedir=/var \
     -Dtests=false \

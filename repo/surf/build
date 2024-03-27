@@ -9,7 +9,7 @@ sed 's/4.0/4.1/g' config.mk > _
 mv -f _ config.mk
 
 make
-make DESTDIR="$1" PREFIX=/pkg install
+make DESTDIR="$1" PREFIX=/usr install
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

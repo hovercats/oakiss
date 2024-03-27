@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
-export LIBS="-L/pkg/lib"
-export CFLAGS="$CFLAGS -I/pkg/include"
+export LIBS="-L/usr/lib"
+export CFLAGS="$CFLAGS -I/usr/include"
 
 # Make the build system run /bin/true to generate
 # a dummy file so our pre-generated one is used.
@@ -10,10 +10,10 @@ mv -f _ src/Makefile.in
 
 ./configure \
     GPERF=/bin/true \
-    --prefix=/pkg \
+    --prefix=/usr \
     --localstatedir=/var \
     --sysconfdir=/etc \
-    --with-default-fonts=/pkg/share/fonts \
+    --with-default-fonts=/usr/share/fonts \
     --with-xmldir=/etc/fonts \
     --enable-static \
     --disable-docs \

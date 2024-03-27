@@ -26,7 +26,7 @@ sed '/<atk-bridge.h>/d;/atk_bridge_adaptor_init/d' \
 mv -f _ gtk/a11y/gtkaccessibility.c
 
 meson setup \
-    -Dprefix=/pkg \
+    -Dprefix=/usr \
     -Dx11_backend=true \
     -Dwayland_backend=false \
     -Dxinerama=yes \
@@ -43,4 +43,4 @@ ninja -C output install
 
 # We don't compile with librsvg which leads to this utility solely causing
 # compiler errors for some packages. It has no use at all.
-rm -f "$1/pkg/bin/gtk-encode-symbolic-svg"
+rm -f "$1/usr/bin/gtk-encode-symbolic-svg"

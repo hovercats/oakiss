@@ -2,7 +2,7 @@
 
 ./configure \
 	PROG_LDADD=-all-static \
-    --prefix=/pkg \
+    --prefix=/usr \
     --sysconfdir=/etc \
     --disable-tests
 
@@ -13,4 +13,4 @@ make DESTDIR="$1" install
 rm -rf "$1/etc/ssl"
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

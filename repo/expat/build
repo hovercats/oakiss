@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 ./configure \
-    --prefix=/pkg \
+    --prefix=/usr \
     --without-xmlwf \
     --without-examples \
     --without-tests \
@@ -11,4 +11,4 @@ make
 make DESTDIR="$1" install
 
 # Remove documentation (Changelogs, etc).
-rm -rf "${1:?}/pkg/share"
+rm -rf "${1:?}/usr/share"

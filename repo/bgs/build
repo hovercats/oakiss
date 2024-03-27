@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-export CFLAGS="$CFLAGS -I/pkg/include"
-export LDFLAGS="$LDFLAGS -L/pkg/lib -Wl,-rpath=/pkg/lib"
-
 # shellcheck disable=SC2016
 
 # dont use xinerama
@@ -12,7 +9,7 @@ sed -e 's/\${XINERAMALIBS}//' \
 mv -f _ config.mk
 
 make
-make DESTDIR="$1" PREFIX=/pkg install
+make DESTDIR="$1" PREFIX=/usr install
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

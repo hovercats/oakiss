@@ -7,14 +7,14 @@ sed -e 's/-keeptty//' \
 mv -f _ sx
 
 mkdir -p \
-	"$1/pkg/bin" \
-	"$1/pkg/share/man/man1"
+	"$1/usr/bin" \
+	"$1/usr/share/man/man1"
 
 chmod 755 sx
 chmod 655 sx.1
 
-cp -f sx "$1/pkg/bin"
-cp -f sx.1 "$1/pkg/share/man/man1"
+cp -f sx "$1/usr/bin"
+cp -f sx.1 "$1/usr/share/man/man1"
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

@@ -1,15 +1,13 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
-export LIBS="-L/pkg/lib"
-export CFLAGS="$CFLAGS -I/pkg/include"
 
 TMPDIR="$1/tmp"
 
 ./configure \
-    --prefix=/pkg \
+    --prefix=/usr \
     --sysconfdir=/etc \
-    --mandir=/pkg/share/man \
+    --mandir=/usr/share/man \
     --localstatedir=/var \
     --without-xmlto \
     --disable-specs \
@@ -18,20 +16,20 @@ TMPDIR="$1/tmp"
 make
 make install
 
-# Some X11 packages install to /pkg/share.
-! [ -d "$1/pkg/share/pkgconfig" ] || {
-    mkdir -p "$1/pkg/lib"
-    mv -f "$1/pkg/share/pkgconfig" "$1/pkg/lib"
+# Some X11 packages install to /usr/share.
+! [ -d "$1/usr/share/pkgconfig" ] || {
+    mkdir -p "$1/usr/lib"
+    mv -f "$1/usr/share/pkgconfig" "$1/usr/lib"
 }
 
 # We need to keep this around.
-! [ -d "$1/pkg/share/aclocal" ] || {
+! [ -d "$1/usr/share/aclocal" ] || {
     mkdir -p "$TMPDIR"
-    mv -f "$1/pkg/share/aclocal" "$TMPDIR"
+    mv -f "$1/usr/share/aclocal" "$TMPDIR"
 }
 
 # Restore kept directories.
 ! [ -d "$TMPDIR" ] || {
-    mv -f "$TMPDIR/"* "$1/pkg/share"
+    mv -f "$TMPDIR/"* "$1/usr/share"
     rm -rf "$TMPDIR"
 }

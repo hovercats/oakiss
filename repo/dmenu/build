@@ -5,7 +5,7 @@ for p in *.patch; do
 done
 
 make LDFLAGS="$LDFLAGS -static"
-make DESTDIR="$1" PREFIX=/pkg install
+make DESTDIR="$1" PREFIX=/usr install
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

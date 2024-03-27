@@ -15,9 +15,9 @@ mv -f _ meson.build
 ! kiss list libglvnd >/dev/null 2>&1 || glvnd_enabled=true
 
 meson setup \
-    -Dprefix=/pkg \
+    -Dprefix=/usr \
     -Dsysconfdir=/etc \
-    -Dmandir=/pkg/share/man \
+    -Dmandir=/usr/share/man \
     -Dlocalstatedir=/var \
     -Dbuildtype=release \
     -Dglx-read-only-text=true \

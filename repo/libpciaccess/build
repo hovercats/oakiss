@@ -5,7 +5,7 @@ patch -p1 < lfs64.patch
 export DESTDIR="$1"
 
 meson setup \
-    -Dprefix=/pkg \
+    -Dprefix=/usr \
     -Ddefault_library=static \
     build
 

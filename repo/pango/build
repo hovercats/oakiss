@@ -15,7 +15,7 @@ rm -rf subprojects
 : > docs/meson.build
 
 meson setup \
-    -Dprefix=/pkg \
+    -Dprefix=/usr \
     -Dgtk_doc=false \
     -Dintrospection=disabled \
     output

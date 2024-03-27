@@ -13,7 +13,7 @@ command -v muon > /dev/null || {
 }
 
 muon setup \
-      -Dprefix=/pkg \
+      -Dprefix=/usr \
       -Ddocs=disabled \
       -Dlibcurl=disabled \
       -Dlibpkgconf=disabled \

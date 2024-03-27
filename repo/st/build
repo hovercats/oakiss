@@ -12,9 +12,8 @@ mv -f _ config.mk
 
 make \
 	LDFLAGS="$LDFLAGS -static-pie -lX11 -lXft \
-	-lxcb -lX11-xcb -lXrender -lXau -L/pkg/lib" \
-	CFLAGS="$CFLAGS -fPIE -I/pkg/include"
-make PREFIX=/pkg DESTDIR="$1" install
+	-lxcb -lX11-xcb -lXrender -lXau"
+make PREFIX=/usr DESTDIR="$1" install
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9

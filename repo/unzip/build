@@ -5,9 +5,9 @@ while read -r p; do
 done < series
 
 export DESTDIR="$1"
-export LDFLAGS="$LDFLAGS -static -L/src/oakiss/out/pkg/bzip2"
+export LDFLAGS="$LDFLAGS -static -L/src/oakiss/out/usr/bzip2"
 export CFLAGS="$CFLAGS \
-	-I/src/oakiss/pkg/bzip2/src \
+	-I/src/oakiss/usr/bzip2/src \
 	-D_FILE_OFFSET_BITS=64 \
 	-DWILD_STOP_AT_DIR \
 	-DLARGE_FILE_SUPPORT \
@@ -27,8 +27,8 @@ make \
 
 make \
     prefix="$1/"  \
-    MANDIR=/pkg/share/man/man1 \
+    MANDIR=/usr/share/man/man1 \
     -f unix/Makefile install
 
 # Compress manpages
-find "$1/pkg/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f | xargs gzip -n -9
