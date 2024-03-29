@@ -77,7 +77,7 @@
 #define HAVE_FSEEKO 1
 #define HAVE_FSETXATTR 1
 #define HAVE_FSETXATTR_5 1
-/* #undef HAVE_FSETXATTR_6 */
+/* #undef HAVE_FSETXATTR_5 */
 #define HAVE_FTRUNCATE 1
 #define HAVE_GETADDRINFO 1
 #define HAVE_GETADDRINFO_THREADSAFE 1
@@ -129,6 +129,7 @@
 /* #undef HAVE_LIBBROTLIDEC */
 #define HAVE_LIBGEN_H 1
 /* #undef HAVE_LIBIDN2 */
+/* #undef HAVE_LIBPSL_H */
 /* #undef HAVE_LIBRESSL */
 /* #undef HAVE_LIBRTMP_RTMP_H */
 /* #undef HAVE_LIBSSH */
@@ -282,7 +283,7 @@
 /* #undef USE_LIBRTMP */
 /* #undef USE_LIBSSH */
 /* #undef USE_LIBSSH2 */
-/* #undef USE_MANUAL */
+#define USE_MANUAL 1
 /* #undef USE_MBEDTLS */
 /* #undef USE_MSH3 */
 /* #undef USE_NGHTTP2 */
@@ -305,7 +306,6 @@
 /* #undef USE_THREADS_WIN32 */
 /* #undef USE_TLS_SRP */
 #define USE_UNIX_SOCKETS 1
-/* enable websockets support */
 /* #undef USE_WEBSOCKETS */
 /* #undef USE_WIN32_CRYPTO */
 /* #undef USE_WIN32_IDN */
