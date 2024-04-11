@@ -32,6 +32,6 @@
 /* #undef USE_DBMALLOC */
 /* #undef USE_DMALLOC */
 /* #undef USE_VALGRIND */
-/* #undef YYBTYACC */
+#define YYBTYACC 1
 /* #undef YY_NO_LEAKS */
 /* #undef mode_t */
