@@ -2,6 +2,10 @@
 
 export DESTDIR="$1"
 
+# byacc is only installed as yacc
+sed 's/byacc/yacc/g' meson.build > _
+mv -f _ meson.build
+
 # Fix issues with musl and firefox.
 # https://bugs.freedesktop.org/show_bug.cgi?id=35268
 # https://github.com/mesa3d/mesa/commit/9f37c9903b87f86a533bfaffa72f0ecb285b02b2
