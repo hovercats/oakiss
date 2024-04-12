@@ -27,3 +27,8 @@ make \
     MANDIR=/usr/share/man/man1 \
     -f unix/Makefile install
 
+mkdir -p "$1/usr/share/man/man1"
+cp -f man/*.1 "$1/usr/share/man/man1"
+
+# Compress manpages
+find "$1/usr/share/man" -type f | xargs gzip -n -9
