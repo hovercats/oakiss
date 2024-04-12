@@ -2,6 +2,10 @@
 
 export DESTDIR="$1"
 
+# byacc is only installed as yacc
+sed 's/byacc/yacc/g' meson.build > _
+mv -f _ meson.build
+
 meson setup \
     -Dprefix=/usr \
     -Dlibexecdir=/usr/lib \
