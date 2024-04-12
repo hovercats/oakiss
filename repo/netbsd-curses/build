@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+export LDFLAGS="$LDFLAGS --static"
+
+patch -p1 < prevent-clobbering.patch
+
+make PROGS= all-static 
+make \
+	DESTDIR="$1" \
+	PREFIX=/usr \
+	install-stalibs \
+	install-headers \
+	install-pc-dir

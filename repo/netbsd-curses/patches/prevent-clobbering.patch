@@ -1,0 +1,15 @@
+diff --git a/libcurses/tstp.c b/libcurses/tstp.c
+index e5d3301..e25fd2a 100644
+--- a/libcurses/tstp.c
++++ b/libcurses/tstp.c
+@@ -343,8 +343,8 @@ int
+ reset_prog_mode(void)
+ {
+ 
+-	return tcsetattr(fileno(_cursesi_screen->infd), TCSASOFT | TCSADRAIN,
+-			 &_cursesi_screen->save_termios) ? ERR : OK;
++	__restartwin();
++	return OK;
+ }
+ 
+ int
