@@ -16,7 +16,7 @@ exe('yacc', {
 	'mstring.c',
 	'output.c',
 	'reader.c',
-	'yaccpar.c',
+	'btyaccpar.c',
 	'symtab.c',
 	'verbose.c',
 	'warshall.c',
