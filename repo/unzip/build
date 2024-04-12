@@ -19,13 +19,11 @@ export CFLAGS="$CFLAGS \
 
 make \
     LF2="$LDFLAGS" CF="$CFLAGS $CPPFLAGS -I." \
-    prefix="$1/" \
+    prefix="$1/usr" \
     -f unix/Makefile unzips
 
 make \
-    prefix="$1/"  \
+    prefix="$1/usr"  \
     MANDIR=/usr/share/man/man1 \
     -f unix/Makefile install
 
-# Compress manpages
-find "$1/usr/share/man" -type f | xargs gzip -n -9
