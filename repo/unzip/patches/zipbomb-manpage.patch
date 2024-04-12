@@ -16,7 +16,7 @@ index 21816d1..4d66073 100644
  .IP 11
  no matching files were found.
 +.IP 12
-+invalid zip file with overlapped components (possible zip bomb).
++invalid zip file with overlapped components (possible zip-bomb). The zip-bomb checks can be disabled by using the UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE environment variable.
  .IP 50
  the disk is (or was) full during extraction.
  .IP 51

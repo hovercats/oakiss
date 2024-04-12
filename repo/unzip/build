@@ -1,13 +1,12 @@
 #!/bin/sh -e
 
-while read -r p; do
-    patch -p1 < "$p"
-done < series
+for p in *.patch; do
+	patch -p1 < "$p"
+done
 
 export DESTDIR="$1"
-export LDFLAGS="$LDFLAGS -static -L/src/oakiss/out/usr/bzip2"
+export LDFLAGS="$LDFLAGS -static"
 export CFLAGS="$CFLAGS \
-	-I/src/oakiss/usr/bzip2/src \
 	-D_FILE_OFFSET_BITS=64 \
 	-DWILD_STOP_AT_DIR \
 	-DLARGE_FILE_SUPPORT \
@@ -16,11 +15,9 @@ export CFLAGS="$CFLAGS \
 	-DUTF8_MAYBE_NATIVE \
 	-DNO_LCHMOD \
 	-LDDATE_FORMAT=DF_YMD \
-	-DUSE_BZIP2 \
 	-DNATIVE"
 
 make \
-    D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 \
     LF2="$LDFLAGS" CF="$CFLAGS $CPPFLAGS -I." \
     prefix="$1/" \
     -f unix/Makefile unzips
