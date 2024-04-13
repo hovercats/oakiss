@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+meson setup \
+    -Dprefix=/usr \
+    -Dx11=enabled \
+    -Dmanpage-build=disabled \
+    -Degl=disabled \
+    -Degl-x11=disabled \
+    -Dgl=disabled \
+    -Ddrm=disabled \
+    -Dgbm=disabled \
+    -Dstdatomic=disabled \
+    build
+
+samu -C build
+samu -C build install
+
+# we probably dont need these
+rm -rf \
+    "$1/usr/share/zsh" \
+    "$1/usr/share/bash-completion" \
+    "$1/usr/share/icons"

@@ -1,0 +1,13 @@
+ffmpeg
+freetype-harfbuzz
+libXScrnSaver
+libXext
+libXinerama
+libXpresent
+libXrandr
+libass
+libxkbcommon
+meson make
+pkgconf make
+python  make
+python-docutils make
