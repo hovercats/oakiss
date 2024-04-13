@@ -15,7 +15,7 @@ if kiss l cmake; then
         -DCMAKE_USE_SYSTEM_CURL=False \
         -DCMAKE_USE_SYSTEM_EXPAT=True \
         -DCMAKE_USE_SYSTEM_ZLIB=True \
-        -DCMAKE_USE_SYSTEM_BZIP2=True \
+        -DCMAKE_USE_SYSTEM_BZIP2=False \
         -DCMAKE_USE_SYSTEM_NGHTTP2=False \
         -DBUILD_CursesDialog=OFF \
         -DBUILD_TESTING=OFF
@@ -29,7 +29,7 @@ else
         --no-system-curl \
         --system-expat \
         --system-zlib \
-        --system-bzip2 \
+        --no-system-bzip2 \
         --parallel="$(grep -scF 'core id' /proc/cpuinfo)" -- \
         -DBUILD_CursesDialog=OFF
 
@@ -38,6 +38,6 @@ else
 fi
 
 rm -rf \
-    "$1/doc" \
+    "$1/usr/doc" \
     "$1/usr/share/cmake"*/Help \
     "$1/usr/share/bash-completion"
