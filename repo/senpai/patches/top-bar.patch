@@ -1,0 +1,92 @@
+To: ~delthas/senpai-dev@lists.sr.ht
+Cc: sewn <sewn@disroot.org>
+Subject: [PATCH v1] Move horizontal buffer list to top instead of bottom when width is 0
+Date: Fri, 15 Dec 2023 22:39:28 +0300
+Message-ID: <20231215193929.2227-1-sewn@disroot.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+---
+ app.go   |  4 ++--
+ ui/ui.go | 14 ++++++++------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/app.go b/app.go
+index 3fe3112..4254cad 100644
+--- a/app.go
++++ b/app.go
+@@ -507,7 +507,7 @@ func (app *App) handleMouseEvent(ev *tcell.EventMouse) {
+ 	if ev.Buttons()&tcell.ButtonPrimary != 0 {
+ 		if x < app.win.ChannelWidth() {
+ 			app.win.ClickBuffer(y + app.win.ChannelOffset())
+-		} else if app.win.ChannelWidth() == 0 && y == h-1 {
++		} else if app.win.ChannelWidth() == 0 && y == 0 {
+ 			app.win.ClickBuffer(app.win.HorizontalBufferOffset(x))
+ 		} else if x > w-app.win.MemberWidth() && y >= 2 {
+ 			app.win.ClickMember(y - 2 + app.win.MemberOffset())
+@@ -535,7 +535,7 @@ func (app *App) handleMouseEvent(ev *tcell.EventMouse) {
+ 			if i := y + app.win.ChannelOffset(); i == app.win.ClickedBuffer() {
+ 				app.win.GoToBufferNo(i)
+ 			}
+-		} else if app.win.ChannelWidth() == 0 && y == h-1 {
++		} else if app.win.ChannelWidth() == 0 && y == 0 {
+ 			if i := app.win.HorizontalBufferOffset(x); i >= 0 && i == app.win.ClickedBuffer() {
+ 				app.win.GoToBufferNo(i)
+ 			}
+diff --git a/ui/ui.go b/ui/ui.go
+index 05ba87f..894fdad 100644
+--- a/ui/ui.go
++++ b/ui/ui.go
+@@ -475,31 +475,33 @@ func (ui *UI) Draw(members []irc.Member) {
+ 	w, h := ui.screen.Size()
+ 
+ 	if ui.channelWidth == 0 {
+-		ui.e.Draw(ui.screen, 9+ui.config.NickColWidth, h-2)
++		ui.e.Draw(ui.screen, 9+ui.config.NickColWidth, h-1)
+ 	} else {
+ 		ui.e.Draw(ui.screen, 9+ui.channelWidth+ui.config.NickColWidth, h-1)
+ 	}
+ 
+-	ui.bs.DrawTimeline(ui.screen, ui.channelWidth, 0, ui.config.NickColWidth)
+ 	if ui.channelWidth == 0 {
+-		ui.bs.DrawHorizontalBufferList(ui.screen, 0, h-1, w-ui.memberWidth, &ui.channelOffset)
++		ui.bs.DrawHorizontalBufferList(ui.screen, 0, 0, w-ui.memberWidth, &ui.channelOffset)
++		ui.bs.DrawTimeline(ui.screen, ui.channelWidth, 1, ui.config.NickColWidth)
+ 	} else {
++		ui.bs.DrawTimeline(ui.screen, ui.channelWidth, 0, ui.config.NickColWidth)
+ 		ui.bs.DrawVerticalBufferList(ui.screen, 0, 0, ui.channelWidth, h, &ui.channelOffset)
+ 	}
+ 	if ui.memberWidth != 0 {
+ 		ui.drawVerticalMemberList(ui.screen, w-ui.memberWidth, 0, ui.memberWidth, h, members, &ui.memberOffset)
+ 	}
+ 	if ui.channelWidth == 0 {
+-		ui.drawStatusBar(ui.channelWidth, h-3, w-ui.memberWidth)
++		ui.drawStatusBar(ui.channelWidth, h-2, w-ui.memberWidth)
+ 	} else {
+ 		ui.drawStatusBar(ui.channelWidth, h-2, w-ui.channelWidth-ui.memberWidth)
+ 	}
+ 
+ 	if ui.channelWidth == 0 {
+ 		for x := 0; x < 9+ui.config.NickColWidth; x++ {
++			ui.screen.SetContent(x, h-1, ' ', nil, tcell.StyleDefault)
+ 			ui.screen.SetContent(x, h-2, ' ', nil, tcell.StyleDefault)
+ 		}
+-		printIdent(ui.screen, 7, h-2, ui.config.NickColWidth, ui.prompt)
++		printIdent(ui.screen, 7, h-1, ui.config.NickColWidth, ui.prompt)
+ 	} else {
+ 		for x := ui.channelWidth; x < 9+ui.channelWidth+ui.config.NickColWidth; x++ {
+ 			ui.screen.SetContent(x, h-1, ' ', nil, tcell.StyleDefault)
+@@ -519,7 +521,7 @@ func (ui *UI) ScrollToBuffer() {
+ 	w, h := ui.screen.Size()
+ 	var first int
+ 	if ui.channelWidth > 0 {
+-		first = ui.bs.current - h + 1
++		first = ui.bs.current - h
+ 	} else {
+ 		first = ui.bs.GetLeftMost(w - ui.memberWidth)
+ 	}
+
+base-commit: 5e771831a3196f49d4417e0f913da64a251e8cb5
+-- 
+2.43.0
+
