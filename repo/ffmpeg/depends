@@ -1,0 +1,15 @@
+alsa-lib
+lame
+libass
+libdrm
+libogg
+libressl
+libvorbis
+libvpx
+libwebp
+libxcb
+nasm          make
+opus
+pkgconf make
+xvidcore
+zlib
