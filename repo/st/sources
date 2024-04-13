@@ -1,4 +1,4 @@
-https://dl.suckless.org/st/st-0.9.tar.gz
+https://dl.suckless.org/st/st-0.9.1.tar.gz
 patches/0001-apply-font2-patch.patch
 patches/0002-set-borderpx-to-5.patch
 patches/0003-set-default-cursor-to-_.patch
