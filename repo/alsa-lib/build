@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+# this should be fixed
+# build once with shared libs
+./configure \
+    --prefix=/usr \
+    --without-debug
+
+make
+make DESTDIR="$1" install
+
+# rebuild, but with --static flag, to produce static bins
+./configure \
+    --prefix=/usr \
+    --without-debug \
+    --disable-shared \
+    --enable-static
+
+make LDFLAGS="$LDFLAGS --static"
+make DESTDIR="$1" install
