@@ -1,0 +1,17 @@
+diff --git a/command_mode.c b/command_mode.c
+index 3d00267..a227c6b 100644
+--- a/command_mode.c
++++ b/command_mode.c
+@@ -435,8 +435,10 @@ static void cmd_set(char *arg)
+ 		} else {
+ 			current_win()->changed = 1;
+ 		}
+-		update_titleline();
+-		update_statusline();
++		if (cur_view) {
++			update_titleline();
++			update_statusline();
++		}
+ 	} else {
+ 		struct cmus_opt *opt;
+ 		char buf[OPTION_MAX_SIZE];
