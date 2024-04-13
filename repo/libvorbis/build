@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+./configure \
+    --prefix=/usr
+
+make
+
+make -C lib     install
+make -C include install
+
+make install-m4dataDATA install-pkgconfigDATA
+
