@@ -1,0 +1,49 @@
+diff --git a/lib/Makefile b/lib/Makefile
+index ef20218..440e213 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -154,19 +154,6 @@ ZSTD_DYNLIB_DIR := $(BUILD_DIR)/dynamic
+ ZSTD_DYNLIB := $(ZSTD_DYNLIB_DIR)/$(LIBZSTD)
+ ZSTD_DYNLIB_OBJ := $(addprefix $(ZSTD_DYNLIB_DIR)/,$(ZSTD_LOCAL_OBJ))
+ 
+-$(ZSTD_DYNLIB): | $(ZSTD_DYNLIB_DIR)
+-$(ZSTD_DYNLIB): $(ZSTD_DYNLIB_OBJ)
+-# Check for multithread flag at target execution time
+-	$(if $(filter -DZSTD_MULTITHREAD,$(CPPFLAGS)),\
+-    @echo compiling multi-threaded dynamic library $(LIBVER),\
+-    @echo compiling single-threaded dynamic library $(LIBVER))
+-	$(CC) $(FLAGS) $^ $(LDFLAGS) $(SONAME_FLAGS) -o $@
+-	@echo creating versioned links
+-	ln -sf $@ libzstd.$(SHARED_EXT_MAJOR)
+-	ln -sf $@ libzstd.$(SHARED_EXT)
+-
+-$(LIBZSTD): $(ZSTD_DYNLIB)
+-	cp -f $< $@
+ 
+ endif  # ifndef BUILD_DIR
+ endif  # if windows
+@@ -308,7 +295,7 @@ libzstd.pc: libzstd.pc.in
+ 	        $< >$@
+ 
+ .PHONY: install
+-install: install-pc install-static install-shared install-includes
++install: install-pc install-static install-includes
+ 	@echo zstd static and shared library installed
+ 
+ .PHONY: install-pc
+@@ -324,15 +311,6 @@ install-static:
+ 	@echo Installing static library
+ 	$(INSTALL_DATA) libzstd.a $(DESTDIR)$(LIBDIR)
+ 
+-.PHONY: install-shared
+-install-shared:
+-	# only generate libzstd.so if it's not already present
+-	[ -e $(LIBZSTD) ] || $(MAKE) libzstd-release
+-	[ -e $(DESTDIR)$(LIBDIR) ] || $(INSTALL) -d -m 755 $(DESTDIR)$(LIBDIR)/
+-	@echo Installing shared library
+-	$(INSTALL_PROGRAM) $(LIBZSTD) $(DESTDIR)$(LIBDIR)
+-	ln -sf $(LIBZSTD) $(DESTDIR)$(LIBDIR)/libzstd.$(SHARED_EXT_MAJOR)
+-	ln -sf $(LIBZSTD) $(DESTDIR)$(LIBDIR)/libzstd.$(SHARED_EXT)
+ 
+ .PHONY: install-includes
+ install-includes:
