@@ -1,0 +1,29 @@
+diff --git a/src/make.bash b/src/make.bash
+index 755b3b0b9e..96750b4842 100755
+--- a/src/make.bash
++++ b/src/make.bash
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env bash
++#!/usr/bin/env sh
+ # Copyright 2009 The Go Authors. All rights reserved.
+ # Use of this source code is governed by a BSD-style
+ # license that can be found in the LICENSE file.
+@@ -167,7 +167,7 @@ nogoenv() {
+ }
+ 
+ export GOROOT="$(cd .. && pwd)"
+-IFS=$'\n'; for go_exe in $(type -ap go); do
++for go_exe in $(command -v go); do
+ 	if [ ! -x "$GOROOT_BOOTSTRAP/bin/go" ]; then
+ 		goroot=$(GOROOT= nogoenv "$go_exe" env GOROOT)
+ 		if [ "$goroot" != "$GOROOT" ]; then
+@@ -198,7 +198,9 @@ if [ "$GOROOT_BOOTSTRAP" = "$GOROOT" ]; then
+ 	exit 1
+ fi
+ rm -f cmd/dist/dist
++(
+ GOROOT="$GOROOT_BOOTSTRAP" nogoenv "$GOROOT_BOOTSTRAP/bin/go" build -o cmd/dist/dist ./cmd/dist
++)
+ 
+ # -e doesn't propagate out of eval, so check success by hand.
+ eval $(./cmd/dist/dist env -p || echo FAIL=true)
