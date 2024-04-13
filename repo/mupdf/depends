@@ -1,0 +1,11 @@
+freetype-harfbuzz
+jbig2dec make
+libX11
+libXau
+libXext
+libjpeg-turbo
+libpng
+libressl
+libxcb
+pkgconf make
+zlib

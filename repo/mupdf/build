@@ -1,0 +1,36 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+export CFLAGS="$CFLAGS \
+	-fPIC \
+    -DNDEBUG \
+    -DFZ_ENABLE_JS=0 \
+    -DFZ_ENABLE_JPX=0 \
+    -DFZ_ENABLE_HTML=0 \
+    -DFZ_ENABLE_EPUB=0 \
+    -DNO_CJK \
+    -DFZ_ENABLE_ICC=0 \
+    -DNO_ICC \
+    -DNOTO_SMALL \
+    -DSHARE_JPEG"
+
+for p in *.patch; do
+    patch -p1 < "$p"
+done
+
+make \
+    prefix="/usr" \
+    build=release \
+    HAVE_X11=yes \
+    HAVE_CURL=no \
+    HAVE_WAYLAND=no \
+    HAVE_GLUT=no \
+    USE_SYSTEM_OPENJPEG=no \
+    USE_SYSTEM_LIBS=yes \
+    shared=no \
+    install-apps install-docs
+
+mv -f "$1/usr/bin/mupdf-x11" "$1/usr/bin/mupdf"
+
+# remove docs, but keep manpages
+rm -rf "$1/usr/share/doc"
