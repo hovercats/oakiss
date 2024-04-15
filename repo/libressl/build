@@ -10,7 +10,7 @@ make
 make DESTDIR="$1" install
 
 # Certs is provided elsewhere
-rm -rf "$1/etc/ssl/cacert.pem"
+rm -rf "$1/etc/ssl/cert.pem"
 
 # Compress manpages
 find "$1/usr/share/man" -type f | xargs gzip -n -9
