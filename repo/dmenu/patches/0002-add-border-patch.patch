@@ -1,15 +1,15 @@
-From 531ffb3347100945c4e95951e9304bed7cee97cb Mon Sep 17 00:00:00 2001
+From c534a81cff5ebd7b97dcb9dd6b3f7920ebb08d9d Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Wed, 29 Mar 2023 20:18:05 +0200
-Subject: [PATCH 3/4] add border patch
+Subject: [PATCH 2/3] add border patch
 
 ---
  config.def.h | 3 +++
  dmenu.c      | 6 +++++-
- 3 files changed, 9 insertions(+), 1 deletion(-)
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/config.def.h b/config.def.h
-index 88ef264..be7f0d2 100644
+index 88ef264..5c87304 100644
 --- a/config.def.h
 +++ b/config.def.h
 @@ -23,3 +23,6 @@ static unsigned int lines      = 0;
@@ -20,14 +20,14 @@ index 88ef264..be7f0d2 100644
 +/* Size of the window border */
 +static unsigned int border_width = 2;
 diff --git a/dmenu.c b/dmenu.c
-index 5edb037..3c6f6da 100644
+index b6cfd65..1fae794 100644
 --- a/dmenu.c
 +++ b/dmenu.c
-@@ -709,9 +709,11 @@ setup(void)
+@@ -708,9 +708,11 @@ setup(void)
  	swa.override_redirect = True;
  	swa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
  	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
--	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, 0,
+-	win = XCreateWindow(dpy, root, x, y, mw, mh, 0,
 +	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, border_width,
  	                    CopyFromParent, CopyFromParent, CopyFromParent,
  	                    CWOverrideRedirect | CWBackPixel | CWEventMask, &swa);
@@ -46,5 +46,5 @@ index 5edb037..3c6f6da 100644
  			usage();
  
 -- 
-2.42.0
+2.44.0
 

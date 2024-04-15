@@ -1,14 +1,14 @@
-From df687b9478c0de1f2d7fd1288d214a0812499c58 Mon Sep 17 00:00:00 2001
+From 2a965a8e4faafaec25e49527f997b952d4cb4260 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Sat, 1 Apr 2023 05:38:34 +0200
-Subject: [PATCH 4/4] change colorscheme
+Subject: [PATCH 3/3] change colorscheme
 
 ---
  config.def.h | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/config.def.h b/config.def.h
-index be7f0d2..6a40966 100644
+index 5c87304..898948d 100644
 --- a/config.def.h
 +++ b/config.def.h
 @@ -11,9 +11,9 @@ static const char *fonts[] = {
@@ -25,5 +25,5 @@ index be7f0d2..6a40966 100644
  /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
  static unsigned int lines      = 0;
 -- 
-2.42.0
+2.44.0
 
