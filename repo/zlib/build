@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-patch -p1 < configure-Pass-LDFLAGS-to-link-tests.patch
-
 export CFLAGS="$CFLAGS -fPIC"
 
 ./configure \
