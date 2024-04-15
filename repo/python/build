@@ -20,6 +20,7 @@ export LDFLAGS="$LDFLAGS -fno-semantic-interposition"
     --libdir=/usr/lib \
     --enable-shared \
     --with-system-ffi \
+    --with-system-expat \
     --with-ensurepip=yes \
     --without-pymalloc \
     --disable-ipv6 \
