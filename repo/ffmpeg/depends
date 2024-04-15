@@ -8,7 +8,6 @@ libvorbis
 libvpx
 libwebp
 libxcb
-nasm          make
 opus
 pkgconf make
 xvidcore
