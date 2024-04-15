@@ -11,8 +11,8 @@ TMPDIR="$1/tmp"
     --localstatedir=/var \
     --without-xmlto \
     --disable-specs \
-    --disable-shared \
-    --enable-static
+    --enable-static \
+    --enable-shared
 
 make
 make install
