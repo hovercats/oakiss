@@ -1,0 +1,27 @@
+From 4f0bcda44064d3f11f6f795b60b6dbf02537c2a6 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sun, 14 Apr 2024 23:45:12 +0200
+Subject: [PATCH] login: fix permissions for /dev/tty*
+
+upon logging in, /dev/ttyN should change ownership to $USER.
+This did not occour, which made rc unable to run inside a tty unless ran as root.
+---
+ login.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/login.c b/login.c
+index 25a59e4..a4aaaf6 100644
+--- a/login.c
++++ b/login.c
+@@ -116,6 +116,8 @@ main(int argc, char *argv[])
+ 	tty = ttyname(0);
+ 	if (!tty)
+ 		eprintf("ttyname:");
++	if (fchown(0, uid, gid) < 0)
++		eprintf("fchown:");
+ 
+ 	writeutmp(user, tty);
+ 
+-- 
+2.44.0
+
