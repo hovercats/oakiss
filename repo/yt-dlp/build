@@ -5,4 +5,5 @@ make yt-dlp
 
 chmod 755 yt-dlp
 
+mkdir -p "$1/usr/bin"
 cp -f yt-dlp "$1/usr/bin"
