@@ -4,7 +4,8 @@ for p in *.patch; do
 	patch -p1 < "$p"
 done
 
-make LDFLAGS="$LDFLAGS -static"
+make XINERAMALIBS='' XINERAMAFLAGS='' \
+	X11INC=/usr/include X11LIB=/usr/lib
 make DESTDIR="$1" PREFIX=/usr install
 
 # Compress manpages
