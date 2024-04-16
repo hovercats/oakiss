@@ -8,10 +8,7 @@ export CPPFLAGS="$CPPFLAGS -DSQLITE_ENABLE_COLUMN_METADATA"
     --enable-threadsafe \
     --enable-dynamic-extensions \
     --enable-fts5 \
-    --disable-shared \
-    ac_cv_search_readline=no \
-    CFLAGS="$CFLAGS -fPIE" \
-    LDFLAGS="$LDFLAGS -static-pie"
+    ac_cv_search_readline=no
 
 make
 make DESTDIR="$1" install
