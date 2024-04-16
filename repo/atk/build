@@ -14,5 +14,5 @@ meson setup \
     -Dintrospection="${gi:-false}" \
     output
 
-ninja -C output
-ninja -C output install
+samu -C output
+samu -C output install
