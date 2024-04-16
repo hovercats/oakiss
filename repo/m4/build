@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+export CFLAGS="$CFLAGS -fPIE"
+export LDFLAGS="$LDFLAGS -static-pie"
+
+./configure \
+    --prefix=/usr \
+    --disable-nls \
+    --program-prefix=g
+
+make
+make DESTDIR="$1" install
+
+# Remove info files
+rm -r "$1/usr/share/info"
+
+# Compress manpages
+find "$1/usr/share/man" -type f | xargs gzip -n -9

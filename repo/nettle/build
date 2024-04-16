@@ -6,5 +6,5 @@
     --enable-mini-gmp \
     --disable-documentation
 
-make
+make M4=gm4
 make DESTDIR="$1" install
