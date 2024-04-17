@@ -48,5 +48,10 @@ find "$1" -name \*.0 -type f -exec rm -f {} +
 # Fix permissions.
 find "$1/usr/lib" -type f -exec chmod 644 {} \;
 
+# These 2 are hardlinks, which we cannot compress
+rm -r \
+	"$1/usr/share/man/man1/perlthanks.1" \
+	"$1/usr/share/man/man1/perlbug.1"
+
 # Compress manpages
 find "$1/usr/share/man" -type f | xargs gzip -n -9
