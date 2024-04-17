@@ -1,8 +1,9 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
+export LDFLAGS="$LDFLAGS -static-pie"
 export CFLAGS="$CFLAGS \
-	-fPIC \
+	-fPIE \
     -DNDEBUG \
     -DFZ_ENABLE_JS=0 \
     -DFZ_ENABLE_JPX=0 \
@@ -28,6 +29,8 @@ make \
     USE_SYSTEM_OPENJPEG=no \
     USE_SYSTEM_LIBS=yes \
     shared=no \
+    THIRD_LIBS="/usr/lib/*.a -lfreetype -lharfbuzz -lfontconfig -ljbig2dec -ljpeg -lz -lpng16" \
+    X11_LIBS="-lxcb -lX11 -lXau -lXext" \
     install-apps install-docs
 
 mv -f "$1/usr/bin/mupdf-x11" "$1/usr/bin/mupdf"
