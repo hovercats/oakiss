@@ -1,0 +1,4 @@
+#!/bin/sh 
+
+make CFLAGS="$CFLAGS -I/usr/include"
+make DESTDIR="$1" BIN_DIR="$1/usr/bin" install
