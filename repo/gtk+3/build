@@ -38,8 +38,8 @@ meson setup \
     -Dtests=false \
     output
 
-ninja -C output
-ninja -C output install
+samu -C output
+samu -C output install
 
 # We don't compile with librsvg which leads to this utility solely causing
 # compiler errors for some packages. It has no use at all.
