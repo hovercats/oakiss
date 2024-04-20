@@ -6,6 +6,7 @@ file('bin/kiss-manifest', '755', '$srcdir/contrib/kiss-manifest')
 file('bin/kiss-new', '755', '$srcdir/contrib/kiss-new')
 file('bin/kiss-orphans', '755', '$srcdir/contrib/kiss-orphans')
 file('bin/kiss-outdated', '755', '$srcdir/contrib/kiss-outdated')
+file('bin/kiss-owns', '755', '$srcdir/contrib/kiss-owns')
 file('bin/kiss-revdepends', '755', '$srcdir/contrib/kiss-revdepends')
 file('bin/kiss-size', '755', '$srcdir/contrib/kiss-size')
 
