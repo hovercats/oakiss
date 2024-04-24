@@ -1,14 +1,24 @@
 #!/bin/sh -e
 
+patch -p1 < expr.patch
+
 ./configure \
     --prefix=/usr \
+    --enable-static \
     --with-threads \
     --with-history \
     --without-python \
-    --without-icu
+    --without-icu \
+    --without-readline \
+    --without-lzma
 
 make
 make DESTDIR="$1" install
 
 # Compress manpages
 find "$1/usr/share/man" -type f | xargs gzip -n -9
+
+# Remove docs
+rm -rf \
+	"$1/usr/share/gtk-doc" \
+	"$1/usr/share/doc"
