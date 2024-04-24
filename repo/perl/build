@@ -24,17 +24,13 @@ export CFLAGS="$CFLAGS -DNO_POSIX_2008_LOCALE -D_GNU_SOURCE"
     -Dar="$AR" \
     -Dnm="$NM" \
     -Dranlib="$RANLIB" \
-    -Dman1dir=/usr/share/man/man1 \
-    -Dman3dir=/usr/share/man/man3 \
-    -Dinstallman1dir=/usr/share/man/man1 \
-    -Dinstallman3dir=/usr/share/man/man3 \
     -Dman1ext=1 \
     -Dman3ext=3pm \
     -Dperl_static_inline="static __inline__" \
     -Dd_static_inline
 
 make
-make DESTDIR="$1" install
+make DESTDIR="$1" install.perl
 
 # Remove all unneeded files.
 find "$1" -name \*.pod       -exec rm -f {} +
@@ -44,14 +40,3 @@ find "$1" -name TODO\*       -exec rm -f {} +
 find "$1" -name Change\*     -exec rm -f {} +
 find "$1" -name \*.bs        -exec rm -f {} +
 find "$1" -name \*.0 -type f -exec rm -f {} +
-
-# Fix permissions.
-find "$1/usr/lib" -type f -exec chmod 644 {} \;
-
-# These 2 are hardlinks, which we cannot compress
-rm -r \
-	"$1/usr/share/man/man1/perlthanks.1" \
-	"$1/usr/share/man/man1/perlbug.1"
-
-# Compress manpages
-find "$1/usr/share/man" -type f | xargs gzip -n -9
