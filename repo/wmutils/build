@@ -11,8 +11,5 @@ sed 's/wmp.c.*/wmp.c/' Makefile > _
 mv -f _ Makefile
 
 make
-make DESTDIR="$1" install
+make MANPREFIX=/usr/share DESTDIR="$1" install
 
-# move manpages to correct dir
-mkdir -p "$1/usr/share/"
-mv -f    "$1/usr/man" "$1/usr/share/"
