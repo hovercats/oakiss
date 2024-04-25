@@ -15,4 +15,4 @@ make DESTDIR="$1" install
 rm -r "$1/usr/share/info"
 
 # Compress manpages
-find "$1/usr/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +

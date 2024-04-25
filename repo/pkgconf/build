@@ -18,4 +18,4 @@ ln -s pkgconf "$1/usr/bin/pkg-config"
 rm -rf "$1/usr/share/doc"
 
 # Compress manpages
-find "$1/usr/share/man" -type f | xargs gzip -n -9
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
