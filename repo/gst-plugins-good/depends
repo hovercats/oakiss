@@ -1,0 +1,7 @@
+cairo
+gdk-pixbuf
+glib
+gst-plugins-base
+gstreamer
+meson make
+zlib
