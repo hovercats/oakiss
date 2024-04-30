@@ -1,0 +1,5 @@
+ffmpeg
+glib
+gst-plugins-base
+gstreamer
+meson make
