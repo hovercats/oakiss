@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+meson setup \
+    -Dprefix=/usr \
+    -Dgl=disabled \
+    -Dtests=disabled \
+    -Dtremor=disabled \
+    -Dexamples=disabled \
+    -Dcdparanoia=disabled \
+    -Dintrospection=disabled \
+    -Dnls=disabled \
+    -Ddoc=disabled \
+    -Dalsa=enabled \
+    -Db_colorout=never \
+    output
+
+samu -C output
+samu -C output install
