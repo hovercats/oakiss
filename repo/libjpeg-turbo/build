@@ -4,7 +4,7 @@ export DESTDIR="$1"
 
 patch -p1 < no-docs.patch
 
-cmake -B build \
+cmake -G Ninja -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DCMAKE_INSTALL_BINDIR=/usr/bin \
@@ -15,8 +15,8 @@ cmake -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DWITH_JPEG8=1
 
-cmake --build   build
-cmake --install build
+samu -C build
+samu -C build install
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
