@@ -1,0 +1,5 @@
+glib
+gst-plugins-base
+gstreamer
+libressl
+meson make
