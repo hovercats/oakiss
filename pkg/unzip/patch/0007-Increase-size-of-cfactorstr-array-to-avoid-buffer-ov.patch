@@ -1,0 +1,25 @@
+From 5ba63850818457aa3147ab40adc376ff7dc0f1c9 Mon Sep 17 00:00:00 2001
+From: "Steven M. Schweda" <sms@antinode.info>
+Date: Sat, 15 Jun 2019 18:13:11 -0700
+Subject: [PATCH] Increase size of cfactorstr array to avoid buffer overflow
+
+---
+ list.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/list.c b/list.c
+index 15e0011..5de41e5 100644
+--- a/list.c
++++ b/list.c
+@@ -97,7 +97,7 @@ int list_files(__G)    /* return PK-type error code */
+ {
+     int do_this_file=FALSE, cfactor, error, error_in_archive=PK_COOL;
+ #ifndef WINDLL
+-    char sgn, cfactorstr[10];
++    char sgn, cfactorstr[12];
+     int longhdr=(uO.vflag>1);
+ #endif
+     int date_format;
+-- 
+2.20.1
+
