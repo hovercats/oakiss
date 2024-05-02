@@ -1,3 +1,124 @@
+From bfff2564b939ff39fd50da0f64fb65566a85243d Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 18:19:07 +0200
+Subject: [PATCH 2/2] remove need for atk
+
+this removes accessability altogether.
+---
+ gtk/a11y/gtkbooleancellaccessible.h      |   1 -
+ gtk/a11y/gtkcellaccessible.h             |   4 -
+ gtk/a11y/gtkcontaineraccessibleprivate.h |   2 -
+ gtk/a11y/gtkimagecellaccessible.h        |   1 -
+ gtk/a11y/gtkplugaccessible.h             |  44 --
+ gtk/a11y/gtkrenderercellaccessible.h     |   4 -
+ gtk/a11y/gtktextcellaccessible.h         |   1 -
+ gtk/a11y/gtktoplevelaccessible.h         |   2 -
+ gtk/a11y/gtkwidgetaccessible.h           |   4 -
+ gtk/deprecated/gtkarrow.c                |   2 -
+ gtk/deprecated/gtkcolorsel.c             |  36 --
+ gtk/deprecated/gtkcolorseldialog.c       |   2 -
+ gtk/deprecated/gtkfontsel.c              |  45 --
+ gtk/deprecated/gtkhsv.c                  |   2 -
+ gtk/deprecated/gtktearoffmenuitem.c      |   2 -
+ gtk/gtk-autocleanups.h                   |   1 -
+ gtk/gtk.h                                |   1 -
+ gtk/gtkaccellabel.c                      |   2 -
+ gtk/gtkaccessible.c                      | 185 --------
+ gtk/gtkaccessible.h                      |  15 -
+ gtk/gtkactionbar.c                       |   1 -
+ gtk/gtkassistant.c                       |  71 ----
+ gtk/gtkbox.c                             |   1 -
+ gtk/gtkbutton.c                          |   1 -
+ gtk/gtkcalendar.c                        |   1 -
+ gtk/gtkcellrenderer.c                    |  37 --
+ gtk/gtkcellrendererpixbuf.c              |   4 -
+ gtk/gtkcellrenderertext.c                |   2 -
+ gtk/gtkcellrenderertoggle.c              |   2 -
+ gtk/gtkcheckbutton.c                     |   1 -
+ gtk/gtkcheckmenuitem.c                   |   1 -
+ gtk/gtkcolorchooserwidget.c              |  11 -
+ gtk/gtkcolorplane.c                      |   9 -
+ gtk/gtkcolorscale.c                      |  12 -
+ gtk/gtkcolorswatch.c                     |   1 -
+ gtk/gtkcombobox.c                        |  30 --
+ gtk/gtkcombobox.h                        |   2 -
+ gtk/gtkcontainer.c                       |   6 -
+ gtk/gtkdialog.c                          |   2 -
+ gtk/gtkdrawingarea.c                     |   2 -
+ gtk/gtkentry.c                           |   1 -
+ gtk/gtkentrycompletion.c                 |  18 -
+ gtk/gtkexpander.c                        |   1 -
+ gtk/gtkfilechooserdialog.c               |   2 -
+ gtk/gtkfilechooserwidget.c               |   6 -
+ gtk/gtkflowbox.c                         |   4 -
+ gtk/gtkfontchooserdialog.c               |   2 -
+ gtk/gtkfontchooserwidget.c               |   2 -
+ gtk/gtkframe.c                           |   1 -
+ gtk/gtkglarea.c                          |   2 -
+ gtk/gtkheaderbar.c                       |  19 -
+ gtk/gtkiconview.c                        |  39 --
+ gtk/gtkimage.c                           |   1 -
+ gtk/gtkinfobar.c                         |  38 --
+ gtk/gtklabel.c                           |  12 -
+ gtk/gtklevelbar.c                        |   1 -
+ gtk/gtklinkbutton.c                      |   1 -
+ gtk/gtklistbox.c                         |   6 -
+ gtk/gtklockbutton.c                      |   4 -
+ gtk/gtkmain.c                            |  15 -
+ gtk/gtkmenu.c                            |   1 -
+ gtk/gtkmenubar.c                         |   1 -
+ gtk/gtkmenubutton.c                      |   1 -
+ gtk/gtkmenuitem.c                        |   1 -
+ gtk/gtkmenushell.c                       |   2 -
+ gtk/gtkmessagedialog.c                   |  11 -
+ gtk/gtkmodelbutton.c                     |  31 --
+ gtk/gtkmodelmenuitem.c                   |  10 -
+ gtk/gtknotebook.c                        |   1 -
+ gtk/gtkpaned.c                           |   1 -
+ gtk/gtkpango.c                           | 516 -----------------------
+ gtk/gtkpango.h                           |  13 -
+ gtk/gtkpathbar.c                         |   3 -
+ gtk/gtkplug.c                            |   2 -
+ gtk/gtkpopover.c                         |   1 -
+ gtk/gtkprogressbar.c                     |   1 -
+ gtk/gtkradiobutton.c                     |   1 -
+ gtk/gtkradiomenuitem.c                   |   2 -
+ gtk/gtkrange.c                           |   2 -
+ gtk/gtkscale.c                           |   1 -
+ gtk/gtkscalebutton.c                     |   1 -
+ gtk/gtkscrollbar.c                       |   1 -
+ gtk/gtkscrolledwindow.c                  |   1 -
+ gtk/gtksearchentry.c                     |   6 -
+ gtk/gtkseparator.c                       |   1 -
+ gtk/gtkseparatormenuitem.c               |   1 -
+ gtk/gtksocket.c                          |   2 -
+ gtk/gtkspinbutton.c                      |   1 -
+ gtk/gtkspinner.c                         |   1 -
+ gtk/gtkstack.c                           |   5 -
+ gtk/gtkstatusbar.c                       |   1 -
+ gtk/gtkstylecontext.c                    |  57 ---
+ gtk/gtkstylecontext.h                    |   1 -
+ gtk/gtkstylecontextprivate.h             |   5 -
+ gtk/gtkswitch.c                          |   7 -
+ gtk/gtktextbuffer.c                      | 265 ------------
+ gtk/gtktextbufferprivate.h               |   3 -
+ gtk/gtktextview.c                        |   2 -
+ gtk/gtktogglebutton.c                    |   1 -
+ gtk/gtktoolbar.c                         |   2 -
+ gtk/gtktoolbutton.c                      |   3 -
+ gtk/gtktooltipwindow.c                   |   1 -
+ gtk/gtktreeselection.c                   |   2 -
+ gtk/gtktreeview.c                        |  42 --
+ gtk/gtktreeviewcolumn.c                  |   6 -
+ gtk/gtkviewport.c                        |   2 -
+ gtk/gtkvolumebutton.c                    |   8 -
+ gtk/gtkwidget.c                          | 469 --------------------
+ gtk/gtkwidget.h                          |  15 -
+ gtk/gtkwidgetprivate.h                   |   4 -
+ 110 files changed, 2246 deletions(-)
+
+diff --git a/gtk/a11y/gtkbooleancellaccessible.h b/gtk/a11y/gtkbooleancellaccessible.h
+index ba344e6..6300cfa 100644
 --- a/gtk/a11y/gtkbooleancellaccessible.h
 +++ b/gtk/a11y/gtkbooleancellaccessible.h
 @@ -22,7 +22,6 @@
@@ -8,6 +129,8 @@
  #include <gtk/a11y/gtkrenderercellaccessible.h>
  
  G_BEGIN_DECLS
+diff --git a/gtk/a11y/gtkcellaccessible.h b/gtk/a11y/gtkcellaccessible.h
+index 1195a38..0a80c5f 100644
 --- a/gtk/a11y/gtkcellaccessible.h
 +++ b/gtk/a11y/gtkcellaccessible.h
 @@ -22,7 +22,6 @@
@@ -18,7 +141,7 @@
  #include <gtk/gtk.h>
  
  G_BEGIN_DECLS
-@@ -40,14 +39,11 @@
+@@ -40,14 +39,11 @@ typedef struct _GtkCellAccessiblePrivate GtkCellAccessiblePrivate;
  
  struct _GtkCellAccessible
  {
@@ -33,6 +156,8 @@
    void (*update_cache) (GtkCellAccessible *cell,
                          gboolean           emit_signal);
  };
+diff --git a/gtk/a11y/gtkcontaineraccessibleprivate.h b/gtk/a11y/gtkcontaineraccessibleprivate.h
+index 4d02a73..baf5531 100644
 --- a/gtk/a11y/gtkcontaineraccessibleprivate.h
 +++ b/gtk/a11y/gtkcontaineraccessibleprivate.h
 @@ -23,10 +23,8 @@
@@ -46,6 +171,8 @@
                                                           gint                    index);
  void            _gtk_container_accessible_add           (GtkWidget              *parent,
                                                           GtkWidget              *child);
+diff --git a/gtk/a11y/gtkimagecellaccessible.h b/gtk/a11y/gtkimagecellaccessible.h
+index 5ab1c22..bd0ee82 100644
 --- a/gtk/a11y/gtkimagecellaccessible.h
 +++ b/gtk/a11y/gtkimagecellaccessible.h
 @@ -22,7 +22,6 @@
@@ -56,6 +183,61 @@
  #include <gtk/a11y/gtkrenderercellaccessible.h>
  
  G_BEGIN_DECLS
+diff --git a/gtk/a11y/gtkplugaccessible.h b/gtk/a11y/gtkplugaccessible.h
+index 5be8fe4..b9840af 100644
+--- a/gtk/a11y/gtkplugaccessible.h
++++ b/gtk/a11y/gtkplugaccessible.h
+@@ -24,48 +24,4 @@
+ 
+ #include <gtk/a11y/gtkwindowaccessible.h>
+ 
+-#if ATK_CHECK_VERSION(2,35,1)
+-
+-#define GTK_HAVE_ATK_PLUG_SET_CHILD
+-
+-G_BEGIN_DECLS
+-
+-#define GTK_TYPE_PLUG_ACCESSIBLE                         (gtk_plug_accessible_get_type ())
+-#define GTK_PLUG_ACCESSIBLE(obj)                         (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_PLUG_ACCESSIBLE, GtkPlugAccessible))
+-#define GTK_PLUG_ACCESSIBLE_CLASS(klass)                 (G_TYPE_CHECK_CLASS_CAST ((klass), GTK_TYPE_PLUG_ACCESSIBLE, GtkPlugAccessibleClass))
+-#define GTK_IS_PLUG_ACCESSIBLE(obj)                      (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_PLUG_ACCESSIBLE))
+-#define GTK_IS_PLUG_ACCESSIBLE_CLASS(klass)              (G_TYPE_CHECK_CLASS_TYPE ((klass), GTK_TYPE_PLUG_ACCESSIBLE))
+-#define GTK_PLUG_ACCESSIBLE_GET_CLASS(obj)               (G_TYPE_INSTANCE_GET_CLASS ((obj), GTK_TYPE_PLUG_ACCESSIBLE, GtkPlugAccessibleClass))
+-
+-typedef struct _GtkPlugAccessible        GtkPlugAccessible;
+-typedef struct _GtkPlugAccessibleClass   GtkPlugAccessibleClass;
+-typedef struct _GtkPlugAccessiblePrivate GtkPlugAccessiblePrivate;
+-
+-/**
+- * GtkPlugAccessible:
+- *
+- * Since: 3.24.30
+- */
+-struct _GtkPlugAccessible
+-{
+-  GtkWindowAccessible parent;
+-
+-  GtkPlugAccessiblePrivate *priv;
+-};
+-
+-struct _GtkPlugAccessibleClass
+-{
+-  GtkWindowAccessibleClass parent_class;
+-};
+-
+-GDK_AVAILABLE_IN_ALL
+-GType gtk_plug_accessible_get_type (void);
+-
+-GDK_AVAILABLE_IN_ALL
+-gchar *gtk_plug_accessible_get_id (GtkPlugAccessible *plug);
+-
+-G_END_DECLS
+-
+-#endif /* ATK_CHECK_VERSION(2,35,1) */
+-
+ #endif /* __GTK_PLUG_ACCESSIBLE_H__ */
+diff --git a/gtk/a11y/gtkrenderercellaccessible.h b/gtk/a11y/gtkrenderercellaccessible.h
+index ac39d89..2b97029 100644
 --- a/gtk/a11y/gtkrenderercellaccessible.h
 +++ b/gtk/a11y/gtkrenderercellaccessible.h
 @@ -22,7 +22,6 @@
@@ -66,16 +248,18 @@
  #include <gtk/a11y/gtkcellaccessible.h>
  
  G_BEGIN_DECLS
-@@ -52,9 +51,6 @@
- 
+@@ -53,9 +52,6 @@ struct _GtkRendererCellAccessibleClass
  GDK_AVAILABLE_IN_ALL
  GType      gtk_renderer_cell_accessible_get_type     (void);
--
+ 
 -GDK_AVAILABLE_IN_ALL
 -AtkObject *gtk_renderer_cell_accessible_new          (GtkCellRenderer * renderer);
- 
+-
  G_END_DECLS
  
+ #endif /* __GTK_RENDERER_CELL_ACCESSIBLE_H__ */
+diff --git a/gtk/a11y/gtktextcellaccessible.h b/gtk/a11y/gtktextcellaccessible.h
+index 16a63b7..069fd42 100644
 --- a/gtk/a11y/gtktextcellaccessible.h
 +++ b/gtk/a11y/gtktextcellaccessible.h
 @@ -22,7 +22,6 @@
@@ -86,6 +270,8 @@
  #include <gtk/a11y/gtkrenderercellaccessible.h>
  
  G_BEGIN_DECLS
+diff --git a/gtk/a11y/gtktoplevelaccessible.h b/gtk/a11y/gtktoplevelaccessible.h
+index 9c782b8..59d5372 100644
 --- a/gtk/a11y/gtktoplevelaccessible.h
 +++ b/gtk/a11y/gtktoplevelaccessible.h
 @@ -22,8 +22,6 @@
@@ -97,9 +283,11 @@
  G_BEGIN_DECLS
  
  #define GTK_TYPE_TOPLEVEL_ACCESSIBLE               (gtk_toplevel_accessible_get_type ())
+diff --git a/gtk/a11y/gtkwidgetaccessible.h b/gtk/a11y/gtkwidgetaccessible.h
+index 37fd45b..a623081 100644
 --- a/gtk/a11y/gtkwidgetaccessible.h
 +++ b/gtk/a11y/gtkwidgetaccessible.h
-@@ -39,15 +39,11 @@
+@@ -39,15 +39,11 @@ typedef struct _GtkWidgetAccessiblePrivate GtkWidgetAccessiblePrivate;
  
  struct _GtkWidgetAccessible
  {
@@ -115,9 +303,11 @@
    /*
     * Signal handler for notify signal on GTK widget
     */
+diff --git a/gtk/deprecated/gtkarrow.c b/gtk/deprecated/gtkarrow.c
+index 3312ffc..e22f52c 100644
 --- a/gtk/deprecated/gtkarrow.c
 +++ b/gtk/deprecated/gtkarrow.c
-@@ -139,8 +139,6 @@
+@@ -139,8 +139,6 @@ gtk_arrow_class_init (GtkArrowClass *class)
                                                                 P_("Amount of space used up by arrow"),
                                                                 0.0, 1.0, 0.7,
                                                                 GTK_PARAM_READABLE));
@@ -126,9 +316,11 @@
  }
  
  static void
+diff --git a/gtk/deprecated/gtkcolorsel.c b/gtk/deprecated/gtkcolorsel.c
+index 8152983..af1e9db 100644
 --- a/gtk/deprecated/gtkcolorsel.c
 +++ b/gtk/deprecated/gtkcolorsel.c
-@@ -206,10 +206,6 @@
+@@ -206,10 +206,6 @@ static void     default_noscreen_change_palette_func    (const GdkColor    *colo
  static void     default_change_palette_func             (GdkScreen         *screen,
                                                           const GdkColor    *colors,
                                                           gint               n_colors);
@@ -139,7 +331,7 @@
  
  static void     hsv_changed                             (GtkWidget         *hsv,
                                                           gpointer           data);
-@@ -398,7 +394,6 @@
+@@ -398,7 +394,6 @@ gtk_color_selection_init (GtkColorSelection *colorsel)
    GtkWidget *picker_image;
    gint i, j;
    GtkColorSelectionPrivate *priv;
@@ -147,7 +339,7 @@
    GList *focus_chain = NULL;
  
    gtk_orientable_set_orientation (GTK_ORIENTABLE (colorsel),
-@@ -572,14 +567,6 @@
+@@ -572,14 +567,6 @@ gtk_color_selection_init (GtkColorSelection *colorsel)
        gtk_widget_hide (priv->palette_frame);
      }
  
@@ -162,11 +354,10 @@
    gtk_widget_pop_composite_child ();
  }
  
-@@ -3056,27 +3043,4 @@
-   change_palette_hook = func;
+@@ -3057,26 +3044,3 @@ gtk_color_selection_set_change_palette_with_screen_hook (GtkColorSelectionChange
  
    return old;
--}
+ }
 -
 -static void
 -make_control_relations (AtkObject *atk_obj,
@@ -189,10 +380,12 @@
 -  make_control_relations (atk_obj, priv->red_spinbutton);
 -  make_control_relations (atk_obj, priv->green_spinbutton);
 -  make_control_relations (atk_obj, priv->blue_spinbutton);
- }
+-}
+diff --git a/gtk/deprecated/gtkcolorseldialog.c b/gtk/deprecated/gtkcolorseldialog.c
+index 7ff28ec..19daf9d 100644
 --- a/gtk/deprecated/gtkcolorseldialog.c
 +++ b/gtk/deprecated/gtkcolorseldialog.c
-@@ -158,8 +158,6 @@
+@@ -158,8 +158,6 @@ gtk_color_selection_dialog_class_init (GtkColorSelectionDialogClass *klass)
  						     P_("The help button of the dialog."),
  						     GTK_TYPE_WIDGET,
  						     G_PARAM_READABLE));
@@ -201,6 +394,8 @@
  }
  
  static void
+diff --git a/gtk/deprecated/gtkfontsel.c b/gtk/deprecated/gtkfontsel.c
+index 7812e75..67e3a8e 100644
 --- a/gtk/deprecated/gtkfontsel.c
 +++ b/gtk/deprecated/gtkfontsel.c
 @@ -35,8 +35,6 @@
@@ -212,7 +407,7 @@
  #include "gtkbutton.h"
  #include "gtkcellrenderertext.h"
  #include "gtkentry.h"
-@@ -335,7 +333,6 @@
+@@ -335,7 +333,6 @@ gtk_font_selection_init (GtkFontSelection *fontsel)
    GtkListStore *model;
    GtkTreeViewColumn *column;
    GList *focus_chain = NULL;
@@ -220,7 +415,7 @@
  
    fontsel->priv = gtk_font_selection_get_instance_private (fontsel);
    priv = fontsel->priv;
-@@ -528,47 +525,7 @@
+@@ -528,46 +525,6 @@ gtk_font_selection_init (GtkFontSelection *fontsel)
  
    g_signal_connect (gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->size_list)), "changed",
  		    G_CALLBACK (gtk_font_selection_select_size), fontsel);
@@ -234,7 +429,7 @@
 -      AtkRelationSet *relation_set;
 -      AtkRelation *relation;
 -      AtkObject *obj_array[1];
- 
+-
 -      atk_label = gtk_widget_get_accessible (label);
 -      relation_set = atk_object_ref_relation_set (atk_obj);
 -      relation = atk_relation_set_get_relation_by_type (relation_set, ATK_RELATION_LABELLED_BY);
@@ -264,11 +459,10 @@
 -        }
 -      g_object_unref (relation_set);
 -    }
--
+ 
    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
    gtk_widget_show (vbox);
-   gtk_box_pack_start (GTK_BOX (fontsel), vbox, FALSE, TRUE, 0);
-@@ -1651,8 +1608,6 @@
+@@ -1651,8 +1608,6 @@ static void
  gtk_font_selection_dialog_class_init (GtkFontSelectionDialogClass *klass)
  {
    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
@@ -277,9 +471,11 @@
  }
  
  static void
+diff --git a/gtk/deprecated/gtkhsv.c b/gtk/deprecated/gtkhsv.c
+index 6e30d5e..f76969f 100644
 --- a/gtk/deprecated/gtkhsv.c
 +++ b/gtk/deprecated/gtkhsv.c
-@@ -160,8 +160,6 @@
+@@ -160,8 +160,6 @@ gtk_hsv_class_init (GtkHSVClass *class)
    widget_class->focus = gtk_hsv_focus;
    widget_class->grab_broken_event = gtk_hsv_grab_broken;
  
@@ -288,9 +484,11 @@
    hsv_class->move = gtk_hsv_move;
  
    hsv_signals[CHANGED] =
+diff --git a/gtk/deprecated/gtktearoffmenuitem.c b/gtk/deprecated/gtktearoffmenuitem.c
+index 87fdb80..2cbced9 100644
 --- a/gtk/deprecated/gtktearoffmenuitem.c
 +++ b/gtk/deprecated/gtktearoffmenuitem.c
-@@ -110,8 +110,6 @@
+@@ -110,8 +110,6 @@ gtk_tearoff_menu_item_class_init (GtkTearoffMenuItemClass *klass)
    widget_class->get_preferred_height = gtk_tearoff_menu_item_get_preferred_height;
    widget_class->parent_set = gtk_tearoff_menu_item_parent_set;
  
@@ -299,6 +497,8 @@
    menu_item_class->activate = gtk_tearoff_menu_item_activate;
  }
  
+diff --git a/gtk/gtk-autocleanups.h b/gtk/gtk-autocleanups.h
+index 5c942ce..70f2d5f 100644
 --- a/gtk/gtk-autocleanups.h
 +++ b/gtk/gtk-autocleanups.h
 @@ -21,7 +21,6 @@
@@ -309,6 +509,8 @@
  G_DEFINE_AUTOPTR_CLEANUP_FUNC(GtkActionBar, g_object_unref)
  G_DEFINE_AUTOPTR_CLEANUP_FUNC(GtkActionable, g_object_unref)
  G_DEFINE_AUTOPTR_CLEANUP_FUNC(GtkAdjustment, g_object_unref)
+diff --git a/gtk/gtk.h b/gtk/gtk.h
+index c08454c..5d48f88 100644
 --- a/gtk/gtk.h
 +++ b/gtk/gtk.h
 @@ -32,7 +32,6 @@
@@ -319,9 +521,11 @@
  #include <gtk/gtkactionable.h>
  #include <gtk/gtkactionbar.h>
  #include <gtk/gtkadjustment.h>
+diff --git a/gtk/gtkaccellabel.c b/gtk/gtkaccellabel.c
+index 75b27a8..f734783 100644
 --- a/gtk/gtkaccellabel.c
 +++ b/gtk/gtkaccellabel.c
-@@ -167,8 +167,6 @@
+@@ -167,8 +167,6 @@ gtk_accel_label_class_init (GtkAccelLabelClass *class)
    widget_class->get_preferred_width = gtk_accel_label_get_preferred_width;
    widget_class->destroy = gtk_accel_label_destroy;
  
@@ -330,14 +534,16 @@
    class->signal_quote1 = g_strdup ("<:");
    class->signal_quote2 = g_strdup (":>");
  
+diff --git a/gtk/gtkaccessible.c b/gtk/gtkaccessible.c
+index 9efbb0c..e16fb88 100644
 --- a/gtk/gtkaccessible.c
 +++ b/gtk/gtkaccessible.c
-@@ -50,177 +50,8 @@
+@@ -50,175 +50,6 @@ enum {
    PROP_WIDGET
  };
  
 -static void gtk_accessible_real_connect_widget_destroyed (GtkAccessible *accessible);
- 
+-
 -G_DEFINE_TYPE_WITH_PRIVATE (GtkAccessible, gtk_accessible, ATK_TYPE_OBJECT)
 -
 -static void
@@ -445,7 +651,7 @@
 -							G_PARAM_READWRITE));
 -}
 -
- /**
+-/**
 - * gtk_accessible_set_widget:
 - * @accessible: a #GtkAccessible
 - * @widget: (allow-none): a #GtkWidget or %NULL to unset
@@ -505,12 +711,10 @@
 -
 -  return accessible->priv->widget;
 -}
--
--/**
+ 
+ /**
   * gtk_accessible_connect_widget_destroyed:
-  * @accessible: a #GtkAccessible
-  *
-@@ -242,19 +73,3 @@
+@@ -242,19 +73,3 @@ gtk_accessible_connect_widget_destroyed (GtkAccessible *accessible)
      class->connect_widget_destroyed (accessible);
  }
  
@@ -530,6 +734,8 @@
 -    g_signal_connect (priv->widget, "destroy",
 -                      G_CALLBACK (gtk_accessible_widget_destroyed), accessible);
 -}
+diff --git a/gtk/gtkaccessible.h b/gtk/gtkaccessible.h
+index 9c2229b..85a198d 100644
 --- a/gtk/gtkaccessible.h
 +++ b/gtk/gtkaccessible.h
 @@ -22,34 +22,22 @@
@@ -567,19 +773,21 @@
    void (*connect_widget_destroyed) (GtkAccessible *accessible);
  
    void (*widget_set)               (GtkAccessible *accessible);
-@@ -58,9 +46,6 @@
-   void (*_gtk_reserved3) (void);
+@@ -59,9 +47,6 @@ struct _GtkAccessibleClass
    void (*_gtk_reserved4) (void);
  };
--
+ 
 -GDK_AVAILABLE_IN_ALL
 -GType      gtk_accessible_get_type                 (void) G_GNUC_CONST;
- 
+-
  GDK_AVAILABLE_IN_ALL
  void       gtk_accessible_set_widget               (GtkAccessible *accessible,
+                                                     GtkWidget     *widget);
+diff --git a/gtk/gtkactionbar.c b/gtk/gtkactionbar.c
+index effd494..ea86299 100644
 --- a/gtk/gtkactionbar.c
 +++ b/gtk/gtkactionbar.c
-@@ -351,7 +351,6 @@
+@@ -351,7 +351,6 @@ gtk_action_bar_class_init (GtkActionBarClass *klass)
    gtk_widget_class_bind_template_child_private (widget_class, GtkActionBar, box);
    gtk_widget_class_bind_template_child_private (widget_class, GtkActionBar, revealer);
  
@@ -587,6 +795,8 @@
    gtk_widget_class_set_css_name (widget_class, "actionbar");
  }
  
+diff --git a/gtk/gtkassistant.c b/gtk/gtkassistant.c
+index bad21b3..4a09a7e 100644
 --- a/gtk/gtkassistant.c
 +++ b/gtk/gtkassistant.c
 @@ -58,8 +58,6 @@
@@ -598,7 +808,7 @@
  #include "gtkassistant.h"
  
  #include "gtkbutton.h"
-@@ -405,8 +403,6 @@
+@@ -405,8 +403,6 @@ gtk_assistant_class_init (GtkAssistantClass *class)
    widget_class->unmap = gtk_assistant_unmap;
    widget_class->delete_event = gtk_assistant_delete_event;
  
@@ -607,7 +817,7 @@
    container_class->add = gtk_assistant_add;
    container_class->remove = gtk_assistant_remove;
    container_class->set_child_property = gtk_assistant_set_child_property;
-@@ -2534,76 +2530,9 @@
+@@ -2534,76 +2530,9 @@ gtk_assistant_commit (GtkAssistant *assistant)
  typedef GtkWindowAccessible      GtkAssistantAccessible;
  typedef GtkWindowAccessibleClass GtkAssistantAccessibleClass;
  
@@ -684,9 +894,11 @@
  }
  
  static void
+diff --git a/gtk/gtkbox.c b/gtk/gtkbox.c
+index c372f9c..161bb54 100644
 --- a/gtk/gtkbox.c
 +++ b/gtk/gtkbox.c
-@@ -370,7 +370,6 @@
+@@ -370,7 +370,6 @@ gtk_box_class_init (GtkBoxClass *class)
  
    gtk_container_class_install_child_properties (container_class, LAST_CHILD_PROP, child_props);
  
@@ -694,9 +906,11 @@
    gtk_widget_class_set_css_name (widget_class, "box");
  }
  
+diff --git a/gtk/gtkbutton.c b/gtk/gtkbutton.c
+index 26b7ffb..c9744a8 100644
 --- a/gtk/gtkbutton.c
 +++ b/gtk/gtkbutton.c
-@@ -630,7 +630,6 @@
+@@ -630,7 +630,6 @@ gtk_button_class_init (GtkButtonClass *klass)
  							     2,
  							     GTK_PARAM_READABLE | G_PARAM_DEPRECATED));
  
@@ -704,9 +918,11 @@
    gtk_widget_class_set_css_name (widget_class, "button");
  }
  
+diff --git a/gtk/gtkcalendar.c b/gtk/gtkcalendar.c
+index 5f1a5d5..2c2e141 100644
 --- a/gtk/gtkcalendar.c
 +++ b/gtk/gtkcalendar.c
-@@ -680,7 +680,6 @@
+@@ -680,7 +680,6 @@ gtk_calendar_class_init (GtkCalendarClass *class)
                    NULL,
                    G_TYPE_NONE, 0);
  
@@ -714,9 +930,11 @@
    gtk_widget_class_set_css_name (widget_class, "calendar");
  }
  
+diff --git a/gtk/gtkcellrenderer.c b/gtk/gtkcellrenderer.c
+index d10cd09..c3e68d3 100644
 --- a/gtk/gtkcellrenderer.c
 +++ b/gtk/gtkcellrenderer.c
-@@ -443,8 +443,6 @@
+@@ -443,8 +443,6 @@ G_GNUC_END_IGNORE_DEPRECATIONS
  
    if (GtkCellRenderer_private_offset != 0)
      g_type_class_adjust_private_offset (class, &GtkCellRenderer_private_offset);
@@ -725,12 +943,10 @@
  }
  
  static void
-@@ -1848,40 +1846,5 @@
-     state |= GTK_STATE_FLAG_SELECTED;
- 
+@@ -1850,38 +1848,3 @@ gtk_cell_renderer_get_state (GtkCellRenderer      *cell,
    return state;
--}
--
+ }
+ 
 -/**
 - * gtk_cell_renderer_class_set_accessible_type:
 - * @renderer_class: class to set the accessible type for
@@ -764,11 +980,13 @@
 -  g_return_val_if_fail (GTK_IS_CELL_RENDERER (renderer), GTK_TYPE_RENDERER_CELL_ACCESSIBLE);
 -
 -  return GTK_CELL_RENDERER_GET_CLASS (renderer)->priv->accessible_type;
- }
- 
+-}
+-
+diff --git a/gtk/gtkcellrendererpixbuf.c b/gtk/gtkcellrendererpixbuf.c
+index e24f956..f4c9baf 100644
 --- a/gtk/gtkcellrendererpixbuf.c
 +++ b/gtk/gtkcellrendererpixbuf.c
-@@ -282,10 +282,6 @@
+@@ -282,10 +282,6 @@ gtk_cell_renderer_pixbuf_class_init (GtkCellRendererPixbufClass *class)
                                                          P_("The GIcon being displayed"),
                                                          G_TYPE_ICON,
                                                          GTK_PARAM_READWRITE));
@@ -779,9 +997,11 @@
  }
  
  static void
+diff --git a/gtk/gtkcellrenderertext.c b/gtk/gtkcellrenderertext.c
+index 32eb155..aed7c6d 100644
 --- a/gtk/gtkcellrenderertext.c
 +++ b/gtk/gtkcellrenderertext.c
-@@ -692,8 +692,6 @@
+@@ -692,8 +692,6 @@ G_GNUC_END_IGNORE_DEPRECATIONS
    g_signal_set_va_marshaller (text_cell_renderer_signals [EDITED],
                                G_OBJECT_CLASS_TYPE (object_class),
                                _gtk_marshal_VOID__STRING_STRINGv);
@@ -790,9 +1010,11 @@
  }
  
  static void
+diff --git a/gtk/gtkcellrenderertoggle.c b/gtk/gtkcellrenderertoggle.c
+index ea5aebf..ca75f9d 100644
 --- a/gtk/gtkcellrenderertoggle.c
 +++ b/gtk/gtkcellrenderertoggle.c
-@@ -196,8 +196,6 @@
+@@ -196,8 +196,6 @@ gtk_cell_renderer_toggle_class_init (GtkCellRendererToggleClass *class)
  		  NULL,
  		  G_TYPE_NONE, 1,
  		  G_TYPE_STRING);
@@ -801,9 +1023,11 @@
  }
  
  static void
+diff --git a/gtk/gtkcheckbutton.c b/gtk/gtkcheckbutton.c
+index a274524..2a89fb3 100644
 --- a/gtk/gtkcheckbutton.c
 +++ b/gtk/gtkcheckbutton.c
-@@ -253,7 +253,6 @@
+@@ -253,7 +253,6 @@ gtk_check_button_class_init (GtkCheckButtonClass *class)
  							     INDICATOR_SPACING,
  							     GTK_PARAM_READABLE|G_PARAM_DEPRECATED));
  
@@ -811,9 +1035,11 @@
    gtk_widget_class_set_css_name (widget_class, "checkbutton");
  }
  
+diff --git a/gtk/gtkcheckmenuitem.c b/gtk/gtkcheckmenuitem.c
+index b3b32d2..ef71fb5 100644
 --- a/gtk/gtkcheckmenuitem.c
 +++ b/gtk/gtkcheckmenuitem.c
-@@ -271,7 +271,6 @@
+@@ -271,7 +271,6 @@ gtk_check_menu_item_class_init (GtkCheckMenuItemClass *klass)
                    NULL,
                    G_TYPE_NONE, 0);
  
@@ -821,9 +1047,11 @@
    gtk_widget_class_set_css_name (widget_class, "menuitem");
  }
  
+diff --git a/gtk/gtkcolorchooserwidget.c b/gtk/gtkcolorchooserwidget.c
+index 9fca31d..1aea899 100644
 --- a/gtk/gtkcolorchooserwidget.c
 +++ b/gtk/gtkcolorchooserwidget.c
-@@ -344,7 +344,6 @@
+@@ -344,7 +344,6 @@ add_palette (GtkColorChooserWidget  *cc,
  {
    GtkWidget *grid;
    GtkWidget *p;
@@ -831,7 +1059,7 @@
    gint line, pos;
    gint i;
    gint left, right;
-@@ -373,11 +372,8 @@
+@@ -373,11 +372,8 @@ add_palette (GtkColorChooserWidget  *cc,
    for (i = 0; i < n_colors; i++)
      {
        p = gtk_color_swatch_new ();
@@ -843,7 +1071,7 @@
          }
        else
          {
-@@ -385,7 +381,6 @@
+@@ -385,7 +381,6 @@ add_palette (GtkColorChooserWidget  *cc,
  
            name = accessible_color_name (&colors[i]);
            text = g_strdup_printf (_("Color: %s"), name);
@@ -851,7 +1079,7 @@
            g_free (text);
            g_free (name);
          }
-@@ -513,7 +508,6 @@
+@@ -513,7 +508,6 @@ gtk_color_chooser_widget_init (GtkColorChooserWidget *cc)
    GVariant *variant;
    GVariantIter iter;
    gboolean selected;
@@ -859,7 +1087,7 @@
    gchar *text, *name;
  
    cc->priv = gtk_color_chooser_widget_get_instance_private (cc);
-@@ -537,9 +531,6 @@
+@@ -537,9 +531,6 @@ gtk_color_chooser_widget_init (GtkColorChooserWidget *cc)
  
    cc->priv->button = button = gtk_color_swatch_new ();
    gtk_widget_set_name (button, "add-color-button");
@@ -869,7 +1097,7 @@
    connect_button_signals (button, cc);
    gtk_color_swatch_set_icon (GTK_COLOR_SWATCH (button), "list-add-symbolic");
    gtk_color_swatch_set_selectable (GTK_COLOR_SWATCH (button), FALSE);
-@@ -556,10 +547,8 @@
+@@ -556,10 +547,8 @@ gtk_color_chooser_widget_init (GtkColorChooserWidget *cc)
        p = gtk_color_swatch_new ();
        gtk_color_swatch_set_rgba (GTK_COLOR_SWATCH (p), &color);
        gtk_color_swatch_set_can_drop (GTK_COLOR_SWATCH (p), TRUE);
@@ -880,9 +1108,11 @@
        g_free (text);
        g_free (name);
        connect_custom_signals (p, cc);
+diff --git a/gtk/gtkcolorplane.c b/gtk/gtkcolorplane.c
+index aa964bb..8217b9a 100644
 --- a/gtk/gtkcolorplane.c
 +++ b/gtk/gtkcolorplane.c
-@@ -392,8 +392,6 @@
+@@ -392,8 +392,6 @@ plane_drag_gesture_end (GtkGestureDrag *gesture,
  static void
  gtk_color_plane_init (GtkColorPlane *plane)
  {
@@ -891,23 +1121,25 @@
    plane->priv = gtk_color_plane_get_instance_private (plane);
  
    gtk_widget_set_can_focus (GTK_WIDGET (plane), TRUE);
-@@ -402,13 +400,6 @@
-                                              | GDK_BUTTON_PRESS_MASK
+@@ -403,13 +401,6 @@ gtk_color_plane_init (GtkColorPlane *plane)
                                               | GDK_BUTTON_RELEASE_MASK
                                               | GDK_POINTER_MOTION_MASK);
--
+ 
 -  atk_obj = gtk_widget_get_accessible (GTK_WIDGET (plane));
 -  if (GTK_IS_ACCESSIBLE (atk_obj))
 -    {
 -      atk_object_set_name (atk_obj, _("Color Plane"));
 -      atk_object_set_role (atk_obj, ATK_ROLE_COLOR_CHOOSER);
 -    }
- 
+-
    plane->priv->drag_gesture = gtk_gesture_drag_new (GTK_WIDGET (plane));
    g_signal_connect (plane->priv->drag_gesture, "drag-begin",
+ 		    G_CALLBACK (plane_drag_gesture_begin), plane);
+diff --git a/gtk/gtkcolorscale.c b/gtk/gtkcolorscale.c
+index be1123d..47fad0d 100644
 --- a/gtk/gtkcolorscale.c
 +++ b/gtk/gtkcolorscale.c
-@@ -200,19 +200,7 @@
+@@ -200,19 +200,7 @@ static void
  scale_set_type (GtkColorScale     *scale,
                  GtkColorScaleType  type)
  {
@@ -927,9 +1159,11 @@
  }
  
  static void
+diff --git a/gtk/gtkcolorswatch.c b/gtk/gtkcolorswatch.c
+index 106a19b..a5e9bb7 100644
 --- a/gtk/gtkcolorswatch.c
 +++ b/gtk/gtkcolorswatch.c
-@@ -725,7 +725,6 @@
+@@ -725,7 +725,6 @@ gtk_color_swatch_class_init (GtkColorSwatchClass *class)
        g_param_spec_boolean ("has-menu", P_("Has Menu"), P_("Whether the swatch should offer customization"),
                              TRUE, GTK_PARAM_READWRITE));
  
@@ -937,9 +1171,11 @@
    gtk_widget_class_set_css_name (widget_class, "colorswatch");
  }
  
+diff --git a/gtk/gtkcombobox.c b/gtk/gtkcombobox.c
+index ef4996c..8c93248 100644
 --- a/gtk/gtkcombobox.c
 +++ b/gtk/gtkcombobox.c
-@@ -1255,7 +1255,6 @@
+@@ -1255,7 +1255,6 @@ gtk_combo_box_class_init (GtkComboBoxClass *klass)
    gtk_widget_class_bind_template_child_internal_private (widget_class, GtkComboBox, arrow);
    gtk_widget_class_bind_template_callback (widget_class, gtk_combo_box_button_toggled);
  
@@ -947,11 +1183,10 @@
    gtk_widget_class_set_css_name (widget_class, "combobox");
  }
  
-@@ -4639,35 +4638,6 @@
-   return combo_box->priv->popup_fixed_width;
+@@ -4640,35 +4639,6 @@ gtk_combo_box_get_popup_fixed_width (GtkComboBox *combo_box)
  }
  
--
+ 
 -/**
 - * gtk_combo_box_get_popup_accessible:
 - * @combo_box: a #GtkComboBox
@@ -980,12 +1215,15 @@
 -
 -  return NULL;
 -}
- 
+-
  /**
   * gtk_combo_box_get_row_separator_func: (skip)
+  * @combo_box: a #GtkComboBox
+diff --git a/gtk/gtkcombobox.h b/gtk/gtkcombobox.h
+index c886983..6835e9f 100644
 --- a/gtk/gtkcombobox.h
 +++ b/gtk/gtkcombobox.h
-@@ -181,8 +181,6 @@
+@@ -181,8 +181,6 @@ void          gtk_combo_box_popup_for_device (GtkComboBox     *combo_box,
                                                GdkDevice       *device);
  GDK_AVAILABLE_IN_ALL
  void          gtk_combo_box_popdown          (GtkComboBox     *combo_box);
@@ -994,9 +1232,11 @@
  
  GDK_AVAILABLE_IN_ALL
  gint          gtk_combo_box_get_id_column        (GtkComboBox *combo_box);
+diff --git a/gtk/gtkcontainer.c b/gtk/gtkcontainer.c
+index 435a233..c69f265 100644
 --- a/gtk/gtkcontainer.c
 +++ b/gtk/gtkcontainer.c
-@@ -591,8 +591,6 @@
+@@ -591,8 +591,6 @@ gtk_container_class_init (GtkContainerClass *class)
  
    if (GtkContainer_private_offset != 0)
      g_type_class_adjust_private_offset (class, &GtkContainer_private_offset);
@@ -1005,7 +1245,7 @@
  }
  
  static void
-@@ -1875,8 +1873,6 @@
+@@ -1875,8 +1873,6 @@ gtk_container_add (GtkContainer *container,
      }
  
    g_signal_emit (container, container_signals[ADD], 0, widget);
@@ -1014,18 +1254,20 @@
  }
  
  /**
-@@ -1905,8 +1901,6 @@
-   g_object_ref (widget);
+@@ -1906,8 +1902,6 @@ gtk_container_remove (GtkContainer *container,
  
    g_signal_emit (container, container_signals[REMOVE], 0, widget);
--
--  _gtk_container_accessible_remove (GTK_WIDGET (container), widget);
  
+-  _gtk_container_accessible_remove (GTK_WIDGET (container), widget);
+-
    g_object_unref (widget);
    g_object_unref (container);
+ }
+diff --git a/gtk/gtkdialog.c b/gtk/gtkdialog.c
+index 0e58ac4..dd87df4 100644
 --- a/gtk/gtkdialog.c
 +++ b/gtk/gtkdialog.c
-@@ -533,8 +533,6 @@
+@@ -533,8 +533,6 @@ gtk_dialog_class_init (GtkDialogClass *class)
    widget_class->map = gtk_dialog_map;
    widget_class->style_updated = gtk_dialog_style_updated;
  
@@ -1034,9 +1276,11 @@
    class->close = gtk_dialog_close;
  
    /**
+diff --git a/gtk/gtkdrawingarea.c b/gtk/gtkdrawingarea.c
+index 261bf34..7a5b6e3 100644
 --- a/gtk/gtkdrawingarea.c
 +++ b/gtk/gtkdrawingarea.c
-@@ -135,8 +135,6 @@
+@@ -135,8 +135,6 @@ gtk_drawing_area_class_init (GtkDrawingAreaClass *class)
    widget_class->realize = gtk_drawing_area_realize;
    widget_class->size_allocate = gtk_drawing_area_size_allocate;
    widget_class->style_updated = gtk_drawing_area_style_updated;
@@ -1045,9 +1289,11 @@
  }
  
  static void
+diff --git a/gtk/gtkentry.c b/gtk/gtkentry.c
+index 4078855..7dd9f1a 100644
 --- a/gtk/gtkentry.c
 +++ b/gtk/gtkentry.c
-@@ -2125,7 +2125,6 @@
+@@ -2125,7 +2125,6 @@ gtk_entry_class_init (GtkEntryClass *class)
    gtk_binding_entry_add_signal (binding_set, GDK_KEY_semicolon, GDK_CONTROL_MASK,
                                  "insert-emoji", 0);
  
@@ -1055,9 +1301,11 @@
    gtk_widget_class_set_css_name (widget_class, "entry");
  }
  
+diff --git a/gtk/gtkentrycompletion.c b/gtk/gtkentrycompletion.c
+index ea159fe..0c04e53 100644
 --- a/gtk/gtkentrycompletion.c
 +++ b/gtk/gtkentrycompletion.c
-@@ -2634,30 +2634,12 @@
+@@ -2634,30 +2634,12 @@ static void
  set_accessible_relation (GtkWidget *window,
                           GtkWidget *entry)
  {
@@ -1088,9 +1336,11 @@
  }
  
  static void
+diff --git a/gtk/gtkexpander.c b/gtk/gtkexpander.c
+index 8cfbdb3..78f30d9 100644
 --- a/gtk/gtkexpander.c
 +++ b/gtk/gtkexpander.c
-@@ -427,7 +427,6 @@
+@@ -427,7 +427,6 @@ gtk_expander_class_init (GtkExpanderClass *klass)
                    NULL,
                    G_TYPE_NONE, 0);
  
@@ -1098,9 +1348,11 @@
    gtk_widget_class_set_css_name (widget_class, "expander");
  }
  
+diff --git a/gtk/gtkfilechooserdialog.c b/gtk/gtkfilechooserdialog.c
+index db1d8f6..e577f8e 100644
 --- a/gtk/gtkfilechooserdialog.c
 +++ b/gtk/gtkfilechooserdialog.c
-@@ -265,8 +265,6 @@
+@@ -265,8 +265,6 @@ gtk_file_chooser_dialog_class_init (GtkFileChooserDialogClass *class)
    widget_class->unmap = gtk_file_chooser_dialog_unmap;
    widget_class->size_allocate = gtk_file_chooser_dialog_size_allocate;
  
@@ -1109,9 +1361,11 @@
    _gtk_file_chooser_install_properties (gobject_class);
  
    /* Bind class to template
+diff --git a/gtk/gtkfilechooserwidget.c b/gtk/gtkfilechooserwidget.c
+index ab531f7..46acc87 100644
 --- a/gtk/gtkfilechooserwidget.c
 +++ b/gtk/gtkfilechooserwidget.c
-@@ -8753,7 +8753,6 @@
+@@ -8758,7 +8758,6 @@ gtk_file_chooser_widget_class_init (GtkFileChooserWidgetClass *class)
    gtk_widget_class_bind_template_callback (widget_class, rename_file_rename_clicked);
    gtk_widget_class_bind_template_callback (widget_class, rename_file_end);
  
@@ -1119,7 +1373,7 @@
    gtk_widget_class_set_css_name (widget_class, "filechooser");
  }
  
-@@ -8762,7 +8761,6 @@
+@@ -8767,7 +8766,6 @@ post_process_ui (GtkFileChooserWidget *impl)
  {
    GtkTreeSelection *selection;
    GtkCellRenderer *cell;
@@ -1127,20 +1381,22 @@
    GList *cells;
    GFile *file;
  
-@@ -8818,10 +8816,6 @@
-    * that priv->icon_size be already setup.
+@@ -8824,10 +8822,6 @@ post_process_ui (GtkFileChooserWidget *impl)
     */
    set_icon_cell_renderer_fixed_size (impl);
--
+ 
 -  atk_obj = gtk_widget_get_accessible (impl->priv->browse_new_folder_button);
 -  if (GTK_IS_ACCESSIBLE (atk_obj))
 -    atk_object_set_name (atk_obj, _("Create Folder"));
- 
+-
    gtk_popover_set_default_widget (GTK_POPOVER (impl->priv->new_folder_popover), impl->priv->new_folder_create_button);
    gtk_popover_set_default_widget (GTK_POPOVER (impl->priv->rename_file_popover), impl->priv->rename_file_rename_button);
+   gtk_popover_set_relative_to (GTK_POPOVER (impl->priv->rename_file_popover), impl->priv->browse_files_tree_view);
+diff --git a/gtk/gtkflowbox.c b/gtk/gtkflowbox.c
+index cd7bd83..9abf11f 100644
 --- a/gtk/gtkflowbox.c
 +++ b/gtk/gtkflowbox.c
-@@ -635,7 +635,6 @@
+@@ -635,7 +635,6 @@ gtk_flow_box_child_class_init (GtkFlowBoxChildClass *class)
                    G_TYPE_NONE, 0);
    widget_class->activate_signal = child_signals[CHILD_ACTIVATE];
  
@@ -1148,7 +1404,7 @@
    gtk_widget_class_set_css_name (widget_class, "flowboxchild");
  }
  
-@@ -1025,7 +1024,6 @@
+@@ -1025,7 +1024,6 @@ gtk_flow_box_update_cursor (GtkFlowBox      *box,
    BOX_PRIV (box)->cursor_child = child;
    gtk_widget_grab_focus (GTK_WIDGET (child));
    gtk_widget_queue_draw (GTK_WIDGET (child));
@@ -1156,7 +1412,7 @@
  }
  
  static void
-@@ -3645,7 +3643,6 @@
+@@ -3645,7 +3643,6 @@ gtk_flow_box_move_cursor (GtkFlowBox      *box,
  static void
  gtk_flow_box_selected_children_changed (GtkFlowBox *box)
  {
@@ -1164,7 +1420,7 @@
  }
  
  /* GObject implementation {{{2 */
-@@ -4100,7 +4097,6 @@
+@@ -4100,7 +4097,6 @@ gtk_flow_box_class_init (GtkFlowBoxClass *class)
    gtk_binding_entry_add_signal (binding_set, GDK_KEY_a, GDK_CONTROL_MASK | GDK_SHIFT_MASK,
                                  "unselect-all", 0);
  
@@ -1172,6 +1428,8 @@
    gtk_widget_class_set_css_name (widget_class, "flowbox");
  }
  
+diff --git a/gtk/gtkfontchooserdialog.c b/gtk/gtkfontchooserdialog.c
+index 723412f..9b2b349 100644
 --- a/gtk/gtkfontchooserdialog.c
 +++ b/gtk/gtkfontchooserdialog.c
 @@ -22,8 +22,6 @@
@@ -1183,6 +1441,8 @@
  #include "gtkfontchooserdialog.h"
  #include "gtkfontchooser.h"
  #include "gtkfontchooserwidget.h"
+diff --git a/gtk/gtkfontchooserwidget.c b/gtk/gtkfontchooserwidget.c
+index 50f3b2f..a610e3e 100644
 --- a/gtk/gtkfontchooserwidget.c
 +++ b/gtk/gtkfontchooserwidget.c
 @@ -21,8 +21,6 @@
@@ -1194,9 +1454,11 @@
  #include "gtkfontchooserwidget.h"
  #include "gtkfontchooserwidgetprivate.h"
  
+diff --git a/gtk/gtkframe.c b/gtk/gtkframe.c
+index 8ae7054..7ddcd45 100644
 --- a/gtk/gtkframe.c
 +++ b/gtk/gtkframe.c
-@@ -282,7 +282,6 @@
+@@ -282,7 +282,6 @@ gtk_frame_class_init (GtkFrameClass *class)
  
    class->compute_child_allocation = gtk_frame_real_compute_child_allocation;
  
@@ -1204,9 +1466,11 @@
    gtk_widget_class_set_css_name (widget_class, "frame");
  }
  
+diff --git a/gtk/gtkglarea.c b/gtk/gtkglarea.c
+index 802303e..145e5ad 100644
 --- a/gtk/gtkglarea.c
 +++ b/gtk/gtkglarea.c
-@@ -766,8 +766,6 @@
+@@ -766,8 +766,6 @@ gtk_gl_area_class_init (GtkGLAreaClass *klass)
    widget_class->size_allocate = gtk_gl_area_size_allocate;
    widget_class->draw = gtk_gl_area_draw;
  
@@ -1215,9 +1479,11 @@
    /**
     * GtkGLArea:context:
     *
+diff --git a/gtk/gtkheaderbar.c b/gtk/gtkheaderbar.c
+index 0ef94e3..5c32fc6 100644
 --- a/gtk/gtkheaderbar.c
 +++ b/gtk/gtkheaderbar.c
-@@ -351,7 +351,6 @@
+@@ -351,7 +351,6 @@ _gtk_header_bar_update_window_buttons (GtkHeaderBar *bar)
              {
                GtkWidget *button = NULL;
                GtkWidget *image = NULL;
@@ -1225,7 +1491,7 @@
  
                if (strcmp (t[j], "icon") == 0 &&
                    is_sovereign_window)
-@@ -386,10 +385,6 @@
+@@ -386,10 +385,6 @@ _gtk_header_bar_update_window_buttons (GtkHeaderBar *bar)
                    gtk_widget_set_can_focus (button, FALSE);
                    gtk_widget_show_all (button);
  
@@ -1236,7 +1502,7 @@
                    priv->titlebar_icon = image;
                    if (!_gtk_header_bar_update_window_icon (bar, window))
                      gtk_image_set_from_icon_name (GTK_IMAGE (priv->titlebar_icon),
-@@ -409,10 +404,6 @@
+@@ -409,10 +404,6 @@ _gtk_header_bar_update_window_buttons (GtkHeaderBar *bar)
                    gtk_widget_show_all (button);
                    g_signal_connect_swapped (button, "clicked",
                                              G_CALLBACK (gtk_window_iconify), window);
@@ -1247,7 +1513,7 @@
                  }
                else if (strcmp (t[j], "maximize") == 0 &&
                         gtk_window_get_resizable (window) &&
-@@ -433,10 +424,6 @@
+@@ -433,10 +424,6 @@ _gtk_header_bar_update_window_buttons (GtkHeaderBar *bar)
                    gtk_widget_show_all (button);
                    g_signal_connect_swapped (button, "clicked",
                                              G_CALLBACK (_gtk_window_toggle_maximized), window);
@@ -1258,7 +1524,7 @@
                  }
                else if (strcmp (t[j], "close") == 0 &&
                         gtk_window_get_deletable (window))
-@@ -452,10 +439,6 @@
+@@ -452,10 +439,6 @@ _gtk_header_bar_update_window_buttons (GtkHeaderBar *bar)
                    gtk_widget_show_all (button);
                    g_signal_connect_swapped (button, "clicked",
                                              G_CALLBACK (gtk_window_close), window);
@@ -1269,7 +1535,7 @@
                  }
  
                if (button)
-@@ -2118,8 +2101,6 @@
+@@ -2118,8 +2101,6 @@ gtk_header_bar_class_init (GtkHeaderBarClass *class)
  
    g_object_class_install_properties (object_class, LAST_PROP, header_bar_props);
  
@@ -1278,9 +1544,11 @@
    gtk_widget_class_set_css_name (widget_class, "headerbar");
  }
  
+diff --git a/gtk/gtkiconview.c b/gtk/gtkiconview.c
+index 735695e..2fdb814 100644
 --- a/gtk/gtkiconview.c
 +++ b/gtk/gtkiconview.c
-@@ -965,7 +965,6 @@
+@@ -965,7 +965,6 @@ gtk_icon_view_class_init (GtkIconViewClass *klass)
    gtk_icon_view_add_move_binding (binding_set, GDK_KEY_KP_Left, 0, 
  				  GTK_MOVEMENT_VISUAL_POSITIONS, -1);
  
@@ -1288,7 +1556,7 @@
    gtk_widget_class_set_css_name (widget_class, "iconview");
  }
  
-@@ -2125,19 +2124,6 @@
+@@ -2125,19 +2124,6 @@ static void
  gtk_icon_view_item_selected_changed (GtkIconView      *icon_view,
                                       GtkIconViewItem  *item)
  {
@@ -1308,7 +1576,7 @@
  }
  
  static void
-@@ -2939,8 +2925,6 @@
+@@ -2939,8 +2925,6 @@ gtk_icon_view_adjustment_changed (GtkAdjustment *adjustment,
  
        if (icon_view->priv->doing_rubberband)
          gtk_icon_view_update_rubberband (GTK_WIDGET (icon_view));
@@ -1317,7 +1585,7 @@
      }
  }
  
-@@ -3238,10 +3222,6 @@
+@@ -3238,10 +3222,6 @@ _gtk_icon_view_set_cursor_item (GtkIconView     *icon_view,
                                  GtkIconViewItem *item,
                                  GtkCellRenderer *cursor_cell)
  {
@@ -1328,7 +1596,7 @@
    /* When hitting this path from keynav, the focus cell is
     * already set, we dont need to notify the atk object
     * but we still need to queue the draw here (in the case
-@@ -3253,17 +3233,10 @@
+@@ -3253,17 +3233,10 @@ _gtk_icon_view_set_cursor_item (GtkIconView     *icon_view,
        (cursor_cell == NULL || cursor_cell == gtk_cell_area_get_focus_cell (icon_view->priv->cell_area)))
      return;
  
@@ -1346,11 +1614,10 @@
    icon_view->priv->cursor_item = item;
  
    if (cursor_cell)
-@@ -3273,18 +3246,6 @@
-       /* Make sure there is a cell in focus initially */
+@@ -3274,18 +3247,6 @@ _gtk_icon_view_set_cursor_item (GtkIconView     *icon_view,
        if (!gtk_cell_area_get_focus_cell (icon_view->priv->cell_area))
  	gtk_cell_area_focus (icon_view->priv->cell_area, GTK_DIR_TAB_FORWARD);
--    }
+     }
 -  
 -  /* Notify that accessible focus object has changed */
 -  item_obj = atk_object_ref_accessible_child (obj, item->index);
@@ -1362,12 +1629,15 @@
 -      G_GNUC_END_IGNORE_DEPRECATIONS;
 -      atk_object_notify_state_change (item_obj, ATK_STATE_FOCUSED, TRUE);
 -      g_object_unref (item_obj); 
-     }
+-    }
  }
  
+ 
+diff --git a/gtk/gtkimage.c b/gtk/gtkimage.c
+index 5d6e715..df60ede 100644
 --- a/gtk/gtkimage.c
 +++ b/gtk/gtkimage.c
-@@ -402,7 +402,6 @@
+@@ -402,7 +402,6 @@ gtk_image_class_init (GtkImageClass *class)
  
    g_object_class_install_properties (gobject_class, NUM_PROPERTIES, image_props);
  
@@ -1375,9 +1645,11 @@
    gtk_widget_class_set_css_name (widget_class, "image");
  }
  
+diff --git a/gtk/gtkinfobar.c b/gtk/gtkinfobar.c
+index 8eb89ff..6ee5bc1 100644
 --- a/gtk/gtkinfobar.c
 +++ b/gtk/gtkinfobar.c
-@@ -1276,7 +1276,6 @@
+@@ -1276,7 +1276,6 @@ gtk_info_bar_set_message_type (GtkInfoBar     *info_bar,
    if (priv->message_type != message_type)
      {
        GtkStyleContext *context;
@@ -1385,11 +1657,10 @@
        const char *type_class[] = {
          GTK_STYLE_CLASS_INFO,
          GTK_STYLE_CLASS_WARNING,
-@@ -1293,43 +1292,6 @@
-       priv->message_type = message_type;
+@@ -1294,43 +1293,6 @@ gtk_info_bar_set_message_type (GtkInfoBar     *info_bar,
  
        gtk_widget_queue_draw (GTK_WIDGET (info_bar));
--
+ 
 -      atk_obj = gtk_widget_get_accessible (GTK_WIDGET (info_bar));
 -      if (GTK_IS_ACCESSIBLE (atk_obj))
 -        {
@@ -1426,12 +1697,15 @@
 -          if (name)
 -            atk_object_set_name (atk_obj, name);
 -        }
- 
+-
        if (type_class[priv->message_type])
          gtk_style_context_add_class (context, type_class[priv->message_type]);
+ 
+diff --git a/gtk/gtklabel.c b/gtk/gtklabel.c
+index 8ba764c..b011d7b 100644
 --- a/gtk/gtklabel.c
 +++ b/gtk/gtklabel.c
-@@ -1194,8 +1194,6 @@
+@@ -1194,8 +1194,6 @@ gtk_label_class_init (GtkLabelClass *class)
    gtk_binding_entry_add_signal (binding_set, GDK_KEY_KP_Enter, 0,
  				"activate-current-link", 0);
  
@@ -1440,7 +1714,7 @@
    gtk_widget_class_set_css_name (widget_class, "label");
  
    quark_shortcuts_connected = g_quark_from_static_string ("gtk-label-shortcuts-connected");
-@@ -2146,12 +2144,9 @@
+@@ -2146,12 +2144,9 @@ gtk_label_set_text_internal (GtkLabel *label,
        return;
      }
  
@@ -1453,7 +1727,7 @@
    gtk_label_select_region_index (label, 0, 0);
  }
  
-@@ -2680,7 +2675,6 @@
+@@ -2680,7 +2675,6 @@ gtk_label_set_markup_internal (GtkLabel    *label,
      {
        gtk_label_ensure_select_info (label);
        priv->select_info->links = g_list_reverse (links);
@@ -1461,7 +1735,7 @@
        gtk_label_ensure_has_tooltip (label);
      }
  
-@@ -4818,7 +4812,6 @@
+@@ -4818,7 +4812,6 @@ gtk_label_grab_focus (GtkWidget *widget)
                  {
                    priv->select_info->selection_anchor = link->start;
                    priv->select_info->selection_end = link->start;
@@ -1469,7 +1743,7 @@
                    break;
                  }
              }
-@@ -4851,7 +4844,6 @@
+@@ -4851,7 +4844,6 @@ gtk_label_focus (GtkWidget        *widget,
                      {
                        info->selection_anchor = focus_link->start;
                        info->selection_end = focus_link->start;
@@ -1477,7 +1751,7 @@
                      }
                  }
              }
-@@ -4882,7 +4874,6 @@
+@@ -4882,7 +4874,6 @@ gtk_label_focus (GtkWidget        *widget,
                  if (!range_is_in_ellipsis (label, link->start, link->end))
                    {
                      gtk_label_select_region_index (label, link->start, link->start);
@@ -1485,7 +1759,7 @@
                      return TRUE;
                    }
                }
-@@ -4897,7 +4888,6 @@
+@@ -4897,7 +4888,6 @@ gtk_label_focus (GtkWidget        *widget,
                  if (!range_is_in_ellipsis (label, link->start, link->end))
                    {
                      gtk_label_select_region_index (label, link->start, link->start);
@@ -1493,7 +1767,7 @@
                      return TRUE;
                    }
                }
-@@ -4951,7 +4941,6 @@
+@@ -4951,7 +4941,6 @@ gtk_label_focus (GtkWidget        *widget,
            focus_link = l->data;
            info->selection_anchor = focus_link->start;
            info->selection_end = focus_link->start;
@@ -1501,7 +1775,7 @@
            gtk_widget_queue_draw (widget);
  
            return TRUE;
-@@ -6732,7 +6721,6 @@
+@@ -6733,7 +6722,6 @@ gtk_label_clear_links (GtkLabel *label)
    priv->select_info->links = NULL;
    priv->select_info->active_link = NULL;
  
@@ -1509,9 +1783,11 @@
  }
  
  static gboolean
+diff --git a/gtk/gtklevelbar.c b/gtk/gtklevelbar.c
+index 6e3ac12..296eb28 100644
 --- a/gtk/gtklevelbar.c
 +++ b/gtk/gtklevelbar.c
-@@ -1136,7 +1136,6 @@
+@@ -1136,7 +1136,6 @@ gtk_level_bar_class_init (GtkLevelBarClass *klass)
  
    g_object_class_install_properties (oclass, LAST_PROPERTY, properties);
  
@@ -1519,9 +1795,11 @@
    gtk_widget_class_set_css_name (wclass, "levelbar");
  }
  
+diff --git a/gtk/gtklinkbutton.c b/gtk/gtklinkbutton.c
+index 103348a..3476b79 100644
 --- a/gtk/gtklinkbutton.c
 +++ b/gtk/gtklinkbutton.c
-@@ -209,7 +209,6 @@
+@@ -209,7 +209,6 @@ gtk_link_button_class_init (GtkLinkButtonClass *klass)
                    _gtk_marshal_BOOLEAN__VOID,
                    G_TYPE_BOOLEAN, 0);
  
@@ -1529,9 +1807,11 @@
    gtk_widget_class_set_css_name (widget_class, "button");
  }
  
+diff --git a/gtk/gtklistbox.c b/gtk/gtklistbox.c
+index efc3434..11b0b98 100644
 --- a/gtk/gtklistbox.c
 +++ b/gtk/gtklistbox.c
-@@ -447,8 +447,6 @@
+@@ -447,8 +447,6 @@ gtk_list_box_class_init (GtkListBoxClass *klass)
    GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
    GtkBindingSet *binding_set;
  
@@ -1540,7 +1820,7 @@
    object_class->get_property = gtk_list_box_get_property;
    object_class->set_property = gtk_list_box_set_property;
    object_class->finalize = gtk_list_box_finalize;
-@@ -903,7 +901,6 @@
+@@ -903,7 +901,6 @@ gtk_list_box_unselect_all (GtkListBox *box)
  static void
  gtk_list_box_selected_rows_changed (GtkListBox *box)
  {
@@ -1548,7 +1828,7 @@
  }
  
  /**
-@@ -1559,7 +1556,6 @@
+@@ -1559,7 +1556,6 @@ gtk_list_box_update_cursor (GtkListBox    *box,
    if (grab_focus)
      gtk_widget_grab_focus (GTK_WIDGET (row));
    gtk_widget_queue_draw (GTK_WIDGET (row));
@@ -1556,18 +1836,20 @@
  }
  
  static GtkListBox *
-@@ -3865,8 +3861,6 @@
- {
+@@ -3866,8 +3862,6 @@ gtk_list_box_row_class_init (GtkListBoxRowClass *klass)
    GObjectClass *object_class = G_OBJECT_CLASS (klass);
    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
--
--  gtk_widget_class_set_accessible_type (widget_class, GTK_TYPE_LIST_BOX_ROW_ACCESSIBLE);
  
+-  gtk_widget_class_set_accessible_type (widget_class, GTK_TYPE_LIST_BOX_ROW_ACCESSIBLE);
+-
    object_class->get_property = gtk_list_box_row_get_property;
    object_class->set_property = gtk_list_box_row_set_property;
+   object_class->finalize = gtk_list_box_row_finalize;
+diff --git a/gtk/gtklockbutton.c b/gtk/gtklockbutton.c
+index 6750f6e..4086e67 100644
 --- a/gtk/gtklockbutton.c
 +++ b/gtk/gtklockbutton.c
-@@ -189,12 +189,10 @@
+@@ -189,12 +189,10 @@ gtk_lock_button_set_property (GObject      *object,
  
      case PROP_TEXT_LOCK:
        gtk_label_set_text (GTK_LABEL (priv->label_lock), g_value_get_string (value));
@@ -1580,7 +1862,7 @@
        break;
  
      case PROP_TOOLTIP_LOCK:
-@@ -322,7 +320,6 @@
+@@ -322,7 +320,6 @@ gtk_lock_button_class_init (GtkLockButtonClass *klass)
    gtk_widget_class_bind_template_child_private (widget_class, GtkLockButton, label_unlock);
    gtk_widget_class_bind_template_child_private (widget_class, GtkLockButton, stack);
  
@@ -1588,7 +1870,7 @@
    gtk_widget_class_set_css_name (widget_class, "button");
  }
  
-@@ -387,7 +384,6 @@
+@@ -387,7 +384,6 @@ update_state (GtkLockButton *button)
    gtk_image_set_from_gicon (GTK_IMAGE (priv->image), icon, GTK_ICON_SIZE_MENU);
    gtk_stack_set_visible_child (GTK_STACK (priv->stack),
                                 allowed ? priv->label_lock : priv->label_unlock);
@@ -1596,6 +1878,8 @@
    gtk_widget_set_tooltip_markup (GTK_WIDGET (button), tooltip);
    gtk_widget_set_sensitive (GTK_WIDGET (button), sensitive);
    gtk_widget_set_visible (GTK_WIDGET (button), visible);
+diff --git a/gtk/gtkmain.c b/gtk/gtkmain.c
+index ae64e18..d82fbf3 100644
 --- a/gtk/gtkmain.c
 +++ b/gtk/gtkmain.c
 @@ -131,8 +131,6 @@
@@ -1607,7 +1891,7 @@
  /* Private type definitions
   */
  typedef struct _GtkKeySnooperData        GtkKeySnooperData;
-@@ -712,7 +710,6 @@
+@@ -712,7 +710,6 @@ gettext_initialization (void)
  static void
  default_display_notify_cb (GdkDisplayManager *dm)
  {
@@ -1615,11 +1899,10 @@
    debug_flags[0].display = gdk_display_get_default ();
  }
  
-@@ -2434,18 +2431,6 @@
- {
+@@ -2435,18 +2432,6 @@ gtk_invoke_key_snoopers (GtkWidget *grab_widget,
    GSList *slist;
    gint return_val = FALSE;
--
+ 
 -  return_val = _gtk_accessibility_key_snooper (grab_widget, (GdkEventKey *) event);
 -
 -  slist = key_snoopers;
@@ -1631,12 +1914,15 @@
 -      slist = slist->next;
 -      return_val = (*data->func) (grab_widget, (GdkEventKey*) event, data->func_data);
 -    }
- 
+-
    return return_val;
  }
+ 
+diff --git a/gtk/gtkmenu.c b/gtk/gtkmenu.c
+index 18bef69..c039a03 100644
 --- a/gtk/gtkmenu.c
 +++ b/gtk/gtkmenu.c
-@@ -1090,7 +1090,6 @@
+@@ -1090,7 +1090,6 @@ gtk_menu_class_init (GtkMenuClass *class)
                                  GTK_TYPE_SCROLL_TYPE,
                                  GTK_SCROLL_PAGE_DOWN);
  
@@ -1644,9 +1930,11 @@
    gtk_widget_class_set_css_name (widget_class, "menu");
  }
  
+diff --git a/gtk/gtkmenubar.c b/gtk/gtkmenubar.c
+index fcf687b..ba80892 100644
 --- a/gtk/gtkmenubar.c
 +++ b/gtk/gtkmenubar.c
-@@ -275,7 +275,6 @@
+@@ -275,7 +275,6 @@ gtk_menu_bar_class_init (GtkMenuBarClass *class)
                                                               GTK_PARAM_READABLE|G_PARAM_DEPRECATED));
  
    gtk_container_class_handle_border_width (container_class);
@@ -1654,9 +1942,11 @@
    gtk_widget_class_set_css_name (widget_class, "menubar");
  }
  
+diff --git a/gtk/gtkmenubutton.c b/gtk/gtkmenubutton.c
+index 56b687f..2bd7956 100644
 --- a/gtk/gtkmenubutton.c
 +++ b/gtk/gtkmenubutton.c
-@@ -568,7 +568,6 @@
+@@ -568,7 +568,6 @@ gtk_menu_button_class_init (GtkMenuButtonClass *klass)
  
    g_object_class_install_properties (gobject_class, LAST_PROP, menu_button_props);
  
@@ -1664,9 +1954,11 @@
    gtk_widget_class_set_css_name (widget_class, "button");
  }
  
+diff --git a/gtk/gtkmenuitem.c b/gtk/gtkmenuitem.c
+index 2fee8ee..f1d21c6 100644
 --- a/gtk/gtkmenuitem.c
 +++ b/gtk/gtkmenuitem.c
-@@ -919,7 +919,6 @@
+@@ -919,7 +919,6 @@ gtk_menu_item_class_init (GtkMenuItemClass *klass)
                                                               0, G_MAXINT, 12,
                                                               GTK_PARAM_READABLE|G_PARAM_DEPRECATED));
  
@@ -1674,9 +1966,11 @@
    gtk_widget_class_set_css_name (widget_class, "menuitem");
  
    gtk_container_class_handle_border_width (container_class);
+diff --git a/gtk/gtkmenushell.c b/gtk/gtkmenushell.c
+index 515492c..5ea8925 100644
 --- a/gtk/gtkmenushell.c
 +++ b/gtk/gtkmenushell.c
-@@ -420,8 +420,6 @@
+@@ -420,8 +420,6 @@ gtk_menu_shell_class_init (GtkMenuShellClass *klass)
                                                           P_("A boolean that determines whether the menu grabs the keyboard focus"),
                                                           TRUE,
                                                           GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
@@ -1685,9 +1979,11 @@
  }
  
  static GType
+diff --git a/gtk/gtkmessagedialog.c b/gtk/gtkmessagedialog.c
+index e70c820..82d22ec 100644
 --- a/gtk/gtkmessagedialog.c
 +++ b/gtk/gtkmessagedialog.c
-@@ -163,8 +163,6 @@
+@@ -163,8 +163,6 @@ gtk_message_dialog_class_init (GtkMessageDialogClass *class)
    
    widget_class->style_updated = gtk_message_dialog_style_updated;
  
@@ -1696,7 +1992,7 @@
    gobject_class->constructed = gtk_message_dialog_constructed;
    gobject_class->set_property = gtk_message_dialog_set_property;
    gobject_class->get_property = gtk_message_dialog_get_property;
-@@ -372,7 +370,6 @@
+@@ -372,7 +370,6 @@ setup_type (GtkMessageDialog *dialog,
  {
    GtkMessageDialogPrivate *priv = dialog->priv;
    const gchar *name = NULL;
@@ -1704,24 +2000,26 @@
  
    if (priv->message_type == type)
      return;
-@@ -403,14 +400,6 @@
-     default:
-       g_warning ("Unknown GtkMessageType %u", type);
+@@ -405,14 +402,6 @@ setup_type (GtkMessageDialog *dialog,
        break;
--    }
--
+     }
+ 
 -  atk_obj = gtk_widget_get_accessible (GTK_WIDGET (dialog));
 -  if (GTK_IS_ACCESSIBLE (atk_obj))
 -    {
 -      atk_object_set_role (atk_obj, ATK_ROLE_ALERT);
 -      if (name)
 -        atk_object_set_name (atk_obj, name);
-     }
- 
+-    }
+-
    g_object_notify (G_OBJECT (dialog), "message-type");
+ }
+ 
+diff --git a/gtk/gtkmodelbutton.c b/gtk/gtkmodelbutton.c
+index 4653cff..e0b5c12 100644
 --- a/gtk/gtkmodelbutton.c
 +++ b/gtk/gtkmodelbutton.c
-@@ -247,15 +247,6 @@
+@@ -247,15 +247,6 @@ gtk_model_button_update_state (GtkModelButton *button)
      gtk_css_gadget_set_state (button->gadget, state);
  
    gtk_css_gadget_set_state (button->indicator_gadget, indicator_state);
@@ -1737,7 +2035,7 @@
  }
  
  static void
-@@ -310,17 +301,13 @@
+@@ -310,17 +301,13 @@ gtk_model_button_direction_changed (GtkWidget        *widget,
  static void
  update_node_name (GtkModelButton *button)
  {
@@ -1755,7 +2053,7 @@
        if (button->menu_name)
          {
            indicator_name = I_("arrow");
-@@ -334,13 +321,11 @@
+@@ -334,13 +321,11 @@ update_node_name (GtkModelButton *button)
        break;
  
      case GTK_BUTTON_ROLE_CHECK:
@@ -1769,7 +2067,7 @@
        indicator_name = I_("radio");
        indicator_visible = TRUE;
        break;
-@@ -352,8 +337,6 @@
+@@ -352,8 +337,6 @@ update_node_name (GtkModelButton *button)
    if (button->iconic)
      indicator_visible = FALSE;
  
@@ -1778,7 +2076,7 @@
    indicator_node = gtk_css_gadget_get_node (button->indicator_gadget);
    gtk_css_node_set_name (indicator_node, indicator_name);
    gtk_css_node_set_visible (indicator_node, indicator_visible);
-@@ -1099,18 +1082,6 @@
+@@ -1099,18 +1082,6 @@ gtk_model_button_finalize (GObject *object)
    G_OBJECT_CLASS (gtk_model_button_parent_class)->finalize (object);
  }
  
@@ -1797,7 +2095,7 @@
  static void
  gtk_model_button_class_init (GtkModelButtonClass *class)
  {
-@@ -1132,7 +1103,6 @@
+@@ -1132,7 +1103,6 @@ gtk_model_button_class_init (GtkModelButtonClass *class)
    widget_class->destroy = gtk_model_button_destroy;
    widget_class->state_flags_changed = gtk_model_button_state_flags_changed;
    widget_class->direction_changed = gtk_model_button_direction_changed;
@@ -1805,7 +2103,7 @@
  
    button_class->clicked = gtk_model_button_clicked;
  
-@@ -1276,7 +1246,6 @@
+@@ -1276,7 +1246,6 @@ gtk_model_button_class_init (GtkModelButtonClass *class)
                            G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
    g_object_class_install_properties (object_class, LAST_PROPERTY, properties);
  
@@ -1813,9 +2111,11 @@
    gtk_widget_class_set_css_name (GTK_WIDGET_CLASS (class), "modelbutton");
  }
  
+diff --git a/gtk/gtkmodelmenuitem.c b/gtk/gtkmodelmenuitem.c
+index 103f053..c0ac121 100644
 --- a/gtk/gtkmodelmenuitem.c
 +++ b/gtk/gtkmodelmenuitem.c
-@@ -94,35 +94,27 @@
+@@ -94,35 +94,27 @@ static void
  gtk_model_menu_item_set_action_role (GtkModelMenuItem       *item,
                                       GtkMenuTrackerItemRole  role)
  {
@@ -1851,7 +2151,7 @@
    g_object_notify (G_OBJECT (item), "action-role");
  }
  
-@@ -499,8 +491,6 @@
+@@ -499,8 +491,6 @@ gtk_model_menu_item_class_init (GtkModelMenuItemClass *class)
    g_object_class_install_property (object_class, PROP_ACCEL,
                                     g_param_spec_string ("accel", "accel", "accel", NULL,
                                                          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY));
@@ -1860,9 +2160,11 @@
  }
  
  GtkWidget *
+diff --git a/gtk/gtknotebook.c b/gtk/gtknotebook.c
+index f51570e..8a1c642 100644
 --- a/gtk/gtknotebook.c
 +++ b/gtk/gtknotebook.c
-@@ -1282,7 +1282,6 @@
+@@ -1282,7 +1282,6 @@ gtk_notebook_class_init (GtkNotebookClass *class)
  
    gtk_container_class_handle_border_width (container_class);
  
@@ -1870,9 +2172,11 @@
    gtk_widget_class_set_css_name (widget_class, "notebook");
  }
  
+diff --git a/gtk/gtkpaned.c b/gtk/gtkpaned.c
+index 4d44a07..306ed97 100644
 --- a/gtk/gtkpaned.c
 +++ b/gtk/gtkpaned.c
-@@ -692,7 +692,6 @@
+@@ -692,7 +692,6 @@ gtk_paned_class_init (GtkPanedClass *class)
    add_move_binding (binding_set, GDK_KEY_End, 0, GTK_SCROLL_END);
    add_move_binding (binding_set, GDK_KEY_KP_End, 0, GTK_SCROLL_END);
  
@@ -1880,9 +2184,11 @@
    gtk_widget_class_set_css_name (widget_class, "paned");
  }
  
+diff --git a/gtk/gtkpango.c b/gtk/gtkpango.c
+index a76ad57..8745a6b 100644
 --- a/gtk/gtkpango.c
 +++ b/gtk/gtkpango.c
-@@ -233,301 +233,7 @@
+@@ -233,300 +233,6 @@ _gtk_pango_fill_layout (cairo_t     *cr,
      cairo_move_to (cr, current_x, current_y);
  }
  
@@ -1900,7 +2206,7 @@
 -  return g_slist_prepend (attributes, at);
 -}
 -
- /*
+-/*
 - * _gtk_pango_get_default_attributes:
 - * @attributes: a #AtkAttributeSet to add the attributes to
 - * @layout: the #PangoLayout from which to get attributes
@@ -2180,11 +2486,10 @@
 -  return attributes;
 -}
 -
--/*
+ /*
   * _gtk_pango_move_chars:
   * @layout: a #PangoLayout
-  * @offset: a character offset in @layout
-@@ -793,7 +499,6 @@
+@@ -793,7 +499,6 @@ _gtk_pango_is_inside_sentence (PangoLayout  *layout,
  
  static void
  pango_layout_get_line_before (PangoLayout     *layout,
@@ -2192,7 +2497,7 @@
                                gint             offset,
                                gint            *start_offset,
                                gint            *end_offset)
-@@ -818,23 +523,7 @@
+@@ -818,23 +523,7 @@ pango_layout_get_line_before (PangoLayout     *layout,
            /* Found line for offset */
            if (prev_line)
              {
@@ -2216,7 +2521,7 @@
            else
              start_index = end_index = 0;
  
-@@ -860,7 +549,6 @@
+@@ -860,7 +549,6 @@ pango_layout_get_line_before (PangoLayout     *layout,
  
  static void
  pango_layout_get_line_at (PangoLayout     *layout,
@@ -2224,7 +2529,7 @@
                            gint             offset,
                            gint            *start_offset,
                            gint            *end_offset)
-@@ -882,21 +570,6 @@
+@@ -882,21 +570,6 @@ pango_layout_get_line_at (PangoLayout     *layout,
  
        if (index >= start_index && index <= end_index)
          {
@@ -2246,7 +2551,7 @@
            found = TRUE;
            break;
          }
-@@ -918,7 +591,6 @@
+@@ -918,7 +591,6 @@ pango_layout_get_line_at (PangoLayout     *layout,
  
  static void
  pango_layout_get_line_after (PangoLayout     *layout,
@@ -2254,7 +2559,7 @@
                               gint             offset,
                               gint            *start_offset,
                               gint            *end_offset)
-@@ -944,23 +616,7 @@
+@@ -944,23 +616,7 @@ pango_layout_get_line_after (PangoLayout     *layout,
            if (pango_layout_iter_next_line (iter))
              {
                line = pango_layout_iter_get_line (iter);
@@ -2278,7 +2583,7 @@
            else
              start_index = end_index;
  
-@@ -986,23 +642,17 @@
+@@ -986,23 +642,17 @@ pango_layout_get_line_after (PangoLayout     *layout,
  /*
   * _gtk_pango_get_text_before:
   * @layout: a #PangoLayout
@@ -2302,7 +2607,7 @@
                              gint             offset,
                              gint            *start_offset,
                              gint            *end_offset)
-@@ -1026,56 +676,6 @@
+@@ -1026,56 +676,6 @@ _gtk_pango_get_text_before (PangoLayout     *layout,
    start = offset;
    end = start;
  
@@ -2359,7 +2664,7 @@
    *start_offset = start;
    *end_offset = end;
  
-@@ -1087,23 +687,17 @@
+@@ -1087,23 +687,17 @@ _gtk_pango_get_text_before (PangoLayout     *layout,
  /*
   * _gtk_pango_get_text_after:
   * @layout: a #PangoLayout
@@ -2383,7 +2688,7 @@
                             gint             offset,
                             gint            *start_offset,
                             gint            *end_offset)
-@@ -1127,62 +721,6 @@
+@@ -1127,62 +721,6 @@ _gtk_pango_get_text_after (PangoLayout     *layout,
    start = offset;
    end = start;
  
@@ -2446,7 +2751,7 @@
    *start_offset = start;
    *end_offset = end;
  
-@@ -1194,23 +732,17 @@
+@@ -1194,23 +732,17 @@ _gtk_pango_get_text_after (PangoLayout     *layout,
  /*
   * _gtk_pango_get_text_at:
   * @layout: a #PangoLayout
@@ -2470,11 +2775,10 @@
                          gint             offset,
                          gint            *start_offset,
                          gint            *end_offset)
-@@ -1233,54 +765,6 @@
- 
+@@ -1234,54 +766,6 @@ _gtk_pango_get_text_at (PangoLayout     *layout,
    start = offset;
    end = start;
--
+ 
 -  switch (boundary_type)
 -    {
 -    case ATK_TEXT_BOUNDARY_CHAR:
@@ -2522,9 +2826,12 @@
 -      pango_layout_get_line_at (layout, boundary_type, offset, &start, &end);
 -      break;
 -    }
- 
+-
    *start_offset = start;
    *end_offset = end;
+ 
+diff --git a/gtk/gtkpango.h b/gtk/gtkpango.h
+index 388e364..b085159 100644
 --- a/gtk/gtkpango.h
 +++ b/gtk/gtkpango.h
 @@ -27,7 +27,6 @@
@@ -2535,7 +2842,7 @@
  
  G_BEGIN_DECLS
  
-@@ -35,15 +34,6 @@
+@@ -35,15 +34,6 @@ void             _gtk_pango_fill_layout            (cairo_t         *cr,
                                                      PangoLayout     *layout);
  
  
@@ -2551,7 +2858,7 @@
  gint _gtk_pango_move_chars     (PangoLayout  *layout,
                                  gint          offset,
                                  gint          count);
-@@ -64,17 +54,14 @@
+@@ -64,17 +54,14 @@ gboolean _gtk_pango_is_inside_sentence (PangoLayout  *layout,
  
  
  gchar *_gtk_pango_get_text_before (PangoLayout     *layout,
@@ -2569,6 +2876,8 @@
                                     gint             offset,
                                     gint            *start_offset,
                                     gint            *end_offset);
+diff --git a/gtk/gtkpathbar.c b/gtk/gtkpathbar.c
+index 60d70ad..fff37bc 100644
 --- a/gtk/gtkpathbar.c
 +++ b/gtk/gtkpathbar.c
 @@ -1550,7 +1550,6 @@ make_directory_button (GtkPathBar  *path_bar,
@@ -2595,9 +2904,24 @@
        break;
      case HOME_BUTTON:
      case DESKTOP_BUTTON:
+diff --git a/gtk/gtkplug.c b/gtk/gtkplug.c
+index 6361b60..8eec0d4 100644
+--- a/gtk/gtkplug.c
++++ b/gtk/gtkplug.c
+@@ -178,8 +178,6 @@ gtk_plug_class_init (GtkPlugClass *class)
+   widget_class->unmap = gtk_plug_unmap;
+   widget_class->focus = gtk_plug_focus;
+ 
+-  gtk_widget_class_set_accessible_role (widget_class, ATK_ROLE_PANEL);
+-
+   container_class->check_resize = gtk_plug_check_resize;
+ 
+   window_class->set_focus = gtk_plug_set_focus;
+diff --git a/gtk/gtkpopover.c b/gtk/gtkpopover.c
+index b812e0e..d405358 100644
 --- a/gtk/gtkpopover.c
 +++ b/gtk/gtkpopover.c
-@@ -1835,7 +1835,6 @@
+@@ -1836,7 +1836,6 @@ gtk_popover_class_init (GtkPopoverClass *klass)
                    G_TYPE_NONE, 0);
  
    quark_widget_popovers = g_quark_from_static_string ("gtk-quark-widget-popovers");
@@ -2605,9 +2929,11 @@
    gtk_widget_class_set_css_name (widget_class, "popover");
  }
  
+diff --git a/gtk/gtkprogressbar.c b/gtk/gtkprogressbar.c
+index 4cb8437..b6a8f9e 100644
 --- a/gtk/gtkprogressbar.c
 +++ b/gtk/gtkprogressbar.c
-@@ -427,7 +427,6 @@
+@@ -427,7 +427,6 @@ gtk_progress_bar_class_init (GtkProgressBarClass *class)
                                                               1, G_MAXINT, MIN_VERTICAL_BAR_HEIGHT,
                                                               G_PARAM_READWRITE|G_PARAM_DEPRECATED));
  
@@ -2615,9 +2941,11 @@
    gtk_widget_class_set_css_name (widget_class, "progressbar");
  }
  
+diff --git a/gtk/gtkradiobutton.c b/gtk/gtkradiobutton.c
+index 9b7aafd..85c5ced 100644
 --- a/gtk/gtkradiobutton.c
 +++ b/gtk/gtkradiobutton.c
-@@ -216,7 +216,6 @@
+@@ -216,7 +216,6 @@ gtk_radio_button_class_init (GtkRadioButtonClass *class)
  				       NULL,
  				       G_TYPE_NONE, 0);
  
@@ -2625,9 +2953,11 @@
    gtk_widget_class_set_css_name (widget_class, "radiobutton");
  }
  
+diff --git a/gtk/gtkradiomenuitem.c b/gtk/gtkradiomenuitem.c
+index 8e66f85..a2e0fc0 100644
 --- a/gtk/gtkradiomenuitem.c
 +++ b/gtk/gtkradiomenuitem.c
-@@ -407,8 +407,6 @@
+@@ -407,8 +407,6 @@ gtk_radio_menu_item_class_init (GtkRadioMenuItemClass *klass)
  
    widget_class->destroy = gtk_radio_menu_item_destroy;
  
@@ -2636,9 +2966,11 @@
    menu_item_class->activate = gtk_radio_menu_item_activate;
  
    /**
+diff --git a/gtk/gtkrange.c b/gtk/gtkrange.c
+index f53e084..7b3408f 100644
 --- a/gtk/gtkrange.c
 +++ b/gtk/gtkrange.c
-@@ -657,8 +657,6 @@
+@@ -657,8 +657,6 @@ gtk_range_class_init (GtkRangeClass *class)
  							       P_("Arrow scaling with regard to scroll button size"),
  							       0.0, 1.0, 0.5,
  							       GTK_PARAM_READABLE|G_PARAM_DEPRECATED));
@@ -2647,9 +2979,11 @@
  }
  
  static void
+diff --git a/gtk/gtkscale.c b/gtk/gtkscale.c
+index bee30ee..6d97b3d 100644
 --- a/gtk/gtkscale.c
 +++ b/gtk/gtkscale.c
-@@ -944,7 +944,6 @@
+@@ -944,7 +944,6 @@ gtk_scale_class_init (GtkScaleClass *class)
    add_slider_binding (binding_set, GDK_KEY_KP_End, 0,
                        GTK_SCROLL_END);
  
@@ -2657,9 +2991,11 @@
    gtk_widget_class_set_css_name (widget_class, "scale");
  }
  
+diff --git a/gtk/gtkscalebutton.c b/gtk/gtkscalebutton.c
+index 82829b1..5377159 100644
 --- a/gtk/gtkscalebutton.c
 +++ b/gtk/gtkscalebutton.c
-@@ -343,7 +343,6 @@
+@@ -343,7 +343,6 @@ gtk_scale_button_class_init (GtkScaleButtonClass *klass)
    gtk_widget_class_bind_template_callback (widget_class, cb_scale_value_changed);
    gtk_widget_class_bind_template_callback (widget_class, cb_popup_mapped);
  
@@ -2667,9 +3003,11 @@
    gtk_widget_class_set_css_name (widget_class, "button");
  }
  
+diff --git a/gtk/gtkscrollbar.c b/gtk/gtkscrollbar.c
+index ca21d75..f63b6fa 100644
 --- a/gtk/gtkscrollbar.c
 +++ b/gtk/gtkscrollbar.c
-@@ -145,7 +145,6 @@
+@@ -145,7 +145,6 @@ gtk_scrollbar_class_init (GtkScrollbarClass *class)
                                                                   FALSE,
                                                                   GTK_PARAM_READABLE));
  
@@ -2677,9 +3015,11 @@
    gtk_widget_class_set_css_name (widget_class, "scrollbar");
  }
  
+diff --git a/gtk/gtkscrolledwindow.c b/gtk/gtkscrolledwindow.c
+index f4c09d0..0675256 100644
 --- a/gtk/gtkscrolledwindow.c
 +++ b/gtk/gtkscrolledwindow.c
-@@ -896,7 +896,6 @@
+@@ -896,7 +896,6 @@ gtk_scrolled_window_class_init (GtkScrolledWindowClass *class)
    add_tab_bindings (binding_set, GDK_CONTROL_MASK, GTK_DIR_TAB_FORWARD);
    add_tab_bindings (binding_set, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_DIR_TAB_BACKWARD);
  
@@ -2687,9 +3027,11 @@
    gtk_widget_class_set_css_name (widget_class, "scrolledwindow");
  }
  
+diff --git a/gtk/gtksearchentry.c b/gtk/gtksearchentry.c
+index a1243f3..4e3996e 100644
 --- a/gtk/gtksearchentry.c
 +++ b/gtk/gtksearchentry.c
-@@ -358,17 +358,11 @@
+@@ -358,18 +358,12 @@ gtk_search_entry_changed (GtkEditable *editable)
  static void
  gtk_search_entry_init (GtkSearchEntry *entry)
  {
@@ -2700,16 +3042,19 @@
                  "primary-icon-activatable", FALSE,
                  "primary-icon-sensitive", FALSE,
                  NULL);
--
+ 
 -  atk_obj = gtk_widget_get_accessible (GTK_WIDGET (entry));
 -  if (GTK_IS_ACCESSIBLE (atk_obj))
 -    atk_object_set_name (atk_obj, _("Search"));
- 
+-
    gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (entry)), "search");
  }
+ 
+diff --git a/gtk/gtkseparator.c b/gtk/gtkseparator.c
+index f76fb36..b9bee8e 100644
 --- a/gtk/gtkseparator.c
 +++ b/gtk/gtkseparator.c
-@@ -211,7 +211,6 @@
+@@ -211,7 +211,6 @@ gtk_separator_class_init (GtkSeparatorClass *class)
  
    g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
  
@@ -2717,9 +3062,11 @@
    gtk_widget_class_set_css_name (widget_class, "separator");
  }
  
+diff --git a/gtk/gtkseparatormenuitem.c b/gtk/gtkseparatormenuitem.c
+index 1073deb..75d5ee9 100644
 --- a/gtk/gtkseparatormenuitem.c
 +++ b/gtk/gtkseparatormenuitem.c
-@@ -58,7 +58,6 @@
+@@ -58,7 +58,6 @@ gtk_separator_menu_item_class_init (GtkSeparatorMenuItemClass *class)
  
    GTK_MENU_ITEM_CLASS (class)->get_label = gtk_separator_menu_item_get_label;
  
@@ -2727,9 +3074,31 @@
    gtk_widget_class_set_css_name (GTK_WIDGET_CLASS (class), "separator");
  }
  
+diff --git a/gtk/gtksocket.c b/gtk/gtksocket.c
+index ffdaf8b..18b3d55 100644
+--- a/gtk/gtksocket.c
++++ b/gtk/gtksocket.c
+@@ -271,7 +271,6 @@ gtk_socket_class_init (GtkSocketClass *class)
+ 		  G_TYPE_BOOLEAN, 0);
+ 
+ 
+-  gtk_widget_class_set_accessible_type (widget_class, GTK_TYPE_SOCKET_ACCESSIBLE);
+ }
+ 
+ static void
+@@ -1432,7 +1431,6 @@ _gtk_socket_accessible_embed (GtkWidget *socket, GdkWindow *window)
+       return;
+     }
+ 
+-  gtk_socket_accessible_embed (GTK_SOCKET_ACCESSIBLE (gtk_widget_get_accessible (socket)), (gchar*) data);
+   XFree (data);
+ 
+   return;
+diff --git a/gtk/gtkspinbutton.c b/gtk/gtkspinbutton.c
+index 8e65d8a..b936763 100644
 --- a/gtk/gtkspinbutton.c
 +++ b/gtk/gtkspinbutton.c
-@@ -592,7 +592,6 @@
+@@ -592,7 +592,6 @@ gtk_spin_button_class_init (GtkSpinButtonClass *class)
    add_spin_binding (binding_set, GDK_KEY_Page_Up, GDK_CONTROL_MASK, GTK_SCROLL_END);
    add_spin_binding (binding_set, GDK_KEY_Page_Down, GDK_CONTROL_MASK, GTK_SCROLL_START);
  
@@ -2737,9 +3106,11 @@
    gtk_widget_class_set_css_name (widget_class, "spinbutton");
  }
  
+diff --git a/gtk/gtkspinner.c b/gtk/gtkspinner.c
+index 06020b3..a45a073 100644
 --- a/gtk/gtkspinner.c
 +++ b/gtk/gtkspinner.c
-@@ -223,7 +223,6 @@
+@@ -223,7 +223,6 @@ gtk_spinner_class_init (GtkSpinnerClass *klass)
                                                           FALSE,
                                                           GTK_PARAM_READWRITE|G_PARAM_EXPLICIT_NOTIFY));
  
@@ -2747,9 +3118,11 @@
    gtk_widget_class_set_css_name (widget_class, "spinner");
  }
  
+diff --git a/gtk/gtkstack.c b/gtk/gtkstack.c
+index 51a3a73..338b2f0 100644
 --- a/gtk/gtkstack.c
 +++ b/gtk/gtkstack.c
-@@ -559,7 +559,6 @@
+@@ -559,7 +559,6 @@ gtk_stack_class_init (GtkStackClass *klass)
  
    gtk_container_class_install_child_properties (container_class, LAST_CHILD_PROP, stack_child_props);
  
@@ -2757,20 +3130,22 @@
    gtk_widget_class_set_css_name (widget_class, "stack");
  }
  
-@@ -1118,10 +1117,6 @@
-           gtk_widget_set_child_visible (priv->visible_child->widget, FALSE);
+@@ -1119,10 +1118,6 @@ set_visible_child (GtkStack               *stack,
          }
      }
--
+ 
 -  gtk_stack_accessible_update_visible_child (stack,
 -                                             priv->visible_child ? priv->visible_child->widget : NULL,
 -                                             child_info ? child_info->widget : NULL);
- 
+-
    priv->visible_child = child_info;
  
+   if (child_info)
+diff --git a/gtk/gtkstatusbar.c b/gtk/gtkstatusbar.c
+index 8d34f64..3eed895 100644
 --- a/gtk/gtkstatusbar.c
 +++ b/gtk/gtkstatusbar.c
-@@ -187,7 +187,6 @@
+@@ -187,7 +187,6 @@ gtk_statusbar_class_init (GtkStatusbarClass *class)
    gtk_widget_class_bind_template_child_private (widget_class, GtkStatusbar, frame);
    gtk_widget_class_bind_template_child_private (widget_class, GtkStatusbar, label);
  
@@ -2778,9 +3153,11 @@
    gtk_widget_class_set_css_name (widget_class, "statusbar");
  }
  
+diff --git a/gtk/gtkstylecontext.c b/gtk/gtkstylecontext.c
+index 11625d1..3a03046 100644
 --- a/gtk/gtkstylecontext.c
 +++ b/gtk/gtkstylecontext.c
-@@ -3079,63 +3079,6 @@
+@@ -3102,63 +3102,6 @@ _gtk_style_context_get_pango_attributes (GtkStyleContext *context)
    return gtk_css_style_get_pango_attributes (gtk_style_context_lookup_style (context));
  }
  
@@ -2844,6 +3221,8 @@
  cairo_pattern_t *
  gtk_gradient_resolve_for_context (GtkGradient     *gradient,
                                    GtkStyleContext *context)
+diff --git a/gtk/gtkstylecontext.h b/gtk/gtkstylecontext.h
+index 9f8551f..42693ba 100644
 --- a/gtk/gtkstylecontext.h
 +++ b/gtk/gtkstylecontext.h
 @@ -26,7 +26,6 @@
@@ -2854,9 +3233,11 @@
  
  G_BEGIN_DECLS
  
+diff --git a/gtk/gtkstylecontextprivate.h b/gtk/gtkstylecontextprivate.h
+index 421e526..f527267 100644
 --- a/gtk/gtkstylecontextprivate.h
 +++ b/gtk/gtkstylecontextprivate.h
-@@ -72,11 +72,6 @@
+@@ -72,11 +72,6 @@ void           _gtk_style_context_get_icon_extents           (GtkStyleContext
  
  PangoAttrList *_gtk_style_context_get_pango_attributes       (GtkStyleContext *context);
  
@@ -2868,9 +3249,11 @@
  G_END_DECLS
  
  #endif /* __GTK_STYLE_CONTEXT_PRIVATE_H__ */
+diff --git a/gtk/gtkswitch.c b/gtk/gtkswitch.c
+index 8a4aa72..a21ad59 100644
 --- a/gtk/gtkswitch.c
 +++ b/gtk/gtkswitch.c
-@@ -1008,9 +1008,6 @@
+@@ -1008,9 +1008,6 @@ gtk_switch_class_init (GtkSwitchClass *klass)
    g_object_class_override_property (gobject_class, PROP_ACTION_NAME, "action-name");
    g_object_class_override_property (gobject_class, PROP_ACTION_TARGET, "action-target");
  
@@ -2880,7 +3263,7 @@
    gtk_widget_class_set_css_name (widget_class, "switch");
  }
  
-@@ -1120,7 +1117,6 @@
+@@ -1120,7 +1117,6 @@ gtk_switch_set_active (GtkSwitch *sw,
  
    if (priv->is_active != is_active)
      {
@@ -2888,19 +3271,21 @@
        gboolean handled;
  
        priv->is_active = is_active;
-@@ -1133,9 +1129,6 @@
-       g_signal_emit (sw, signals[STATE_SET], 0, is_active, &handled);
+@@ -1134,9 +1130,6 @@ gtk_switch_set_active (GtkSwitch *sw,
  
        g_object_notify_by_pspec (G_OBJECT (sw), switch_props[PROP_ACTIVE]);
--
+ 
 -      accessible = gtk_widget_get_accessible (GTK_WIDGET (sw));
 -      atk_object_notify_state_change (accessible, ATK_STATE_CHECKED, priv->is_active);
- 
+-
        gtk_widget_queue_allocate (GTK_WIDGET (sw));
      }
+ }
+diff --git a/gtk/gtktextbuffer.c b/gtk/gtktextbuffer.c
+index f5f17f5..90208e2 100644
 --- a/gtk/gtktextbuffer.c
 +++ b/gtk/gtktextbuffer.c
-@@ -4478,7 +4478,6 @@
+@@ -4478,7 +4478,6 @@ _gtk_text_buffer_spew (GtkTextBuffer *buffer)
  
  void
  _gtk_text_buffer_get_text_before (GtkTextBuffer   *buffer,
@@ -2908,7 +3293,7 @@
                                    GtkTextIter     *position,
                                    GtkTextIter     *start,
                                    GtkTextIter     *end)
-@@ -4487,103 +4486,10 @@
+@@ -4487,103 +4486,10 @@ _gtk_text_buffer_get_text_before (GtkTextBuffer   *buffer,
  
    *start = *position;
    *end = *start;
@@ -3012,7 +3397,7 @@
                                GtkTextIter     *position,
                                GtkTextIter     *start,
                                GtkTextIter     *end)
-@@ -4592,187 +4498,16 @@
+@@ -4592,187 +4498,16 @@ _gtk_text_buffer_get_text_at (GtkTextBuffer   *buffer,
  
    *start = *position;
    *end = *start;
@@ -3200,9 +3585,11 @@
  }
  
  static GtkTextTag *
+diff --git a/gtk/gtktextbufferprivate.h b/gtk/gtktextbufferprivate.h
+index 8d8363c..c163f0d 100644
 --- a/gtk/gtktextbufferprivate.h
 +++ b/gtk/gtktextbufferprivate.h
-@@ -35,17 +35,14 @@
+@@ -35,17 +35,14 @@ void _gtk_text_buffer_notify_will_remove_tag (GtkTextBuffer *buffer,
                                                GtkTextTag    *tag);
  
  void _gtk_text_buffer_get_text_before (GtkTextBuffer   *buffer,
@@ -3220,9 +3607,11 @@
                                         GtkTextIter     *position,
                                         GtkTextIter     *start,
                                         GtkTextIter     *end);
+diff --git a/gtk/gtktextview.c b/gtk/gtktextview.c
+index 394da40..2873283 100644
 --- a/gtk/gtktextview.c
 +++ b/gtk/gtktextview.c
-@@ -1706,7 +1706,6 @@
+@@ -1706,7 +1706,6 @@ G_GNUC_END_IGNORE_DEPRECATIONS
  				"move-focus", 1,
  				GTK_TYPE_DIRECTION_TYPE, GTK_DIR_TAB_BACKWARD);
  
@@ -3230,7 +3619,7 @@
    gtk_widget_class_set_css_name (widget_class, "textview");
  
    quark_text_selection_data = g_quark_from_static_string ("gtk-text-view-text-selection-data");
-@@ -2016,7 +2015,6 @@
+@@ -2016,7 +2015,6 @@ gtk_text_view_set_buffer (GtkTextView   *text_view,
          gtk_text_view_update_handles (text_view, GTK_TEXT_HANDLE_MODE_NONE);
      }
  
@@ -3238,9 +3627,11 @@
    if (old_buffer)
      g_object_unref (old_buffer);
  
+diff --git a/gtk/gtktogglebutton.c b/gtk/gtktogglebutton.c
+index f594d8c..17579db 100644
 --- a/gtk/gtktogglebutton.c
 +++ b/gtk/gtktogglebutton.c
-@@ -222,7 +222,6 @@
+@@ -222,7 +222,6 @@ gtk_toggle_button_class_init (GtkToggleButtonClass *class)
  		  NULL,
  		  G_TYPE_NONE, 0);
  
@@ -3248,9 +3639,11 @@
    gtk_widget_class_set_css_name (widget_class, "button");
  }
  
+diff --git a/gtk/gtktoolbar.c b/gtk/gtktoolbar.c
+index 79164f3..1b94c08 100644
 --- a/gtk/gtktoolbar.c
 +++ b/gtk/gtktoolbar.c
-@@ -413,8 +413,6 @@
+@@ -413,8 +413,6 @@ gtk_toolbar_class_init (GtkToolbarClass *klass)
    widget_class->style_updated = gtk_toolbar_style_updated;
    widget_class->focus = gtk_toolbar_focus;
  
@@ -3259,9 +3652,11 @@
    /* need to override the base class function via override_class_handler,
     * because the signal slot is not available in GtkWidgetClass
     */
+diff --git a/gtk/gtktoolbutton.c b/gtk/gtktoolbutton.c
+index e56f28b..6a432ea 100644
 --- a/gtk/gtktoolbutton.c
 +++ b/gtk/gtktoolbutton.c
-@@ -1193,7 +1193,6 @@
+@@ -1193,7 +1193,6 @@ gtk_tool_button_set_label (GtkToolButton *button,
  {
    gchar *old_label;
    gchar *elided_label;
@@ -3269,7 +3664,7 @@
    
    g_return_if_fail (GTK_IS_TOOL_BUTTON (button));
  
-@@ -1205,8 +1204,6 @@
+@@ -1205,8 +1204,6 @@ gtk_tool_button_set_label (GtkToolButton *button,
    if (label)
      {
        elided_label = _gtk_toolbar_elide_underscores (label);
@@ -3278,9 +3673,11 @@
        g_free (elided_label);
      }
  
+diff --git a/gtk/gtktooltipwindow.c b/gtk/gtktooltipwindow.c
+index a88a64f..9333232 100644
 --- a/gtk/gtktooltipwindow.c
 +++ b/gtk/gtktooltipwindow.c
-@@ -64,7 +64,6 @@
+@@ -64,7 +64,6 @@ gtk_tooltip_window_class_init (GtkTooltipWindowClass *klass)
    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
  
    gtk_widget_class_set_css_name (widget_class, I_("tooltip"));
@@ -3288,9 +3685,11 @@
    gtk_widget_class_set_template_from_resource (widget_class, "/org/gtk/libgtk/ui/gtktooltipwindow.ui");
  
    gtk_widget_class_bind_template_child (widget_class, GtkTooltipWindow, box);
+diff --git a/gtk/gtktreeselection.c b/gtk/gtktreeselection.c
+index 677a277..9b588f6 100644
 --- a/gtk/gtktreeselection.c
 +++ b/gtk/gtktreeselection.c
-@@ -1638,12 +1638,10 @@
+@@ -1638,12 +1638,10 @@ gtk_tree_selection_real_select_node (GtkTreeSelection *selection,
        if (!GTK_RBNODE_FLAG_SET (node, GTK_RBNODE_IS_SELECTED))
          {
            GTK_RBNODE_SET_FLAG (node, GTK_RBNODE_IS_SELECTED);
@@ -3303,9 +3702,11 @@
          }
  
        _gtk_tree_view_queue_draw_node (priv->tree_view, tree, node, NULL);
+diff --git a/gtk/gtktreeview.c b/gtk/gtktreeview.c
+index b6a4290..63339e3 100644
 --- a/gtk/gtktreeview.c
 +++ b/gtk/gtktreeview.c
-@@ -1811,7 +1811,6 @@
+@@ -1811,7 +1811,6 @@ G_GNUC_END_IGNORE_DEPRECATIONS
  
    gtk_binding_entry_add_signal (binding_set, GDK_KEY_F, GDK_CONTROL_MASK, "start-interactive-search", 0);
  
@@ -3313,7 +3714,7 @@
    gtk_widget_class_set_css_name (widget_class, "treeview");
  }
  
-@@ -9029,8 +9028,6 @@
+@@ -9029,8 +9028,6 @@ gtk_tree_view_row_changed (GtkTreeModel *model,
    if (tree == NULL)
      goto done;
  
@@ -3322,7 +3723,7 @@
    if (tree_view->priv->fixed_height_mode
        && tree_view->priv->fixed_height >= 0)
      {
-@@ -9159,8 +9156,6 @@
+@@ -9159,8 +9156,6 @@ gtk_tree_view_row_inserted (GtkTreeModel *model,
        tmpnode = _gtk_rbtree_insert_after (tree, tmpnode, height, FALSE);
      }
  
@@ -3331,7 +3732,7 @@
   done:
    if (height > 0)
      {
-@@ -9223,12 +9218,10 @@
+@@ -9223,12 +9218,10 @@ gtk_tree_view_row_has_child_toggled (GtkTreeModel *model,
    if (has_child)
      {
        GTK_RBNODE_SET_FLAG (node, GTK_RBNODE_IS_PARENT);
@@ -3344,7 +3745,7 @@
      }
  
    if (has_child && tree_view->priv->is_list)
-@@ -9378,15 +9371,10 @@
+@@ -9378,15 +9371,10 @@ gtk_tree_view_row_deleted (GtkTreeModel *model,
        if (tree_view->priv->tree == tree)
  	tree_view->priv->tree = NULL;
  
@@ -3360,7 +3761,7 @@
        _gtk_rbtree_remove_node (tree, node);
      }
  
-@@ -9460,8 +9448,6 @@
+@@ -9460,8 +9448,6 @@ gtk_tree_view_rows_reordered (GtkTreeModel *model,
  
    _gtk_rbtree_reorder (tree, new_order, len);
  
@@ -3369,7 +3770,7 @@
    gtk_widget_queue_draw (GTK_WIDGET (tree_view));
  
    gtk_tree_view_dy_to_top_row (tree_view);
-@@ -10293,9 +10279,6 @@
+@@ -10293,9 +10279,6 @@ _gtk_tree_view_set_focus_column (GtkTreeView       *tree_view,
  
    tree_view->priv->focus_column = column;
  
@@ -3379,7 +3780,7 @@
  }
  
  
-@@ -11593,7 +11576,6 @@
+@@ -11593,7 +11576,6 @@ gtk_tree_view_set_model (GtkTreeView  *tree_view,
  	{
  	  tree_view->priv->tree = _gtk_rbtree_new ();
  	  gtk_tree_view_build_tree (tree_view, tree_view->priv->tree, &iter, 1, FALSE);
@@ -3387,7 +3788,7 @@
  	}
        gtk_tree_path_free (path);
  
-@@ -12145,8 +12127,6 @@
+@@ -12145,8 +12127,6 @@ gtk_tree_view_remove_column (GtkTreeView       *tree_view,
        gtk_widget_queue_resize (GTK_WIDGET (tree_view));
      }
  
@@ -3396,7 +3797,7 @@
    g_object_unref (column);
    g_signal_emit (tree_view, tree_view_signals[COLUMNS_CHANGED], 0);
  
-@@ -12217,8 +12197,6 @@
+@@ -12217,8 +12197,6 @@ gtk_tree_view_insert_column (GtkTreeView       *tree_view,
        gtk_widget_queue_resize (GTK_WIDGET (tree_view));
      }
  
@@ -3405,7 +3806,7 @@
    g_signal_emit (tree_view, tree_view_signals[COLUMNS_CHANGED], 0);
  
    return tree_view->priv->n_columns;
-@@ -12436,8 +12414,6 @@
+@@ -12436,8 +12414,6 @@ gtk_tree_view_move_column_after (GtkTreeView       *tree_view,
        gtk_tree_view_size_allocate_columns (GTK_WIDGET (tree_view), NULL);
      }
  
@@ -3414,7 +3815,7 @@
    g_signal_emit (tree_view, tree_view_signals[COLUMNS_CHANGED], 0);
  }
  
-@@ -12910,11 +12886,6 @@
+@@ -12910,11 +12886,6 @@ gtk_tree_view_real_expand_row (GtkTreeView *tree_view,
  			    gtk_tree_path_get_depth (path) + 1,
  			    open_all);
  
@@ -3426,7 +3827,7 @@
    install_presize_handler (tree_view);
  
    g_signal_emit (tree_view, tree_view_signals[ROW_EXPANDED], 0, &iter, path);
-@@ -13061,11 +13032,6 @@
+@@ -13061,11 +13032,6 @@ gtk_tree_view_real_collapse_row (GtkTreeView *tree_view,
    /* Stop a pending double click */
    gtk_event_controller_reset (GTK_EVENT_CONTROLLER (tree_view->priv->multipress_gesture));
  
@@ -3438,7 +3839,7 @@
    _gtk_rbtree_remove (node->children);
  
    if (cursor_changed)
-@@ -13284,10 +13250,6 @@
+@@ -13284,10 +13250,6 @@ gtk_tree_view_real_set_cursor (GtkTreeView     *tree_view,
  {
    if (!(flags & CURSOR_INVALID) && tree_view->priv->cursor_node)
      {
@@ -3449,7 +3850,7 @@
        _gtk_tree_view_queue_draw_node (tree_view,
                                        tree_view->priv->cursor_tree,
                                        tree_view->priv->cursor_node,
-@@ -13352,10 +13314,6 @@
+@@ -13352,10 +13314,6 @@ gtk_tree_view_real_set_cursor (GtkTreeView     *tree_view,
                                            NULL);
  	}
  
@@ -3460,9 +3861,11 @@
      }
  
    if (!gtk_widget_in_destruction (GTK_WIDGET (tree_view)))
+diff --git a/gtk/gtktreeviewcolumn.c b/gtk/gtktreeviewcolumn.c
+index 366b3aa..4159f85 100644
 --- a/gtk/gtktreeviewcolumn.c
 +++ b/gtk/gtktreeviewcolumn.c
-@@ -1889,12 +1889,6 @@
+@@ -1889,12 +1889,6 @@ gtk_tree_view_column_set_visible (GtkTreeViewColumn *tree_column,
    if (priv->visible)
      _gtk_tree_view_column_cell_set_dirty (tree_column, TRUE);
  
@@ -3475,9 +3878,11 @@
    gtk_tree_view_column_update_button (tree_column);
    g_object_notify_by_pspec (G_OBJECT (tree_column), tree_column_props[PROP_VISIBLE]);
  }
+diff --git a/gtk/gtkviewport.c b/gtk/gtkviewport.c
+index 601d5a1..c81ce62 100644
 --- a/gtk/gtkviewport.c
 +++ b/gtk/gtkviewport.c
-@@ -390,8 +390,6 @@
+@@ -390,8 +390,6 @@ gtk_viewport_class_init (GtkViewportClass *class)
    widget_class->get_preferred_height_for_width = gtk_viewport_get_preferred_height_for_width;
    widget_class->queue_draw_region = gtk_viewport_queue_draw_region;
    
@@ -3486,9 +3891,11 @@
    container_class->remove = gtk_viewport_remove;
    container_class->add = gtk_viewport_add;
    gtk_container_class_handle_border_width (container_class);
+diff --git a/gtk/gtkvolumebutton.c b/gtk/gtkvolumebutton.c
+index f406492..e6a103c 100644
 --- a/gtk/gtkvolumebutton.c
 +++ b/gtk/gtkvolumebutton.c
-@@ -183,10 +183,6 @@
+@@ -183,10 +183,6 @@ gtk_volume_button_init (GtkVolumeButton *button)
    GtkWidget *widget = GTK_WIDGET (button);
  
    gtk_widget_init_template (widget);
@@ -3499,18 +3906,17 @@
  }
  
  /**
-@@ -220,10 +216,7 @@
+@@ -220,9 +216,6 @@ cb_query_tooltip (GtkWidget  *button,
    GtkAdjustment *adjustment;
    gdouble val;
    char *str;
 -  AtkImage *image;
- 
--  image = ATK_IMAGE (gtk_widget_get_accessible (button));
 -
+-  image = ATK_IMAGE (gtk_widget_get_accessible (button));
+ 
    adjustment = gtk_scale_button_get_adjustment (scale_button);
    val = gtk_scale_button_get_value (scale_button);
- 
-@@ -250,7 +243,6 @@
+@@ -250,7 +243,6 @@ cb_query_tooltip (GtkWidget  *button,
      }
  
    gtk_tooltip_set_text (tooltip, str);
@@ -3518,9 +3924,11 @@
    g_free (str);
  
    return TRUE;
+diff --git a/gtk/gtkwidget.c b/gtk/gtkwidget.c
+index b6e0011..789905a 100644
 --- a/gtk/gtkwidget.c
 +++ b/gtk/gtkwidget.c
-@@ -496,8 +496,6 @@
+@@ -496,8 +496,6 @@ typedef struct {
  struct _GtkWidgetClassPrivate
  {
    GtkWidgetTemplate *template;
@@ -3529,7 +3937,7 @@
    const char *css_name;
  };
  
-@@ -738,9 +736,6 @@
+@@ -738,9 +736,6 @@ static void             gtk_widget_real_state_flags_changed     (GtkWidget
                                                                   GtkStateFlags     old_state);
  static void             gtk_widget_real_queue_draw_region       (GtkWidget         *widget,
  								 const cairo_region_t *region);
@@ -3539,7 +3947,7 @@
  static void             gtk_widget_invalidate_widget_windows    (GtkWidget        *widget,
  								 cairo_region_t        *region);
  static GdkScreen *      gtk_widget_get_screen_unchecked         (GtkWidget        *widget);
-@@ -878,13 +873,6 @@
+@@ -878,13 +873,6 @@ gtk_widget_get_type (void)
  	NULL,		/* value_table */
        };
  
@@ -3553,7 +3961,7 @@
        const GInterfaceInfo buildable_info =
        {
  	(GInterfaceInitFunc) gtk_widget_buildable_interface_init,
-@@ -900,8 +888,6 @@
+@@ -900,8 +888,6 @@ gtk_widget_get_type (void)
        GtkWidget_private_offset =
          g_type_add_instance_private (widget_type, sizeof (GtkWidgetPrivate));
  
@@ -3562,7 +3970,7 @@
        g_type_add_interface_static (widget_type, GTK_TYPE_BUILDABLE,
                                     &buildable_info) ;
      }
-@@ -1106,11 +1092,6 @@
+@@ -1106,11 +1092,6 @@ gtk_widget_class_init (GtkWidgetClass *klass)
  
    klass->show_help = gtk_widget_real_show_help;
  
@@ -3574,7 +3982,7 @@
    klass->adjust_size_request = gtk_widget_real_adjust_size_request;
    klass->adjust_baseline_request = gtk_widget_real_adjust_baseline_request;
    klass->adjust_size_allocation = gtk_widget_real_adjust_size_allocation;
-@@ -3722,7 +3703,6 @@
+@@ -3722,7 +3703,6 @@ G_GNUC_END_IGNORE_DEPRECATIONS
                                                               1, G_MAXINT, 20,
                                                               GTK_PARAM_READABLE));
  
@@ -3582,7 +3990,7 @@
    gtk_widget_class_set_css_name (klass, "widget");
  }
  
-@@ -12332,13 +12312,6 @@
+@@ -12332,13 +12312,6 @@ gtk_widget_real_destroy (GtkWidget *object)
  	}
      }
  
@@ -3596,7 +4004,7 @@
    /* wipe accelerator closures (keep order) */
    g_object_set_qdata (G_OBJECT (widget), quark_accel_path, NULL);
    g_object_set_qdata (G_OBJECT (widget), quark_accel_closures, NULL);
-@@ -12371,8 +12344,6 @@
+@@ -12371,8 +12344,6 @@ gtk_widget_finalize (GObject *object)
  
    g_free (priv->name);
  
@@ -3605,7 +4013,7 @@
    gtk_widget_clear_path (widget);
  
    gtk_css_widget_node_widget_destroyed (GTK_CSS_WIDGET_NODE (priv->cssnode));
-@@ -13420,191 +13391,7 @@
+@@ -13420,190 +13391,6 @@ G_DEFINE_BOXED_TYPE (GtkRequisition, gtk_requisition,
                       gtk_requisition_copy,
                       gtk_requisition_free)
  
@@ -3772,7 +4180,7 @@
 -  return accessible;
 -}
 -
- /*
+-/*
 - * Initialize a AtkImplementorIface instance’s virtual pointers as
 - * appropriate to this implementor’s class (GtkWidget).
 - */
@@ -3793,11 +4201,10 @@
 -  return accessible;
 -}
 -
--/*
+ /*
   * Expand flag management
   */
- 
-@@ -14072,9 +13859,6 @@
+@@ -14072,9 +13859,6 @@ gtk_widget_buildable_get_internal_child (GtkBuildable *buildable,
    GSList *l;
    GType internal_child_type = 0;
  
@@ -3807,7 +4214,7 @@
    /* Find a widget type which has declared an automated child as internal by
     * the name 'childname', if any.
     */
-@@ -14122,44 +13906,10 @@
+@@ -14122,44 +13906,10 @@ gtk_widget_buildable_set_buildable_property (GtkBuildable *buildable,
      g_object_set_property (G_OBJECT (buildable), name, value);
  }
  
@@ -3827,7 +4234,7 @@
 -  gint col;
 -} AtkRelationData;
 -
- static void
+-static void
 -free_action (AtkActionData *data, gpointer user_data)
 -{
 -  g_free (data->action_name);
@@ -3843,7 +4250,7 @@
 -  g_slice_free (AtkRelationData, data);
 -}
 -
--static void
+ static void
  gtk_widget_buildable_parser_finished (GtkBuildable *buildable,
  				      GtkBuilder   *builder)
  {
@@ -3852,7 +4259,7 @@
    if (g_object_get_qdata (G_OBJECT (buildable), quark_builder_has_default))
      {
        gtk_widget_grab_default (GTK_WIDGET (buildable));
-@@ -14171,37 +13921,6 @@
+@@ -14171,37 +13921,6 @@ gtk_widget_buildable_parser_finished (GtkBuildable *buildable,
        gtk_widget_grab_focus (GTK_WIDGET (buildable));
        g_object_steal_qdata (G_OBJECT (buildable), quark_builder_has_focus);
      }
@@ -3890,7 +4297,7 @@
  }
  
  typedef struct
-@@ -14211,125 +13930,6 @@
+@@ -14211,125 +13930,6 @@ typedef struct
    GSList *relations;
  } AccessibilitySubParserData;
  
@@ -4016,7 +4423,7 @@
  typedef struct
  {
    GObject *object;
-@@ -14492,19 +14092,6 @@
+@@ -14492,19 +14092,6 @@ gtk_widget_buildable_custom_tag_start (GtkBuildable     *buildable,
        return TRUE;
      }
  
@@ -4036,11 +4443,10 @@
    if (strcmp (tagname, "style") == 0)
      {
        StyleParserData *data;
-@@ -14577,62 +14164,6 @@
-       toplevel = _gtk_widget_get_toplevel (GTK_WIDGET (accel_data->object));
+@@ -14578,62 +14165,6 @@ gtk_widget_buildable_custom_finished (GtkBuildable *buildable,
  
        _gtk_widget_buildable_finish_accelerator (GTK_WIDGET (buildable), toplevel, user_data);
--    }
+     }
 -  else if (strcmp (tagname, "accessibility") == 0)
 -    {
 -      AccessibilitySubParserData *a11y_data;
@@ -4096,9 +4502,12 @@
 -			    a11y_data->relations);
 -
 -      g_slice_free (AccessibilitySubParserData, a11y_data);
-     }
+-    }
    else if (strcmp (tagname, "style") == 0)
      {
+       StyleParserData *style_data = (StyleParserData *)user_data;
+diff --git a/gtk/gtkwidget.h b/gtk/gtkwidget.h
+index 3dada84..27dbd68 100644
 --- a/gtk/gtkwidget.h
 +++ b/gtk/gtkwidget.h
 @@ -33,7 +33,6 @@
@@ -4109,7 +4518,7 @@
  
  G_BEGIN_DECLS
  
-@@ -305,8 +304,6 @@
+@@ -305,8 +304,6 @@ struct _GtkWidget
   * @popup_menu: Signal emitted whenever a widget should pop up a
   *   context menu.
   * @show_help:
@@ -4118,7 +4527,7 @@
   * @screen_changed: Signal emitted when the screen of a widget has
   *   changed.
   * @can_activate_accel: Signal allows applications and derived widgets
-@@ -549,8 +546,6 @@
+@@ -549,8 +546,6 @@ struct _GtkWidgetClass
  
    /* accessibility support
     */
@@ -4127,11 +4536,10 @@
    void         (* screen_changed)     (GtkWidget *widget,
                                         GdkScreen *previous_screen);
    gboolean     (* can_activate_accel) (GtkWidget *widget,
-@@ -1055,16 +1050,6 @@
- GDK_AVAILABLE_IN_ALL
+@@ -1056,16 +1051,6 @@ GDK_AVAILABLE_IN_ALL
  void             gtk_widget_set_support_multidevice (GtkWidget      *widget,
                                                       gboolean        support_multidevice);
--
+ 
 -/* Accessibility support */
 -GDK_AVAILABLE_IN_3_2
 -void             gtk_widget_class_set_accessible_type    (GtkWidgetClass     *widget_class,
@@ -4141,12 +4549,15 @@
 -                                                          AtkRole             role);
 -GDK_AVAILABLE_IN_ALL
 -AtkObject*       gtk_widget_get_accessible               (GtkWidget          *widget);
- 
+-
  
  /* Margin and alignment */
+ GDK_AVAILABLE_IN_ALL
+diff --git a/gtk/gtkwidgetprivate.h b/gtk/gtkwidgetprivate.h
+index 1b7ddf2..22dc342 100644
 --- a/gtk/gtkwidgetprivate.h
 +++ b/gtk/gtkwidgetprivate.h
-@@ -158,8 +158,6 @@
+@@ -158,8 +158,6 @@ struct _GtkWidgetPrivate
    GtkWidget *parent;
  
    GList *event_controllers;
@@ -4155,704 +4566,15 @@
  };
  
  GtkCssNode *  gtk_widget_get_css_node       (GtkWidget *widget);
-@@ -212,8 +210,6 @@
- 
+@@ -213,8 +211,6 @@ gboolean _gtk_widget_has_baseline_support (GtkWidget *widget);
  const gchar*      _gtk_widget_get_accel_path               (GtkWidget *widget,
                                                              gboolean  *locked);
--
--AtkObject *       _gtk_widget_peek_accessible              (GtkWidget *widget);
  
+-AtkObject *       _gtk_widget_peek_accessible              (GtkWidget *widget);
+-
  void              _gtk_widget_set_has_default              (GtkWidget *widget,
                                                              gboolean   has_default);
---- a/gtk/gtkwindow.c
-+++ b/gtk/gtkwindow.c
-@@ -60,7 +60,6 @@
- #include "gtkheaderbarprivate.h"
- #include "gtkpopoverprivate.h"
- #include "a11y/gtkwindowaccessible.h"
--#include "a11y/gtkcontaineraccessibleprivate.h"
- #include "gtkapplicationprivate.h"
- #include "gtkgestureprivate.h"
- #include "inspector/init.h"
-@@ -1270,7 +1269,6 @@
-   add_tab_bindings (binding_set, GDK_SHIFT_MASK, GTK_DIR_TAB_BACKWARD);
-   add_tab_bindings (binding_set, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_DIR_TAB_BACKWARD);
- 
--  gtk_widget_class_set_accessible_type (widget_class, GTK_TYPE_WINDOW_ACCESSIBLE);
-   gtk_widget_class_set_css_name (widget_class, "window");
- }
- 
-@@ -12478,7 +12476,6 @@
- {
-   GtkWindowPrivate *priv;
-   GtkWindowPopover *data;
--  AtkObject *accessible;
- 
-   g_return_if_fail (GTK_IS_WINDOW (window));
-   g_return_if_fail (GTK_IS_WIDGET (popover));
-@@ -12501,10 +12498,6 @@
-     popover_realize (popover, data, window);
- 
-   gtk_widget_set_parent (popover, GTK_WIDGET (window));
--
--  accessible = gtk_widget_get_accessible (GTK_WIDGET (window));
--  _gtk_container_accessible_add_child (GTK_CONTAINER_ACCESSIBLE (accessible),
--                                       gtk_widget_get_accessible (popover), -1);
- }
- 
- void
-@@ -12513,7 +12506,6 @@
- {
-   GtkWindowPrivate *priv;
-   GtkWindowPopover *data;
--  AtkObject *accessible;
- 
-   g_return_if_fail (GTK_IS_WINDOW (window));
-   g_return_if_fail (GTK_IS_WIDGET (popover));
-@@ -12535,9 +12527,6 @@
- 
-   priv->popovers = g_list_remove (priv->popovers, data);
- 
--  accessible = gtk_widget_get_accessible (GTK_WIDGET (window));
--  _gtk_container_accessible_remove_child (GTK_CONTAINER_ACCESSIBLE (accessible),
--                                          gtk_widget_get_accessible (popover), -1);
-   popover_destroy (data);
-   g_object_unref (popover);
- }
---- a/gtk/inspector/misc-info.c
-+++ b/gtk/inspector/misc-info.c
-@@ -68,12 +68,6 @@
-   GtkWidget *framerate;
-   GtkWidget *framecount_row;
-   GtkWidget *framecount;
--  GtkWidget *accessible_role_row;
--  GtkWidget *accessible_role;
--  GtkWidget *accessible_name_row;
--  GtkWidget *accessible_name;
--  GtkWidget *accessible_description_row;
--  GtkWidget *accessible_description;
-   GtkWidget *mapped_row;
-   GtkWidget *mapped;
-   GtkWidget *realized_row;
-@@ -337,8 +331,6 @@
- 
-   if (GTK_IS_WIDGET (sl->priv->object))
-     {
--      AtkObject *accessible;
--      AtkRole role;
-       GList *list, *l;
- 
-       gtk_container_forall (GTK_CONTAINER (sl->priv->mnemonic_label), (GtkCallback)gtk_widget_destroy, NULL);
-@@ -359,11 +351,6 @@
- 
-       gtk_widget_set_visible (sl->priv->tick_callback, gtk_widget_has_tick_callback (GTK_WIDGET (sl->priv->object)));
- 
--      accessible = ATK_OBJECT (gtk_widget_get_accessible (GTK_WIDGET (sl->priv->object)));
--      role = atk_object_get_role (accessible);
--      gtk_label_set_text (GTK_LABEL (sl->priv->accessible_role), atk_role_get_name (role));
--      gtk_label_set_text (GTK_LABEL (sl->priv->accessible_name), atk_object_get_name (accessible));
--      gtk_label_set_text (GTK_LABEL (sl->priv->accessible_description), atk_object_get_description (accessible));
-       gtk_widget_set_visible (sl->priv->mapped, gtk_widget_get_mapped (GTK_WIDGET (sl->priv->object)));
-       gtk_widget_set_visible (sl->priv->realized, gtk_widget_get_realized (GTK_WIDGET (sl->priv->object)));
-       gtk_widget_set_visible (sl->priv->is_toplevel, gtk_widget_is_toplevel (GTK_WIDGET (sl->priv->object)));
-@@ -454,9 +441,6 @@
-       gtk_widget_show (sl->priv->clip_area_row);
-       gtk_widget_show (sl->priv->mnemonic_label_row);
-       gtk_widget_show (sl->priv->tick_callback_row);
--      gtk_widget_show (sl->priv->accessible_role_row);
--      gtk_widget_show (sl->priv->accessible_name_row);
--      gtk_widget_show (sl->priv->accessible_description_row);
-       gtk_widget_show (sl->priv->mapped_row);
-       gtk_widget_show (sl->priv->realized_row);
-       gtk_widget_show (sl->priv->is_toplevel_row);
-@@ -478,9 +462,6 @@
-       gtk_widget_hide (sl->priv->baseline_row);
-       gtk_widget_hide (sl->priv->clip_area_row);
-       gtk_widget_hide (sl->priv->tick_callback_row);
--      gtk_widget_hide (sl->priv->accessible_role_row);
--      gtk_widget_hide (sl->priv->accessible_name_row);
--      gtk_widget_hide (sl->priv->accessible_description_row);
-       gtk_widget_hide (sl->priv->mapped_row);
-       gtk_widget_hide (sl->priv->realized_row);
-       gtk_widget_hide (sl->priv->is_toplevel_row);
-@@ -642,12 +623,6 @@
-   gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, framecount);
-   gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, framerate_row);
-   gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, framerate);
--  gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, accessible_role_row);
--  gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, accessible_role);
--  gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, accessible_name_row);
--  gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, accessible_name);
--  gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, accessible_description_row);
--  gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, accessible_description);
-   gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, mapped_row);
-   gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, mapped);
-   gtk_widget_class_bind_template_child_private (widget_class, GtkInspectorMiscInfo, realized_row);
---- a/gtk/meson.build
-+++ b/gtk/meson.build
-@@ -1,5 +1,4 @@
- subdir('deprecated')
--subdir('a11y')
- subdir('inspector')
- 
- gtk_cargs = [
-@@ -32,7 +31,6 @@
-   'gtkaccelgroup.c',
-   'gtkaccellabel.c',
-   'gtkaccelmap.c',
--  'gtkaccessible.c',
-   'gtkactionbar.c',
-   'gtkactionhelper.c',
-   'gtkadjustment.c',
-@@ -396,12 +394,10 @@
-   'gtk.h',
-   'gtk-autocleanups.h',
-   'gtkx-autocleanups.h',
--  'gtk-a11y.h',
-   'gtkaboutdialog.h',
-   'gtkaccelgroup.h',
-   'gtkaccellabel.h',
-   'gtkaccelmap.h',
--  'gtkaccessible.h',
-   'gtkactionable.h',
-   'gtkactionbar.h',
-   'gtkadjustment.h',
-@@ -761,7 +757,7 @@
- gtkmarshal_h = gtkmarshalers[1]
- 
- gtktypebuiltins = gnome.mkenums('gtktypebuiltins',
--                                sources: gtk_public_headers + gtk_deprecated_headers + a11y_headers,
-+                                sources: gtk_public_headers + gtk_deprecated_headers,
-                                 c_template: 'gtktypebuiltins.c.template',
-                                 h_template: 'gtktypebuiltins.h.template',
-                                 install_dir: join_paths(gtk_includedir, 'gtk-3.0/gtk'),
-@@ -820,7 +816,6 @@
-   gtk_dbus_src,
-   gtk_deprecated_sources,
-   inspector_sources,
--  a11y_sources,
-   gtkresources,
-   gtkmarshalers,
-   gtkprivatetypebuiltins,
-@@ -840,7 +835,6 @@
-   cairo_dep,
-   fontconfig_dep,
-   pixbuf_dep,
--  atk_dep,
-   epoxy_dep,
-   libm,
- ]
-@@ -896,8 +890,6 @@
-            )
-   gtk_res = import('windows').compile_resources(gtk_rc)
-   gtk_sources += gtk_res
--else
--  gtk_deps += [ atkbridge_dep, ]
- endif
- 
- if quartz_enabled
-@@ -991,15 +983,12 @@
-     gtk_gir_public_headers,
-     gtk_deprecated_headers,
-     gtk_sources,
--    a11y_headers,
--    a11y_sources,
-     gtktypebuiltins_h,
-     gtkversion,
-   ]
- 
--  gtk_gir_includes = [gdk_gir[0], 'Atk-1.0']
--  gtk_gir_extra_args = gir_args + ['-DGTK_COMPILATION',
--                                   '--c-include=gtk/gtk-a11y.h']
-+  gtk_gir_includes = gdk_gir[0]
-+  gtk_gir_extra_args = gir_args + ['-DGTK_COMPILATION']
-   if x11_enabled
-     gtk_gir_includes += ['xlib-2.0']
-     gtk_gir_extra_args += ['--c-include=gtk/gtkx.h']
---- a/gtk/ui/gtkcoloreditor.ui
-+++ b/gtk/ui/gtkcoloreditor.ui
-@@ -84,11 +84,6 @@
-                 <property name="visible">1</property>
-                 <property name="can-focus">1</property>
-                 <property name="invisible-char">•</property>
--                <child internal-child="accessible">
--                  <object class="AtkObject" id="entry-atkobject">
--                    <property name="AtkObject::accessible-name" translatable="yes">Color Name</property>
--                  </object>
--                </child>
-                 <signal name="activate" handler="entry_apply" swapped="no"/>
-                 <signal name="focus-out-event" handler="entry_focus_out" swapped="no"/>
-                 <signal name="notify::text" handler="entry_text_changed" swapped="no"/>
-@@ -191,11 +186,6 @@
-             <property name="width-chars">2</property>
-             <property name="max-width-chars">2</property>
-             <property name="climb-rate">1</property>
--            <child internal-child="accessible">
--              <object class="AtkObject" id="a_entry-atkobject">
--                <property name="AtkObject::accessible-name" translatable="yes">Alpha</property>
--              </object>
--            </child>
-             <signal name="key-press-event" handler="popup_key_press" swapped="no"/>
-           </object>
-           <packing>
-@@ -238,11 +228,6 @@
-             <property name="width-chars">2</property>
-             <property name="max-width-chars">2</property>
-             <property name="climb-rate">1</property>
--            <child internal-child="accessible">
--              <object class="AtkObject" id="h_entry-atkobject">
--                <property name="AtkObject::accessible-name" translatable="yes">Hue</property>
--              </object>
--            </child>
-             <signal name="key-press-event" handler="popup_key_press" swapped="no"/>
-           </object>
-           <packing>
-@@ -296,11 +281,6 @@
-             <property name="width-chars">2</property>
-             <property name="max-width-chars">2</property>
-             <property name="climb-rate">1</property>
--            <child internal-child="accessible">
--              <object class="AtkObject" id="s_entry-atkobject">
--                <property name="AtkObject::accessible-name" translatable="yes">Saturation</property>
--              </object>
--            </child>
-             <signal name="key-press-event" handler="popup_key_press" swapped="no"/>
-           </object>
-           <packing>
-@@ -315,11 +295,6 @@
-             <property name="width-chars">2</property>
-             <property name="max-width-chars">2</property>
-             <property name="climb-rate">1</property>
--            <child internal-child="accessible">
--              <object class="AtkObject" id="v_entry-atkobject">
--                <property name="AtkObject::accessible-name" translatable="yes">Value</property>
--              </object>
--            </child>
-             <signal name="key-press-event" handler="popup_key_press" swapped="no"/>
-           </object>
-           <packing>
---- a/gtk/ui/gtkfilechooserdialog.ui
-+++ b/gtk/ui/gtkfilechooserdialog.ui
-@@ -27,11 +27,6 @@
-             <signal name="file-activated" handler="file_chooser_widget_file_activated" swapped="no"/>
-             <signal name="response-requested" handler="file_chooser_widget_response_requested" swapped="no"/>
-             <signal name="selection-changed" handler="file_chooser_widget_selection_changed" swapped="no"/>
--            <child internal-child="accessible">
--              <object class="AtkObject">
--                <property name="AtkObject::accessible-name" translatable="yes">File Chooser Widget</property>
--              </object>
--            </child>
-           </object>
-           <packing>
-             <property name="expand">1</property>
---- a/gtk/ui/gtkfilechooserwidget.ui
-+++ b/gtk/ui/gtkfilechooserwidget.ui
-@@ -17,11 +17,6 @@
-                 <property name="hscrollbar-policy">never</property>
-                 <property name="local-only">1</property>
-                 <property name="show-other-locations">1</property>
--                <child internal-child="accessible">
--                  <object class="AtkObject">
--                    <property name="AtkObject::accessible-name" translatable="yes">Places</property>
--                  </object>
--                </child>
-                 <style>
-                   <class name="sidebar"/>
-                 </style>
-@@ -42,11 +37,6 @@
-                   <object class="GtkRevealer" id="browse_header_revealer">
-                     <property name="visible">1</property>
-                     <property name="hexpand">1</property>
--                    <child internal-child="accessible">
--                      <object class="AtkObject">
--                        <property name="AtkObject::accessible-name" translatable="yes">Browse Header Revealer</property>
--                      </object>
--                    </child>
-                     <child>
-                       <object class="GtkBox">
-                         <property name="visible">1</property>
-@@ -60,21 +50,11 @@
-                           <object class="GtkStack" id="browse_header_stack">
-                             <property name="visible">1</property>
-                             <property name="transition-type">crossfade</property>
--                            <child internal-child="accessible">
--                              <object class="AtkObject">
--                                <property name="AtkObject::accessible-name" translatable="yes">Browse Header Stack</property>
--                              </object>
--                            </child>
-                             <child>
-                               <object class="GtkBox">
-                                 <property name="visible">1</property>
-                                 <property name="spacing">6</property>
-                                 <property name="border-width">6</property>
--                                <child internal-child="accessible">
--                                  <object class="AtkObject">
--                                    <property name="AtkObject::accessible-name" translatable="yes">PathBar Layer</property>
--                                  </object>
--                                </child>
-                                 <child>
-                                   <object class="GtkPathBar" id="browse_path_bar">
-                                     <property name="visible">True</property>
-@@ -116,12 +96,7 @@
-                                 <property name="no-show-all">1</property>
-                                 <property name="spacing">6</property>
-                                 <property name="border-width">6</property>
--                                <child internal-child="accessible">
--                                  <object class="AtkObject">
--                                    <property name="AtkObject::accessible-name" translatable="yes">Location Layer</property>
-                                   </object>
--                                </child>
--                              </object>
-                               <packing>
-                                 <property name="name">location</property>
-                               </packing>
-@@ -132,11 +107,6 @@
-                                 <property name="no-show-all">1</property>
-                                 <property name="spacing">6</property>
-                                 <property name="border-width">6</property>
--                                <child internal-child="accessible">
--                                  <object class="AtkObject">
--                                    <property name="AtkObject::accessible-name" translatable="yes">Search Layer</property>
--                                  </object>
--                                </child>
-                                 <child type="center">
-                                   <object class="GtkSearchEntry" id="search_entry">
-                                     <property name="visible">1</property>
-@@ -194,11 +164,6 @@
-                                     <property name="visible">1</property>
-                                     <property name="has-tooltip">1</property>
-                                     <property name="enable-search">0</property>
--                                    <child internal-child="accessible">
--                                      <object class="AtkObject" id="browse_files_tree_view-atkobject">
--                                        <property name="AtkObject::accessible-name" translatable="yes">Files</property>
--                                      </object>
--                                    </child>
-                                     <signal name="button-press-event" handler="list_button_press_event_cb" swapped="no"/>
-                                     <signal name="drag-data-received" handler="file_list_drag_data_received_cb" swapped="no"/>
-                                     <signal name="drag-drop" handler="file_list_drag_drop_cb" swapped="no"/>
---- a/gtk/ui/gtkpathbar.ui
-+++ b/gtk/ui/gtkpathbar.ui
-@@ -6,11 +6,6 @@
-     <property name="can-focus">1</property>
-     <property name="receives-default">1</property>
-     <property name="focus-on-click">0</property>
--    <child internal-child="accessible">
--      <object class="AtkObject" id="down_slider_button-atkobject">
--        <property name="AtkObject::accessible-name" translatable="yes">Down Path</property>
--      </object>
--    </child>
-     <signal name="button-press-event" handler="gtk_path_bar_slider_button_press" swapped="no"/>
-     <signal name="button-release-event" handler="gtk_path_bar_slider_button_release" swapped="no"/>
-     <signal name="focus-out-event" handler="gtk_path_bar_slider_down_defocus" swapped="no"/>
-@@ -31,11 +26,6 @@
-     <property name="can-focus">1</property>
-     <property name="receives-default">1</property>
-     <property name="focus-on-click">0</property>
--    <child internal-child="accessible">
--      <object class="AtkObject" id="up_slider_button-atkobject">
--        <property name="AtkObject::accessible-name" translatable="yes">Up Path</property>
--      </object>
--    </child>
-     <signal name="button-press-event" handler="gtk_path_bar_slider_button_press" swapped="no"/>
-     <signal name="button-release-event" handler="gtk_path_bar_slider_button_release" swapped="no"/>
-     <signal name="focus-out-event" handler="gtk_path_bar_slider_up_defocus" swapped="no"/>
---- a/gtk/ui/gtkprintunixdialog.ui
-+++ b/gtk/ui/gtkprintunixdialog.ui
-@@ -182,9 +182,6 @@
-                                 <attributes>
-                                   <attribute name="weight" value="bold"/>
-                                 </attributes>
--                                <accessibility>
--                                  <relation type="label-for" target="range_table"/>
--                                </accessibility>
-                               </object>
-                               <packing>
-                                 <property name="fill">0</property>
-@@ -271,22 +268,12 @@
-  e.g. 1–3, 7, 11</property>
-                                     <property name="invisible-char">•</property>
-                                     <property name="activates-default">1</property>
--                                    <child internal-child="accessible">
--                                      <object class="AtkObject" id="page_range_entry-atkobject">
--                                        <property name="AtkObject::accessible-name" translatable="yes">Pages</property>
--                                        <property name="AtkObject::accessible-description" translatable="yes">Specify one or more page ranges,
-- e.g. 1–3, 7, 11</property>
--                                      </object>
--                                    </child>
-                                   </object>
-                                   <packing>
-                                     <property name="left-attach">1</property>
-                                     <property name="top-attach">3</property>
-                                   </packing>
-                                 </child>
--                                <accessibility>
--                                  <relation type="labelled-by" target="label_widget1"/>
--                                </accessibility>
-                               </object>
-                               <packing>
-                                 <property name="fill">0</property>
-@@ -312,9 +299,6 @@
-                                 <attributes>
-                                   <attribute name="weight" value="bold"/>
-                                 </attributes>
--                                <accessibility>
--                                  <relation type="label-for" target="grid1"/>
--                                </accessibility>
-                               </object>
-                               <packing>
-                                 <property name="fill">0</property>
-@@ -397,9 +381,6 @@
-                                     <property name="height">2</property>
-                                   </packing>
-                                 </child>
--                                <accessibility>
--                                  <relation type="labelled-by" target="label_widget2"/>
--                                </accessibility>
-                               </object>
-                               <packing>
-                                 <property name="fill">0</property>
-@@ -453,9 +434,6 @@
-                                 <attributes>
-                                   <attribute name="weight" value="bold"/>
-                                 </attributes>
--                                <accessibility>
--                                  <relation type="label-for" target="grid2"/>
--                                </accessibility>
-                               </object>
-                               <packing>
-                                 <property name="fill">0</property>
-@@ -622,9 +600,6 @@
-                                     <property name="top-attach">4</property>
-                                   </packing>
-                                 </child>
--                                <accessibility>
--                                  <relation type="labelled-by" target="label_widget3"/>
--                                </accessibility>
-                               </object>
-                               <packing>
-                                 <property name="fill">0</property>
-@@ -650,9 +625,6 @@
-                                 <attributes>
-                                   <attribute name="weight" value="bold"/>
-                                 </attributes>
--                                <accessibility>
--                                  <relation type="label-for" target="grid3"/>
--                                </accessibility>
-                               </object>
-                               <packing>
-                                 <property name="fill">0</property>
-@@ -802,9 +774,6 @@
-                                     <property name="top-attach">4</property>
-                                   </packing>
-                                 </child>
--                                <accessibility>
--                                  <relation type="labelled-by" target="label_widget4"/>
--                                </accessibility>
-                               </object>
-                               <packing>
-                                 <property name="fill">0</property>
-@@ -877,9 +846,6 @@
-                             <attributes>
-                               <attribute name="weight" value="bold"/>
-                             </attributes>
--                            <accessibility>
--                              <relation type="label-for" target="grid5"/>
--                            </accessibility>
-                           </object>
-                           <packing>
-                             <property name="fill">0</property>
-@@ -939,9 +905,6 @@
-                                 <property name="top-attach">1</property>
-                               </packing>
-                             </child>
--                            <accessibility>
--                              <relation type="labelled-by" target="label_widget5"/>
--                            </accessibility>
-                           </object>
-                           <packing>
-                             <property name="fill">0</property>
-@@ -968,9 +931,6 @@
-                             <attributes>
-                               <attribute name="weight" value="bold"/>
-                             </attributes>
--                            <accessibility>
--                              <relation type="label-for" target="grid6"/>
--                            </accessibility>
-                           </object>
-                           <packing>
-                             <property name="fill">0</property>
-@@ -1031,13 +991,6 @@
-  e.g. 15∶30, 2∶35 pm, 14∶15∶20, 11∶46∶30 am, 4 pm</property>
-                                 <property name="invisible-char">•</property>
-                                 <property name="invisible-char-set">1</property>
--                                <child internal-child="accessible">
--                                  <object class="AtkObject" id="print_at_entry-atkobject">
--                                    <property name="AtkObject::accessible-name" translatable="yes">Time of print</property>
--                                    <property name="AtkObject::accessible-description" translatable="yes">Specify the time of print,
-- e.g. 15∶30, 2∶35 pm, 14∶15∶20, 11∶46∶30 am, 4 pm</property>
--                                  </object>
--                                </child>
-                                 <signal name="changed" handler="update_print_at_option" object="GtkPrintUnixDialog" swapped="yes"/>
-                               </object>
-                               <packing>
-@@ -1064,9 +1017,6 @@
-                                 <property name="width">2</property>
-                               </packing>
-                             </child>
--                            <accessibility>
--                              <relation type="labelled-by" target="label_widget6"/>
--                            </accessibility>
-                           </object>
-                           <packing>
-                             <property name="fill">0</property>
-@@ -1093,9 +1043,6 @@
-                             <attributes>
-                               <attribute name="weight" value="bold"/>
-                             </attributes>
--                            <accessibility>
--                              <relation type="label-for" target="grid7"/>
--                            </accessibility>
-                           </object>
-                           <packing>
-                             <property name="fill">0</property>
-@@ -1155,9 +1102,6 @@
-                                 <property name="top-attach">1</property>
-                               </packing>
-                             </child>
--                            <accessibility>
--                              <relation type="labelled-by" target="label_widget7"/>
--                            </accessibility>
-                           </object>
-                           <packing>
-                             <property name="fill">0</property>
---- a/gtk/ui/gtkvolumebutton.ui
-+++ b/gtk/ui/gtkvolumebutton.ui
-@@ -19,32 +19,14 @@
- audio-volume-high
- audio-volume-low
- audio-volume-medium</property>
--    <child internal-child="accessible">
--      <object class="AtkObject" id="GtkVolumeButton-atkobject">
--        <property name="AtkObject::accessible-name" translatable="yes">Volume</property>
--        <property name="AtkObject::accessible-description" translatable="yes">Turns volume up or down</property>
--      </object>
--    </child>
-     <signal name="query-tooltip" handler="cb_query_tooltip" swapped="no"/>
-     <signal name="value-changed" handler="cb_value_changed" swapped="no"/>
-     <child internal-child="plus_button">
-       <object class="GtkButton" id="scalebutton-plus_button1">
--        <child internal-child="accessible">
--          <object class="AtkObject" id="scalebutton-plus_button1-atkobject">
--            <property name="AtkObject::accessible-name" translatable="yes">Volume Up</property>
--            <property name="AtkObject::accessible-description" translatable="yes">Increases the volume</property>
-           </object>
-         </child>
--      </object>
--    </child>
-     <child internal-child="minus_button">
-       <object class="GtkButton" id="scalebutton-minus_button1">
--        <child internal-child="accessible">
--          <object class="AtkObject" id="scalebutton-minus_button1-atkobject">
--            <property name="AtkObject::accessible-name" translatable="yes">Volume Down</property>
--            <property name="AtkObject::accessible-description" translatable="yes">Decreases the volume</property>
--          </object>
--        </child>
-       </object>
-     </child>
-   </template>
---- a/meson.build
-+++ b/meson.build
-@@ -25,8 +25,6 @@
- 
- glib_req           = '>= @0@.@1@.@2@'.format(glib_major_req, glib_minor_req, glib_micro_req)
- pango_req          = '>= 1.41.0'
--atk_req            = '>= 2.35.1'
--at_spi2_atk_req    = '>= 2.15.1'
- cairo_req          = '>= 1.14.0'
- gdk_pixbuf_req     = '>= 2.30.0'
- introspection_req  = '>= 1.39.0'
-@@ -289,7 +287,7 @@
-   test_cflags = [
-     '-fno-strict-aliasing',
-     '-Wpointer-arith',
--    '-Wimplicit-function-declaration',
-+    '-Werror=implicit-function-declaration',
-     '-Wformat=2',
-     '-Wformat-security',
-     '-Wnested-externs',
-@@ -354,7 +352,6 @@
- confinc = include_directories('.')
- gdkinc = include_directories('gdk')
- gtkinc = include_directories('gtk')
--libgailutilinc = include_directories('libgail-util')
- testinc = include_directories('tests')
- 
- # Dependencies
-@@ -449,8 +446,6 @@
-                             fallback : ['gdk-pixbuf', 'gdkpixbuf_dep'])
- epoxy_dep      = dependency('epoxy', version: epoxy_req,
-                             fallback: ['libepoxy', 'libepoxy_dep'])
--atk_dep        = dependency('atk', version: atk_req,
--                            fallback : ['atk', 'libatk_dep'])
- 
- # Update once Meson can have deps declared in a declarative manner or can
- # find deps properly with CMake again
-@@ -459,7 +454,6 @@
- iso_codes_dep  = dependency('iso-codes', required: false)
- 
- fontconfig_dep = [] # only used in x11 backend
--atkbridge_dep  = [] # only used in x11 backend
- 
- if os_win32
-   platform_gio_dep = giowin32_dep
-@@ -548,8 +542,6 @@
- cdata.set('HAVE_HARFBUZZ', harfbuzz_dep.found() ? 1 : false)
- cdata.set('HAVE_PANGOFT', pangoft_dep.found() ? 1 : false)
- 
--atk_pkgs = ['atk']
--
- wayland_pkgs = []
- if wayland_enabled
-   wlclientdep    = dependency('wayland-client', version:  wayland_req)
-@@ -579,7 +571,6 @@
-   xfixes_dep     = dependency('xfixes', required: false)
-   xcomposite_dep = dependency('xcomposite', required: false)
-   fontconfig_dep = dependency('fontconfig', fallback: ['fontconfig', 'fontconfig_dep'])
--  atkbridge_dep  = dependency('atk-bridge-2.0', version: at_spi2_atk_req)
- 
-   backend_immodules += ['xim']
- 
-@@ -598,8 +589,6 @@
-     x11_pkgs += ['xdamage']
-   endif
- 
--  atk_pkgs += ['atk-bridge-2.0']
--
-   cdata.set('HAVE_XDAMAGE', xdamage_dep.found() ? 1 : false)
-   cdata.set('HAVE_XCURSOR', xcursor_dep.found() ? 1 : false)
-   cdata.set('HAVE_XCOMPOSITE', xcomposite_dep.found() ? 1 : false)
-@@ -866,7 +855,6 @@
- subdir('gdk')
- subdir('gtk')
- subdir('modules')
--subdir('libgail-util')
- if get_option('demos')
-   subdir('demos')
- endif
-@@ -928,7 +916,6 @@
-                      ['epoxy', epoxy_req] + cloudproviders_packages))
- 
- gtk_packages = ' '.join([
--    atk_dep.name(), atk_req,
-     cairo_packages,
-     pixbuf_dep.name(), gdk_pixbuf_req,
-     'gio-2.0', glib_req,
-@@ -938,7 +925,7 @@
- # Requires.private
- pc_gdk_extra_libs += cairo_libs
- 
--gtk_private_packages = atk_pkgs + wayland_pkgs + ['epoxy', epoxy_req]
-+gtk_private_packages = wayland_pkgs + ['epoxy', epoxy_req]
- if wayland_enabled or x11_enabled
-   gtk_private_packages += ['pangoft2']
- endif
+ void              _gtk_widget_set_has_grab                 (GtkWidget *widget,
+-- 
+2.44.0
+

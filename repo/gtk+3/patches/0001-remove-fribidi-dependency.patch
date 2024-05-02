@@ -1,5 +1,18 @@
+From 298b189f536e0bf8d7c32d141ef5caefaf086e5c Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 18:13:50 +0200
+Subject: [PATCH 1/2] remove fribidi dependency
+
+---
+ gdk/gdk.c       | 12 ------------
+ gdk/meson.build |  1 -
+ gtk/gtkpango.c  | 12 ------------
+ gtk/meson.build |  1 -
+ meson.build     |  8 ++------
+ 5 files changed, 2 insertions(+), 32 deletions(-)
+
 diff --git a/gdk/gdk.c b/gdk/gdk.c
-index f0869a6..2f3c039 100644
+index 83672d8..2536b53 100644
 --- a/gdk/gdk.c
 +++ b/gdk/gdk.c
 @@ -44,7 +44,6 @@
@@ -71,10 +84,10 @@ index aaac4cc..a76ad57 100644
  }
  
 diff --git a/gtk/meson.build b/gtk/meson.build
-index 79f4f0d..be51997 100644
+index ea866d8..033c6ab 100644
 --- a/gtk/meson.build
 +++ b/gtk/meson.build
-@@ -836,7 +836,6 @@ gtk_deps = [
+@@ -840,7 +840,6 @@ gtk_deps = [
    pango_dep,
    pangoft_dep,
    harfbuzz_dep,
@@ -83,10 +96,10 @@ index 79f4f0d..be51997 100644
    cairo_dep,
    fontconfig_dep,
 diff --git a/meson.build b/meson.build
-index c599843..967a022 100644
+index 7bf5ea4..33bcb28 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -25,7 +25,6 @@ endif
+@@ -26,7 +26,6 @@ endif
  
  glib_req           = '>= @0@.@1@.@2@'.format(glib_major_req, glib_minor_req, glib_micro_req)
  pango_req          = '>= 1.41.0'
@@ -94,7 +107,7 @@ index c599843..967a022 100644
  atk_req            = '>= 2.35.1'
  at_spi2_atk_req    = '>= 2.15.1'
  cairo_req          = '>= 1.14.0'
-@@ -404,8 +403,6 @@ endif
+@@ -400,8 +399,6 @@ endif
  
  pango_dep      = dependency('pango', version: pango_req,
                              fallback : ['pango', 'libpango_dep'])
@@ -103,7 +116,7 @@ index c599843..967a022 100644
  
  # Require PangoFT2 if on X11 or wayland
  require_pangoft2 = wayland_enabled or x11_enabled
-@@ -927,8 +924,7 @@ endif
+@@ -913,8 +910,7 @@ endif
  
  pkgconf.set('GDK_PRIVATE_PACKAGES',
              ' '.join(gio_packages + x11_pkgs + wayland_pkgs + cairo_backends +
@@ -113,7 +126,7 @@ index c599843..967a022 100644
  
  gtk_packages = ' '.join([
      atk_dep.name(), atk_req,
-@@ -941,7 +937,7 @@ pkgconf.set('GTK_PACKAGES', gtk_packages)
+@@ -927,7 +923,7 @@ pkgconf.set('GTK_PACKAGES', gtk_packages)
  # Requires.private
  pc_gdk_extra_libs += cairo_libs
  
@@ -122,3 +135,6 @@ index c599843..967a022 100644
  if wayland_enabled or x11_enabled
    gtk_private_packages += ['pangoft2']
  endif
+-- 
+2.44.0
+
