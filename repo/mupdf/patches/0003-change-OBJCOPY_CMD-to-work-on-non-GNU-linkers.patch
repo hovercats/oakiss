@@ -1,5 +1,14 @@
+From 557e949d4a386ac22f0dfdbc8c18bca4135ed508 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 04:21:00 +0200
+Subject: [PATCH 3/4] change OBJCOPY_CMD to work on non-GNU linkers
+
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/Makefile b/Makefile
-index 53cf06f..948a0be 100644
+index dea68b3..726d470 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -76,7 +76,7 @@ endif
@@ -11,3 +20,6 @@ index 53cf06f..948a0be 100644
  GENDEF_CMD = $(QUIET_GENDEF) gendef - $< > $@
  DLLTOOL_CMD = $(QUIET_DLLTOOL) dlltool -d $< -D $(notdir $(^:%.def=%.dll)) -l $@
  
+-- 
+2.44.0
+

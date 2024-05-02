@@ -1,8 +1,19 @@
+From e1b833b68258f2dee06cc8a8708160e975d3cfab Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 04:19:24 +0200
+Subject: [PATCH 1/4] remove gumbo-parser dependency
+
+---
+ Makefile          |  1 -
+ Makelists         | 18 ------------------
+ source/fitz/xml.c |  4 ++++
+ 3 files changed, 4 insertions(+), 19 deletions(-)
+
 diff --git a/Makefile b/Makefile
-index 0f28384..11c3e04 100644
+index 53cf06f..dea68b3 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -155,7 +155,6 @@ MUPDF_SRC += $(sort $(wildcard source/fitz/*.cpp))
+@@ -178,7 +178,6 @@ MUPDF_SRC += $(sort $(wildcard source/fitz/*.cpp))
  MUPDF_SRC += $(sort $(wildcard source/pdf/*.c))
  MUPDF_SRC += $(sort $(wildcard source/xps/*.c))
  MUPDF_SRC += $(sort $(wildcard source/svg/*.c))
@@ -11,10 +22,10 @@ index 0f28384..11c3e04 100644
  MUPDF_SRC += $(sort $(wildcard source/cbz/*.c))
  
 diff --git a/Makelists b/Makelists
-index e37b3ed..dbcf577 100644
+index 4747a12..2350297 100644
 --- a/Makelists
 +++ b/Makelists
-@@ -31,24 +31,6 @@ FREETYPE_SRC += thirdparty/freetype/src/smooth/smooth.c
+@@ -32,24 +32,6 @@ FREETYPE_SRC += thirdparty/freetype/src/smooth/smooth.c
  FREETYPE_SRC += thirdparty/freetype/src/truetype/truetype.c
  FREETYPE_SRC += thirdparty/freetype/src/type1/type1.c
  
@@ -69,3 +80,6 @@ index ef9a233..0278228 100644
  
  fz_xml *fz_xml_find_dfs(fz_xml *item, const char *tag, const char *att, const char *match)
  {
+-- 
+2.44.0
+

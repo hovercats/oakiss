@@ -1,8 +1,18 @@
+From 8069fdfd9fdc9c420040bee545f0ae9b540b789f Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 04:20:00 +0200
+Subject: [PATCH 2/4] remove openjpeg dependency
+
+---
+ Makelists                | 31 -------------------------------
+ source/fitz/encode-jpx.c |  4 ++--
+ 2 files changed, 2 insertions(+), 33 deletions(-)
+
 diff --git a/Makelists b/Makelists
-index ac54f6f..af430d6 100644
+index 2350297..a1ece3f 100644
 --- a/Makelists
 +++ b/Makelists
-@@ -272,37 +272,6 @@ JBIG2DEC_SRC += thirdparty/jbig2dec/jbig2_segment.c
+@@ -269,37 +269,6 @@ JBIG2DEC_SRC += thirdparty/jbig2dec/jbig2_segment.c
  JBIG2DEC_SRC += thirdparty/jbig2dec/jbig2_symbol_dict.c
  JBIG2DEC_SRC += thirdparty/jbig2dec/jbig2_text.c
  
@@ -57,3 +67,6 @@ index 40cca5a..e38604f 100644
  static opj_image_t *
  image_from_pixmap(fz_context *ctx, fz_pixmap *pix)
  {
+-- 
+2.44.0
+

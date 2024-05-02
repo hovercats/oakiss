@@ -1,5 +1,5 @@
 https://mupdf.com/downloads/archive/mupdf-1.24.0-source.tar.gz
-patches/no-gumbo.patch
-patches/no-openjpeg.patch
-patches/objcopy.patch
-patches/pkcs7-fix.patch
+patches/0001-remove-gumbo-parser-dependency.patch
+patches/0002-remove-openjpeg-dependency.patch
+patches/0003-change-OBJCOPY_CMD-to-work-on-non-GNU-linkers.patch
+patches/0004-Fixed-handling-of-safebags-in-pkcs7-helper-library.patch
