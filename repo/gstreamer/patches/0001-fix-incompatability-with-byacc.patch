@@ -1,0 +1,57 @@
+From 4e7b28955ccb4c8b8c18ecb95b996d0c8d9a3248 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 17:47:31 +0200
+Subject: [PATCH] fix incompatability with byacc
+
+---
+ gst/parse/gen_grammar.py.in |  2 +-
+ gst/parse/meson.build       | 16 ++--------------
+ 2 files changed, 3 insertions(+), 15 deletions(-)
+ mode change 100755 => 100644 gst/parse/gen_grammar.py.in
+
+diff --git a/gst/parse/gen_grammar.py.in b/gst/parse/gen_grammar.py.in
+old mode 100755
+new mode 100644
+index 3a7af00..f4016bc
+--- a/gst/parse/gen_grammar.py.in
++++ b/gst/parse/gen_grammar.py.in
+@@ -6,7 +6,7 @@ cfile = sys.argv[1]
+ hfile = sys.argv[2]
+ yfile = sys.argv[3]
+ 
+-args = ['-d', '-v', '-ppriv_gst_parse_yy', yfile, '-o', cfile]
++args = ['-d', '-v', '-ppriv_gst_parse_yy',  '-o', cfile, yfile]
+ bison = [r'@BISON@'] + shlex.split(r'@BISON_ARGS@')
+ subprocess.check_call(bison + args)
+ 
+diff --git a/gst/parse/meson.build b/gst/parse/meson.build
+index b79a07c..cff1830 100644
+--- a/gst/parse/meson.build
++++ b/gst/parse/meson.build
+@@ -31,21 +31,9 @@ bison_parser_cdata = configuration_data()
+ bison_cdata = configuration_data()
+ 
+ bison_min_version='2.4'
+-bison = find_program('bison', 'win_bison')
++bison = find_program('bison', 'win_bison', 'yacc')
+ 
+-bversion_res = run_command([bison, '--version'], check: true)
+-bversion = bversion_res.stdout().split('\n')[0].split(' ')[-1].strip()
+-if bversion.version_compare('<' + bison_min_version)
+-  error('bison version @0@ >= @1@: NO'.format(bversion, bison_min_version))
+-else
+-  message('bison version @0@ >= @1@: YES'.format(bversion, bison_min_version))
+-endif
+-
+-if bversion.version_compare('>' + '2.5')
+-  bison_parser_cdata.set('BISON_PURE_PARSER', '%define api.pure full')
+-else
+-  bison_parser_cdata.set('BISON_PURE_PARSER', '%pure-parser')
+-endif
++bison_parser_cdata.set('BISON_PURE_PARSER', '%pure-parser')
+ 
+ gen_grammar_file = configure_file(input : 'grammar.y.in',
+   output : 'grammar.y',
+-- 
+2.44.0
+

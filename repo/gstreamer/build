@@ -2,10 +2,7 @@
 
 export DESTDIR="$1"
 
-# Avoid the need for bison
-patch -p1 < byacc.patch
-sed '/^args/{s/yfile,//;s/cfile/cfile, yfile/;}' gst/parse/gen_grammar.py.in > _
-mv -f _ gst/parse/gen_grammar.py.in
+patch -p1 < 0001-fix-incompatability-with-byacc.patch
 
 meson setup \
     -Dprefix=/usr \
