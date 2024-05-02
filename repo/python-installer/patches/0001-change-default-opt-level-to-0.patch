@@ -1,6 +1,14 @@
+From c2e5ba5e5b0a2bfba13272b96ddf9d2522f178ed Mon Sep 17 00:00:00 2001
+From: ptrcnull <git@ptrcnull.me>
+Date: Fri, 17 Nov 2023 19:19:19 +0100
+Subject: [PATCH] change default opt level to 0
+
 the previous default of 0, 1 causes opt-1 bytecode to also be generated,
 which is not used without passing `-O` to `python3` anyway, and doubles
 the size of the resulting package
+---
+ installer/__main__.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/installer/__main__.py b/installer/__main__.py
 index 51014b9..2a389e8 100644
@@ -24,3 +32,6 @@ index 51014b9..2a389e8 100644
  
      with WheelFile.open(args.wheel) as source:
          destination = SchemeDictionaryDestination(
+-- 
+2.44.0
+

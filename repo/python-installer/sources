@@ -1,2 +1,2 @@
 https://files.pythonhosted.org/packages/py3/i/installer/installer-0.7.0-py3-none-any.whl
-patches/default-bytecode-levels.patch build
+patches/0001-change-default-opt-level-to-0.patch
