@@ -1,3 +1,12 @@
+From 2612426a1a204b95a945a005279e55605d887c19 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 19:29:58 +0200
+Subject: [PATCH 2/3] fix slow startup for pyc files
+
+---
+ Lib/py_compile.py | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
 diff --git a/Lib/py_compile.py b/Lib/py_compile.py
 index a81f493..e1328ed 100644
 --- a/Lib/py_compile.py

@@ -1,3 +1,12 @@
+From c43fa6609f8de20d2656892aad547d4d8ccb6cbe Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 19:30:50 +0200
+Subject: [PATCH 3/3] fix python not always installing pip/setuptools
+
+---
+ Lib/ensurepip/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/Lib/ensurepip/__init__.py b/Lib/ensurepip/__init__.py
 index f28ab11..6627189 100644
 --- a/Lib/ensurepip/__init__.py
