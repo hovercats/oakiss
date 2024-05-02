@@ -1,29 +1,21 @@
-diff --git a/go1.20.6/src/make.bash b/go1.20.6/src/make.bash
-index c07f39b..7aefc11 100755
---- a/go1.20.6/src/make.bash
-+++ b/go1.20.6/src/make.bash
-@@ -1,4 +1,4 @@
--#!/usr/bin/env bash
-+#!/usr/bin/env sh
- # Copyright 2009 The Go Authors. All rights reserved.
- # Use of this source code is governed by a BSD-style
- # license that can be found in the LICENSE file.
-@@ -163,7 +163,7 @@ fi
- export GOROOT_BOOTSTRAP
- 
- export GOROOT="$(cd .. && pwd)"
--IFS=$'\n'; for go_exe in $(type -ap go); do
-+for go_exe in $(command -v go); do
- 	if [ ! -x "$GOROOT_BOOTSTRAP/bin/go" ]; then
- 		goroot=$(GOROOT='' GOOS='' GOARCH='' "$go_exe" env GOROOT)
- 		if [ "$goroot" != "$GOROOT" ]; then
+From 0677e181c2e88f21c588933246beca6ac61e0db9 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 18:37:05 +0200
+Subject: [PATCH] use POSIX sh and remove bashisms
+
+---
+ go1.17.13/src/make.bash       |  4 ++--
+ go1.20.6/src/make.bash        |  4 ++--
+ go1.4-bootstrap/src/make.bash | 10 +++++-----
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
 diff --git a/go1.17.13/src/make.bash b/go1.17.13/src/make.bash
-index 9acf079..2b18196 100755
+index 7986125a..9a770665 100755
 --- a/go1.17.13/src/make.bash
 +++ b/go1.17.13/src/make.bash
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env bash
-+#!/usr/bin/env sh
++#!/bin/sh
  # Copyright 2009 The Go Authors. All rights reserved.
  # Use of this source code is governed by a BSD-style
  # license that can be found in the LICENSE file.
@@ -36,13 +28,32 @@ index 9acf079..2b18196 100755
  	if [ ! -x "$GOROOT_BOOTSTRAP/bin/go" ]; then
  		goroot=$(GOROOT='' GOOS='' GOARCH='' "$go_exe" env GOROOT)
  		if [ "$goroot" != "$GOROOT" ]; then
+diff --git a/go1.20.6/src/make.bash b/go1.20.6/src/make.bash
+index c07f39bb..cc5c620d 100755
+--- a/go1.20.6/src/make.bash
++++ b/go1.20.6/src/make.bash
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env bash
++#!/bin/sh
+ # Copyright 2009 The Go Authors. All rights reserved.
+ # Use of this source code is governed by a BSD-style
+ # license that can be found in the LICENSE file.
+@@ -163,7 +163,7 @@ fi
+ export GOROOT_BOOTSTRAP
+ 
+ export GOROOT="$(cd .. && pwd)"
+-IFS=$'\n'; for go_exe in $(type -ap go); do
++for go_exe in $(command -v go); do
+ 	if [ ! -x "$GOROOT_BOOTSTRAP/bin/go" ]; then
+ 		goroot=$(GOROOT='' GOOS='' GOARCH='' "$go_exe" env GOROOT)
+ 		if [ "$goroot" != "$GOROOT" ]; then
 diff --git a/go1.4-bootstrap/src/make.bash b/go1.4-bootstrap/src/make.bash
-index 104c3ba..043d38a 100755
+index 104c3ba5..043d38ac 100755
 --- a/go1.4-bootstrap/src/make.bash
 +++ b/go1.4-bootstrap/src/make.bash
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env bash
-+#!/usr/bin/env sh
++#!/bin/sh
  # Copyright 2009 The Go Authors. All rights reserved.
  # Use of this source code is governed by a BSD-style
  # license that can be found in the LICENSE file.
@@ -80,5 +91,5 @@ index 104c3ba..043d38a 100755
  fi
  ${CC:-gcc} $mflag -O2 -Wall -Werror -o cmd/dist/dist -Icmd/dist "$DEFGOROOT" cmd/dist/*.c
 -- 
-2.36.1
+2.44.0
 

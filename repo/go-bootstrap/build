@@ -4,7 +4,7 @@
 # This breaks Go.
 :> nostrip
 
-patch -p1 < posix-build.patch
+patch -p1 < 0001-use-POSIX-sh-and-remove-bashisms.patch
 
 export CC="${CC:-cc}"
 export GOARCH=amd64
