@@ -1,10 +1,19 @@
+From c5be8dadf89e66a355564f682a13b088d38563d8 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 2 May 2024 18:51:08 +0200
+Subject: [PATCH] use POSIX sh and remove some bashism
+
+---
+ src/make.bash | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
 diff --git a/src/make.bash b/src/make.bash
-index 755b3b0b9e..96750b4842 100755
+index 755b3b0..4a14dcb 100755
 --- a/src/make.bash
 +++ b/src/make.bash
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env bash
-+#!/usr/bin/env sh
++#!/bin/sh
  # Copyright 2009 The Go Authors. All rights reserved.
  # Use of this source code is governed by a BSD-style
  # license that can be found in the LICENSE file.
@@ -27,3 +36,6 @@ index 755b3b0b9e..96750b4842 100755
  
  # -e doesn't propagate out of eval, so check success by hand.
  eval $(./cmd/dist/dist env -p || echo FAIL=true)
+-- 
+2.44.0
+
