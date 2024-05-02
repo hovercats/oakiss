@@ -1,13 +1,14 @@
 #!/bin/sh -e
 
-patch -p1 < drop-shared-libs.patch
+make -C lib libzstd.a
+make -C lib PREFIX=/usr DESTDIR="$1" install-static
+make -C lib PREFIX=/usr DESTDIR="$1" install-includes
+make -C lib PREFIX=/usr DESTDIR="$1" install-pc
 
-sed 's/^FLAGS.*=/FLAGS = -static /' programs/Makefile > _
-mv -f _ programs/Makefile
-
-make \
-    HAVE_LZMA=0 \
+make -C programs \
+	HAVE_LZMA=0 \
     HAVE_ZLIB=0 \
-    HAVE_LZ4=0
+    HAVE_LZ4=0 \
+	LDFLAGS="$LDFLAGS -static"
 
-make PREFIX=/usr DESTDIR="$1" install
+make -C programs PREFIX=/usr DESTDIR="$1" install
