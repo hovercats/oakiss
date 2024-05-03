@@ -1,2 +1,2 @@
 https://git.sr.ht/~taiite/senpai/archive/v0.3.0.tar.gz
-patches/top-bar.patch
+patches/0001-set-bar-to-be-on-top-of-the-window-instead-of-bottom.patch

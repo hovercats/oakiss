@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-patch -p1 < top-bar.patch
+patch -p1 < 0001-set-bar-to-be-on-top-of-the-window-instead-of-bottom.patch
 
 go build -a -ldflags="-w -s -extldflags '-static'" \
     -trimpath \

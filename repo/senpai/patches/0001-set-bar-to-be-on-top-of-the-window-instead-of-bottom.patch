@@ -1,10 +1,7 @@
-To: ~delthas/senpai-dev@lists.sr.ht
-Cc: sewn <sewn@disroot.org>
-Subject: [PATCH v1] Move horizontal buffer list to top instead of bottom when width is 0
-Date: Fri, 15 Dec 2023 22:39:28 +0300
-Message-ID: <20231215193929.2227-1-sewn@disroot.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From 4850038c38a5755ef83003448d76f42ae914ee4e Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Fri, 3 May 2024 18:24:55 +0200
+Subject: [PATCH] set bar to be on top of the window instead of bottom
 
 ---
  app.go   |  4 ++--
@@ -12,7 +9,7 @@ Content-Transfer-Encoding: 8bit
  2 files changed, 10 insertions(+), 8 deletions(-)
 
 diff --git a/app.go b/app.go
-index 3fe3112..4254cad 100644
+index 9741bec..f067641 100644
 --- a/app.go
 +++ b/app.go
 @@ -507,7 +507,7 @@ func (app *App) handleMouseEvent(ev *tcell.EventMouse) {
@@ -34,7 +31,7 @@ index 3fe3112..4254cad 100644
  				app.win.GoToBufferNo(i)
  			}
 diff --git a/ui/ui.go b/ui/ui.go
-index 05ba87f..894fdad 100644
+index cbcef6b..ae3b491 100644
 --- a/ui/ui.go
 +++ b/ui/ui.go
 @@ -475,31 +475,33 @@ func (ui *UI) Draw(members []irc.Member) {
@@ -85,8 +82,6 @@ index 05ba87f..894fdad 100644
  	} else {
  		first = ui.bs.GetLeftMost(w - ui.memberWidth)
  	}
-
-base-commit: 5e771831a3196f49d4417e0f913da64a251e8cb5
 -- 
-2.43.0
+2.44.0
 
