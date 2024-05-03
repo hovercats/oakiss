@@ -1,3 +1,12 @@
+From 46f37e4799b04b08f51fc8b1681749231befdd31 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Fri, 3 May 2024 16:05:51 +0200
+Subject: [PATCH] fix incompability with netbsd-curses
+
+---
+ command_mode.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
 diff --git a/command_mode.c b/command_mode.c
 index 3d00267..a227c6b 100644
 --- a/command_mode.c
@@ -15,3 +24,6 @@ index 3d00267..a227c6b 100644
  	} else {
  		struct cmus_opt *opt;
  		char buf[OPTION_MAX_SIZE];
+-- 
+2.44.0
+

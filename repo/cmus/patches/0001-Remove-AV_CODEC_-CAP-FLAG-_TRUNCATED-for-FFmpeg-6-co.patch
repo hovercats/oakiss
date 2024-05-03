@@ -1,3 +1,13 @@
+From 07ce2dc7082a1ed8704c21fd3f2877c8ba6b12f9 Mon Sep 17 00:00:00 2001
+From: Gavin Troy <gavin@cantlogout.com>
+Date: Sun, 16 Apr 2023 22:32:52 +0100
+Subject: [PATCH] Remove AV_CODEC_{CAP,FLAG}_TRUNCATED for FFmpeg 6
+ compatibility
+
+---
+ ip/ffmpeg.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
 diff --git a/ip/ffmpeg.c b/ip/ffmpeg.c
 index 09ed3fc..ea0b26f 100644
 --- a/ip/ffmpeg.c
@@ -12,3 +22,6 @@ index 09ed3fc..ea0b26f 100644
  		if (avcodec_open2(cc, codec, NULL) < 0) {
  			d_print("could not open codec: %d, %s\n", cc->codec_id, avcodec_get_name(cc->codec_id));
  			err = -IP_ERROR_UNSUPPORTED_FILE_TYPE;
+-- 
+2.44.0
+
