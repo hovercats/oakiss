@@ -1,3 +1,36 @@
+From a1f12e45424d4f6fce1e22a7f294c608f291ed1b Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Fri, 3 May 2024 18:16:44 +0200
+Subject: [PATCH] remove fribidi dependency
+
+---
+ configure           |   3 +-
+ libass/ass_render.h |   3 +-
+ libass/ass_shaper.c | 122 ++++----------------------------------------
+ libass/ass_shaper.h |   9 ++--
+ 4 files changed, 17 insertions(+), 120 deletions(-)
+
+diff --git a/configure b/configure
+index 643f74e..a5ac16a 100755
+--- a/configure
++++ b/configure
+@@ -14185,7 +14185,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$FRIBIDI_PKG_ERRORS" >&5
+ 
+-	as_fn_error $? "Package requirements (fribidi >= 0.19.1) were not met:
++	: 0 " >= 0.19.1) were not met:
+ 
+ $FRIBIDI_PKG_ERRORS
+ 
+@@ -14216,7 +14216,6 @@ else
+         { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ printf "%s\n" "yes" >&6; }
+ 
+-    pkg_requires="fribidi >= 0.19.1, ${pkg_requires}"
+     CFLAGS="$CFLAGS $FRIBIDI_CFLAGS"
+     LIBS="$LIBS $FRIBIDI_LIBS"
+ 
 diff --git a/libass/ass_render.h b/libass/ass_render.h
 index 581c131..0cb5458 100644
 --- a/libass/ass_render.h
@@ -242,3 +275,6 @@ index 819a3fd..3eef8d7 100644
  
  void ass_shaper_info(ASS_Library *lib);
  ASS_Shaper *ass_shaper_new(Cache *metrics_cache);
+-- 
+2.44.0
+
