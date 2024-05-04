@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-patch -p1 < musl.patch
+patch -p1 < 0001-fix-checks-for-argp_parse-and-fts_close.patch
 
 # Build sometimes forces -Werror.
 export CFLAGS="$CFLAGS -Wno-error"

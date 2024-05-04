@@ -1,8 +1,18 @@
+From a3aa0f3a770724367d456cf747c7642344d97093 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sat, 4 May 2024 19:30:17 +0200
+Subject: [PATCH] fix checks for argp_parse and fts_close
+
+---
+ configure       | 6 +++---
+ lib/Makefile.in | 8 ++++----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
 diff --git a/configure b/configure
-index 562d9f4..8c45cc1 100755
+index 6eb5a43..b76362a 100755
 --- a/configure
 +++ b/configure
-@@ -8880,7 +8880,7 @@ LIBS="$saved_LIBS"
+@@ -9287,7 +9287,7 @@ LIBS="$saved_LIBS"
  case "$ac_cv_search_argp_parse" in
          no) { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -11,7 +21,7 @@ index 562d9f4..8c45cc1 100755
  See \`config.log' for more details" "$LINENO" 5; } ;;
          -l*) argp_LDADD="$ac_cv_search_argp_parse" ;;
          *) argp_LDADD= ;;
-@@ -8951,7 +8951,7 @@ LIBS="$saved_LIBS"
+@@ -9358,7 +9358,7 @@ LIBS="$saved_LIBS"
  case "$ac_cv_search_fts_close" in
          no) { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -20,7 +30,7 @@ index 562d9f4..8c45cc1 100755
  See \`config.log' for more details" "$LINENO" 5; } ;;
          -l*) fts_LIBS="$ac_cv_search_fts_close" ;;
          *) fts_LIBS= ;;
-@@ -9022,7 +9022,7 @@ LIBS="$saved_LIBS"
+@@ -9429,7 +9429,7 @@ LIBS="$saved_LIBS"
  case "$ac_cv_search__obstack_free" in
          no) { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
@@ -30,7 +40,7 @@ index 562d9f4..8c45cc1 100755
          -l*) obstack_LIBS="$ac_cv_search__obstack_free" ;;
          *) obstack_LIBS= ;;
 diff --git a/lib/Makefile.in b/lib/Makefile.in
-index e84bc45..1f3be35 100644
+index 140a5ee..1e96d7e 100644
 --- a/lib/Makefile.in
 +++ b/lib/Makefile.in
 @@ -117,8 +117,8 @@ libeu_a_AR = $(AR) $(ARFLAGS)
@@ -44,7 +54,7 @@ index e84bc45..1f3be35 100644
  libeu_a_OBJECTS = $(am_libeu_a_OBJECTS)
  AM_V_P = $(am__v_P_@AM_V@)
  am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
-@@ -409,10 +409,10 @@ textrel_check = if $(READELF) -d $@ | grep -F -q TEXTREL; then $(textrel_found);
+@@ -417,10 +417,10 @@ textrel_check = if $(READELF) -d $@ | grep -F -q TEXTREL; then $(textrel_found);
  noinst_LIBRARIES = libeu.a
  libeu_a_SOURCES = xasprintf.c xstrdup.c xstrndup.c xmalloc.c next_prime.c \
  		  crc32.c crc32_file.c \
@@ -57,3 +67,6 @@ index e84bc45..1f3be35 100644
  		 atomics.h stdatomic-fbsd.h dynamicsizehash_concurrent.h
  
  EXTRA_DIST = dynamicsizehash.c dynamicsizehash_concurrent.c
+-- 
+2.44.0
+
