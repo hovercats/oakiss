@@ -1,4 +1,4 @@
 https://downloads.sourceforge.net/infozip/zip30.tar.gz
-patches/zip-3.0-currdir.patch
-patches/zip-3.0-exec-shield.patch
-patches/zip-3.0-format-security.patch
+patches/0001-fix-build-with-Werror-format-security.patch
+patches/0002-strip-redundant-leading-.-sections.patch
+patches/0003-add-proper-GNU-stack-markings-so-we-dont-get-the-def.patch

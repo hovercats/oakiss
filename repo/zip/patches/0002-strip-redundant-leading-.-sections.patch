@@ -1,0 +1,25 @@
+From 51671ebaa4fe539d498305421917bce050637e20 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sat, 4 May 2024 20:46:12 +0200
+Subject: [PATCH 2/3] strip redundant leading "./" sections
+
+---
+ util.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/util.c b/util.c
+index 73317da..2dd3a46 100644
+--- a/util.c
++++ b/util.c
+@@ -493,6 +493,8 @@ int cs;                 /* force case-sensitive match if TRUE */
+ /* Compare the sh pattern p with the string s and return true if they match,
+    false if they don't or if there is a syntax error in the pattern. */
+ {
++  while (s[0] == '.' && s[1] == '/') 
++    s += 2;                /* strip redundant leading "./" sections */
+   return recmatch(p, s, cs) == 1;
+ }
+ 
+-- 
+2.44.0
+
