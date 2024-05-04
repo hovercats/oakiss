@@ -1,12 +1,9 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
-
-for p in *.patch; do
-	patch -p1 < "$p"
-done
-
 export CCACHE_SLOPPINESS=time_macros,include_file_mtime
+
+patch -p1 < 0001-fix-dlopen-of-libwebkit.patch
 
 # Enable streaming related options if gstreamer is installed.
 pkg-config --exists gstreamer-video-1.0 && video=ON
