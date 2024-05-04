@@ -2,9 +2,7 @@
 
 export DESTDIR="$1"
 
-for p in *.patch; do
-    patch -p1 < "$p"
-done
+patch -p1 < 0001-remove-fribidi-dependency.patch
 
 # Disable download of missing (optional) dependencies
 # during the build. This cannot be turned off otherwise.

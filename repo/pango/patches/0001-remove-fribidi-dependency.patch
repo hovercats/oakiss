@@ -1,8 +1,18 @@
+From 71162e019df5b27793def7db0f64bea94af54026 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sat, 4 May 2024 19:25:43 +0200
+Subject: [PATCH] remove fribidi dependency
+
+---
+ meson.build             |   5 --
+ pango/pango-bidi-type.c | 144 ++++------------------------------------
+ 2 files changed, 14 insertions(+), 135 deletions(-)
+
 diff --git a/meson.build b/meson.build
-index 50ec14b..f45dd6a 100644
+index 066105a..72d3c16 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -200,7 +200,6 @@ endif
+@@ -198,7 +198,6 @@ endif
  pango_deps = []
  
  glib_req_version = '>= 2.62'
@@ -10,7 +20,7 @@ index 50ec14b..f45dd6a 100644
  libthai_req_version = '>= 0.1.9'
  harfbuzz_req_version = '>= 2.6.0'
  fontconfig_req_version = '>= 2.13.0'
-@@ -217,10 +216,6 @@ gobject_dep = dependency('gobject-2.0', version: glib_req_version)
+@@ -215,10 +214,6 @@ gobject_dep = dependency('gobject-2.0', version: glib_req_version)
  gio_dep = dependency('gio-2.0', version: glib_req_version)
  pango_deps += [glib_dep, gobject_dep, gio_dep]
  
@@ -235,3 +245,6 @@ index 4277dc1..73d3476 100644
  }
  
  
+-- 
+2.44.0
+
