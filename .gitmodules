@@ -133,3 +133,6 @@
 	path = pkg/qbe/src
 	url = git://c9x.me/qbe.git
 	ignore = all
+[submodule "pkg/quark/src"]
+	path = pkg/quark/src
+	url = git://git.suckless.org/quark
