@@ -9,7 +9,7 @@ meson setup \
     -Dlibexecdir=/usr/lib \
     -Dlibmount=disabled \
     -Dinstalled_tests=false \
-    -Dman=false \
+    -Dman-pages=disabled \
     -Dtests=false \
     -Dlibelf=disabled \
     -Dnls=disabled \
