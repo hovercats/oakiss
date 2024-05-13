@@ -2,14 +2,8 @@
 
 export DESTDIR="$1"
 
-# stolen from sabotage linux. should fix linking issues with static netbsd-curses libs
-sed 's,curses_version,baudrate,' Source/Checks/Curses/CheckCurses.c > _
-mv -f _ Source/Checks/Curses/CheckCurses.c
-sed 's,defined(HAVE_LIBCRYPTO),0,' Utilities/cmlibarchive/libarchive/archive_hmac.c > _
-mv -f _ Utilities/cmlibarchive/libarchive/archive_hmac.c
-
 if kiss l cmake; then
-    cmake -B build \
+    cmake -G Ninja -B build \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_USE_SYSTEM_CURL=False \
@@ -30,11 +24,12 @@ else
         --system-expat \
         --system-zlib \
         --no-system-bzip2 \
+        --generator=Ninja \
         --parallel="$(grep -scF 'core id' /proc/cpuinfo)" -- \
         -DBUILD_CursesDialog=OFF
 
-    make
-    make install
+    samu
+    samu install
 fi
 
 rm -rf \
