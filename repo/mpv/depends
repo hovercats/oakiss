@@ -10,4 +10,3 @@ libxkbcommon
 meson make
 pkgconf make
 python  make
-python-docutils make
