@@ -1,2 +1,2 @@
-https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.24.1.tar.xz
+https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.24.3.tar.xz
 patches/0001-fix-incompatability-with-byacc.patch
