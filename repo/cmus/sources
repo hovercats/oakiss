@@ -1,3 +1,2 @@
-https://github.com/cmus/cmus/archive/v2.10.0.tar.gz
-patches/0001-Remove-AV_CODEC_-CAP-FLAG-_TRUNCATED-for-FFmpeg-6-co.patch
-patches/0002-fix-incompability-with-netbsd-curses.patch
+https://github.com/cmus/cmus/archive/v2.11.0.tar.gz
+patches/0001-fix-incompability-with-netbsd-curses.patch
