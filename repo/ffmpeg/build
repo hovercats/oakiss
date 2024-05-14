@@ -28,3 +28,6 @@ make
 make DESTDIR="$1" install
 
 rm -rf "$1/usr/share/ffmpeg/examples"
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
