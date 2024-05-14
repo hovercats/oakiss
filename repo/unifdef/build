@@ -5,3 +5,6 @@ make DESTDIR="$1" prefix=/usr install
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
+
+# Remove broken symlinks
+rm -r "$1/usr/share/man/man1/unifdefall.1"
