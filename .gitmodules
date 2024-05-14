@@ -136,3 +136,7 @@
 [submodule "pkg/quark/src"]
 	path = pkg/quark/src
 	url = git://git.suckless.org/quark
+[submodule "pkg/zstd/src"]
+	path = pkg/zstd/src
+	url = https://github.com/facebook/zstd
+	ignore = all
