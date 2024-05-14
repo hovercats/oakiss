@@ -7,3 +7,6 @@ python setup.py install \
     --skip-build
 
 rm -rf "$1/usr/share/polkit-1"
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
