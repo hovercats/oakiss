@@ -8,7 +8,7 @@ mv -f _ src/script/per_project_options.meson
 
 command -v muon > /dev/null || {
       ./bootstrap.sh build
-    export PATH=$PWD/build:$PATH
+    export PATH="$PWD/build:$PATH"
     
 }
 
