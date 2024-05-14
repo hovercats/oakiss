@@ -32,3 +32,6 @@ make install
     mv -f "$TMPDIR/"* "$1/usr/share"
     rm -rf "$TMPDIR"
 }
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
