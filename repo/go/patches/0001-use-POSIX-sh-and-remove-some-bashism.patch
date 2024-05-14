@@ -1,6 +1,6 @@
-From c5be8dadf89e66a355564f682a13b088d38563d8 Mon Sep 17 00:00:00 2001
+From 2a412d83fc519ab0c1ef5dc5aab4431a46315706 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
-Date: Thu, 2 May 2024 18:51:08 +0200
+Date: Tue, 14 May 2024 06:55:43 +0200
 Subject: [PATCH] use POSIX sh and remove some bashism
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] use POSIX sh and remove some bashism
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/src/make.bash b/src/make.bash
-index 755b3b0..4a14dcb 100755
+index 76ad516..73f5a26 100755
 --- a/src/make.bash
 +++ b/src/make.bash
 @@ -1,4 +1,4 @@
@@ -23,10 +23,10 @@ index 755b3b0..4a14dcb 100755
  export GOROOT="$(cd .. && pwd)"
 -IFS=$'\n'; for go_exe in $(type -ap go); do
 +for go_exe in $(command -v go); do
- 	if [ ! -x "$GOROOT_BOOTSTRAP/bin/go" ]; then
+ 	if [[ ! -x "$GOROOT_BOOTSTRAP/bin/go" ]]; then
  		goroot=$(GOROOT= nogoenv "$go_exe" env GOROOT)
- 		if [ "$goroot" != "$GOROOT" ]; then
-@@ -198,7 +198,9 @@ if [ "$GOROOT_BOOTSTRAP" = "$GOROOT" ]; then
+ 		if [[ "$goroot" != "$GOROOT" ]]; then
+@@ -198,7 +198,9 @@ if [[ "$GOROOT_BOOTSTRAP" == "$GOROOT" ]]; then
  	exit 1
  fi
  rm -f cmd/dist/dist
