@@ -2,16 +2,21 @@
 
 export CFLAGS="$CFLAGS -DNO_BZIP_SUPPORT"
 
+
 for p in *.patch; do
     patch -p1 < "$p"
 done
 
+# The ZIPS variable is intentionally single quoted
+# shellcheck disable=SC2016
 make \
     prefix=/usr \
     CC="$CC -static $LDFLAGS $CFLAGS $CXXFLAGS" \
     ZIPS='zip$E' \
     -f unix/Makefile generic
 
+# The ZIPS variable is intentionally single quoted
+# shellcheck disable=SC2016
 make \
     prefix="$1/usr" \
     MANDIR="$1/usr/share/man/man1" \
