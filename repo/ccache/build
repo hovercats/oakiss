@@ -3,15 +3,15 @@
 export DESTDIR="$1"
 export LDFLAGS="$LDFLAGS -static"
 
-cmake -B build \
+cmake -G Ninja -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DREDIS_STORAGE_BACKEND=OFF \
     -DENABLE_TESTING=OFF \
     -DZSTD_LIBRARY=/usr/lib/libzstd.a
 
-cmake --build   build
-cmake --install build
+samu -C build
+samu -C build install
 
 mkdir -p "$1/usr/lib/ccache/bin"
 host=$(cc -dumpmachine)
