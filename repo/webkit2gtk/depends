@@ -1,18 +1,20 @@
 atk
 cairo
-cmake        make
+cmake            make
 freetype-harfbuzz
 glib-networking
-gperf        make
+gperf            make
 gtk+3
 libXt
 libgcrypt
 libsoup3
+libtasn1
 libwebp
 libxslt
 mesa
-perl         make
-python       make
-ruby         make
+perl             make
+python           make
+python-packaging make
+ruby             make
 sqlite
-unifdef      make
+unifdef          make
