@@ -14,3 +14,6 @@ rm -rf "$1/etc/ssl/cert.pem"
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
+
+# Find and remove symlinks that are now broken
+find "$1/usr/share/man" -type l -exec rm -r {} +
