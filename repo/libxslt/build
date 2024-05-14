@@ -14,3 +14,6 @@ make DESTDIR="$1" install
 rm -rf \
 	"$1/usr/share/gtk-doc" \
 	"$1/usr/share/doc"
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
