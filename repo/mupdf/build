@@ -37,3 +37,6 @@ mv -f "$1/usr/bin/mupdf-x11" "$1/usr/bin/mupdf"
 
 # remove docs, but keep manpages
 rm -rf "$1/usr/share/doc"
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
