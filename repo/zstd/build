@@ -15,3 +15,7 @@ make -C programs PREFIX=/usr DESTDIR="$1" install
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
+
+# Fix symbolic links
+ln -sf zstd.1.gz "$1/usr/share/man/man1/zstdcat.1"
+ln -sf zstd.1.gz "$1/usr/share/man/man1/unzstd.1"
