@@ -1,6 +1,5 @@
 #!/bin/sh -e 
 
-export LDFLAGS="$LDFLAGS -static"
 
 # remove atomx and slw, as theyre giving me linking issues.
 sed '/atomx.c/d' Makefile > _
@@ -10,8 +9,14 @@ mv -f _ Makefile
 sed 's/wmp.c.*/wmp.c/' Makefile > _
 mv -f _ Makefile
 
-make
-make MANPREFIX=/usr/share DESTDIR="$1" install
+make \
+	CFLAGS="$CFLAGS -I/usr/include" \
+	LDFLAGS="$LDFLAGS -static -L/usr/lib -lxcb -lxcb-shm -lxcb-util -lxcb-image -lxcb-render-util -lxcb-render -lxcb-cursor -lXau"
+make \
+	MANPREFIX=/usr/share/man \
+	PREFIX=/usr \
+	DESTDIR="$1" \
+	install
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
