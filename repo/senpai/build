@@ -15,3 +15,6 @@ mkdir -p "$1/usr/bin" "$1/usr/share/man/man1" "$1/usr/share/man/man5"
 cp senpai "$1/usr/bin/"
 cp senpai.1 "$1/usr/share/man/man1/"
 cp senpai.5 "$1/usr/share/man/man5/"
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
