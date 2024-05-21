@@ -2,15 +2,7 @@
 
 export DESTDIR="$1"
 
-# Some packages in community/ requrire that gtk+3 have atk methods.
-# So if atk is installed, then we don't patch it out of gtk, just fribidi.
-if pkg-config --exists atk; then
-    patch -p1 < 01-no-fribidi.patch
-else
-    for p in *.patch; do
-        patch -p1 < "$p"
-    done
-fi
+patch -p1 < 0001-remove-fribidi-dependency.patch
 
 # Disable native language support, disable atk-bridge, don't compile schemas.
 sed -e '/compile_schemas/s/true/false/' \
