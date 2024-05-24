@@ -2,7 +2,6 @@
 
 export CFLAGS="$CFLAGS -DNO_BZIP_SUPPORT"
 
-
 for p in *.patch; do
     patch -p1 < "$p"
 done

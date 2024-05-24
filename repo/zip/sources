@@ -2,3 +2,5 @@ https://downloads.sourceforge.net/infozip/zip30.tar.gz
 patches/0001-fix-build-with-Werror-format-security.patch
 patches/0002-strip-redundant-leading-.-sections.patch
 patches/0003-add-proper-GNU-stack-markings-so-we-dont-get-the-def.patch
+patches/0004-add-missing-time.h.patch
+patches/0005-fix-conflicting-types-for-memset-and-memcpy.patch

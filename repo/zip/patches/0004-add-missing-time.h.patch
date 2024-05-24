@@ -1,0 +1,24 @@
+From 217eb7bfb7e17152a28cb7108d6907628c3de24d Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sat, 25 May 2024 00:01:24 +0200
+Subject: [PATCH 4/5] add missing time.h
+
+---
+ timezone.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/timezone.c b/timezone.c
+index 485ec02..18aecbd 100644
+--- a/timezone.c
++++ b/timezone.c
+@@ -41,6 +41,7 @@
+ #include "timezone.h"
+ #include <ctype.h>
+ #include <errno.h>
++#include <time.h>
+ 
+ #ifdef IZTZ_DEFINESTDGLOBALS
+ long timezone = 0;
+-- 
+2.45.1
+

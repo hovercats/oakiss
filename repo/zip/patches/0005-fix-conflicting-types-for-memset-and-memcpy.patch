@@ -1,0 +1,52 @@
+From 92c57f1dfa2a811236c36d93a02d7b6ae932e002 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sat, 25 May 2024 02:02:44 +0200
+Subject: [PATCH 5/5] fix conflicting types for memset and memcpy
+
+https://bugs.gentoo.org/869203
+---
+ unix/configure | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/unix/configure b/unix/configure
+index 73ba803..ecb2d7b 100644
+--- a/unix/configure
++++ b/unix/configure
+@@ -512,14 +512,14 @@ $CC $CFLAGS -c conftest.c >/dev/null 2>/dev/null
+ for func in rmdir strchr strrchr rename mktemp mktime mkstemp
+ do
+   echo Check for $func
+-  echo "int main(){ $func(); return 0; }" > conftest.c
++  echo "char $func(); int main(){ return $func(); }" > conftest.c
+   $CC $BFLAG -o conftest conftest.c >/dev/null 2>/dev/null
+   [ $? -ne 0 ] && CFLAGS="${CFLAGS} -DNO_`echo $func | tr '[a-z]' '[A-Z]'`"
+ done
+ 
+ 
+ echo Check for memset
+-echo "int main(){ char k; memset(&k,0,0); return 0; }" > conftest.c
++echo "int main(){ char memset(); return memset(); }" > conftest.c
+ $CC -o conftest conftest.c >/dev/null 2>/dev/null
+ [ $? -ne 0 ] && CFLAGS="${CFLAGS} -DZMEM"
+ 
+@@ -556,7 +556,7 @@ $CC $CFLAGS -c conftest.c >/dev/null 2>/dev/null
+ 
+ echo Check for directory libraries
+ cat > conftest.c << _EOF_
+-int main() { return closedir(opendir(".")); }
++int main() { char closedir(); char opendir(); return closedir(opendir()); }
+ _EOF_
+ 
+ $CC -o conftest conftest.c >/dev/null 2>/dev/null
+@@ -578,7 +578,7 @@ fi
+ # Dynix/ptx 1.3 needed this
+ 
+ echo Check for readlink
+-echo "int main(){ return readlink(); }" > conftest.c
++echo "int main(){ char readlink(); return readlink(); }" > conftest.c
+ $CC -o conftest conftest.c >/dev/null 2>/dev/null
+ if [ $? -ne 0 ]; then
+   $CC -o conftest conftest.c -lseq >/dev/null 2>/dev/null
+-- 
+2.45.1
+
