@@ -40,6 +40,7 @@ lib('libutil.a', [[libutil/(
 	strlcat.c
 	strlcpy.c
 	strsep.c
+	strnsubst.c
 	strtonum.c
 	unescape.c
 	writeall.c
@@ -66,8 +67,8 @@ lib('libutf.a', [[libutf/(
 	utftorunestr.c
 )]])
 
-rule('getconf', '$srcdir/getconf.sh >$out')
-build('getconf', '$outdir/getconf.h', {'|', '$srcdir/getconf.sh'})
+rule('getconf', '$srcdir/scripts/getconf.sh >$out')
+build('getconf', '$outdir/getconf.h', {'|', '$srcdir/scripts/getconf.sh'})
 
 local cmds = {
 	'basename',
