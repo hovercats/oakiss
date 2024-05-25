@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-export BUILD_ZLIB=0
-export BUILD_BZIP2=0
 export LDFLAGS="$LDFLAGS -pthread"
 export CFLAGS="$CFLAGS -DNO_POSIX_2008_LOCALE -D_GNU_SOURCE"
 
@@ -27,7 +25,9 @@ export CFLAGS="$CFLAGS -DNO_POSIX_2008_LOCALE -D_GNU_SOURCE"
     -Dman1ext=1 \
     -Dman3ext=3pm \
     -Dperl_static_inline="static __inline__" \
-    -Dd_static_inline
+    -Dd_static_inline \
+    -DNO_ZLIB \
+    -DNO_BZLIB
 
 make
 make DESTDIR="$1" install.perl
