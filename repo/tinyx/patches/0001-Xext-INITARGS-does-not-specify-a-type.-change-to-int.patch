@@ -1,0 +1,123 @@
+From f11614bb85d2cd38fada25d8e7bafff701df9a45 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sun, 26 May 2024 22:15:20 +0200
+Subject: [PATCH] Xext: INITARGS does not specify a type. change to int instead
+
+---
+ Xext/bigreq.c | 2 +-
+ Xext/dpms.c   | 2 +-
+ Xext/saver.c  | 2 +-
+ Xext/shm.c    | 2 +-
+ Xext/sync.c   | 2 +-
+ Xext/xcmisc.c | 2 +-
+ Xext/xres.c   | 2 +-
+ Xext/xtest.c  | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/Xext/bigreq.c b/Xext/bigreq.c
+index 8059641..02bb0f9 100644
+--- a/Xext/bigreq.c
++++ b/Xext/bigreq.c
+@@ -50,7 +50,7 @@ static void BigReqResetProc(ExtensionEntry *    /* extEntry */
+ static DISPATCH_PROC(ProcBigReqDispatch);
+ 
+ void
+-BigReqExtensionInit(INITARGS)
++BigReqExtensionInit(int)
+ {
+ #if 0
+     ExtensionEntry *extEntry;
+diff --git a/Xext/dpms.c b/Xext/dpms.c
+index b75f482..612e3af 100644
+--- a/Xext/dpms.c
++++ b/Xext/dpms.c
+@@ -91,7 +91,7 @@ static DISPATCH_PROC(SProcDPMSCapable);
+ static void DPMSResetProc(ExtensionEntry * extEntry);
+ 
+ void
+-DPMSExtensionInit(INITARGS)
++DPMSExtensionInit(int)
+ {
+ #if 0
+     ExtensionEntry *extEntry;
+diff --git a/Xext/saver.c b/Xext/saver.c
+index 0ba9928..e88bce7 100644
+--- a/Xext/saver.c
++++ b/Xext/saver.c
+@@ -239,7 +239,7 @@ static int ScreenPrivateIndex;
+  ****************/
+ 
+ void
+-ScreenSaverExtensionInit(INITARGS)
++ScreenSaverExtensionInit(int)
+ {
+     ExtensionEntry *extEntry;
+ 
+diff --git a/Xext/shm.c b/Xext/shm.c
+index 957fcf3..fb6c05d 100644
+--- a/Xext/shm.c
++++ b/Xext/shm.c
+@@ -208,7 +208,7 @@ CheckForShmSyscall()
+ #endif
+ 
+ void
+-ShmExtensionInit(INITARGS)
++ShmExtensionInit(int)
+ {
+     ExtensionEntry *extEntry;
+ 
+diff --git a/Xext/sync.c b/Xext/sync.c
+index 460cc5e..3242b69 100644
+--- a/Xext/sync.c
++++ b/Xext/sync.c
+@@ -2296,7 +2296,7 @@ ExtensionEntry *extEntry;
+  * ** Initialise the extension.
+  */
+ void
+-SyncExtensionInit(INITARGS)
++SyncExtensionInit(int)
+ {
+     ExtensionEntry *extEntry;
+ 
+diff --git a/Xext/xcmisc.c b/Xext/xcmisc.c
+index d8bfc81..079b262 100644
+--- a/Xext/xcmisc.c
++++ b/Xext/xcmisc.c
+@@ -64,7 +64,7 @@ static DISPATCH_PROC(SProcXCMiscGetXIDList);
+ static DISPATCH_PROC(SProcXCMiscGetXIDRange);
+ 
+ void
+-XCMiscExtensionInit(INITARGS)
++XCMiscExtensionInit(int)
+ {
+ #if 0
+     ExtensionEntry *extEntry;
+diff --git a/Xext/xres.c b/Xext/xres.c
+index 39ba82e..f661572 100644
+--- a/Xext/xres.c
++++ b/Xext/xres.c
+@@ -373,7 +373,7 @@ SProcResDispatch(ClientPtr client)
+ }
+ 
+ void
+-ResExtensionInit(INITARGS)
++ResExtensionInit(int)
+ {
+     (void) AddExtension(XRES_NAME, 0, 0,
+                         ProcResDispatch, SProcResDispatch,
+diff --git a/Xext/xtest.c b/Xext/xtest.c
+index e0f2bdc..af520ee 100644
+--- a/Xext/xtest.c
++++ b/Xext/xtest.c
+@@ -80,7 +80,7 @@ static DISPATCH_PROC(SProcXTestGetVersion);
+ static DISPATCH_PROC(SProcXTestGrabControl);
+ 
+ void
+-XTestExtensionInit(INITARGS)
++XTestExtensionInit(int)
+ {
+ #if 0
+     ExtensionEntry *extEntry;
+-- 
+2.45.1
+

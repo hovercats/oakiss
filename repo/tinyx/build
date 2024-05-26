@@ -4,6 +4,8 @@ export LDFLAGS="$LDFLAGS -static-pie"
 export XSERVERCFLAGS_CFLAGS="-fPIE"
 export XSERVERLIBS_LIBS="/usr/lib/*.a -lz -lfreetype -lpng16"
 
+patch -p1 < 0001-Xext-INITARGS-does-not-specify-a-type.-change-to-int.patch
+
 ./configure \
   --prefix=/usr \
   --with-fontdir=/usr/share/fonts \
