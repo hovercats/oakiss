@@ -28,6 +28,7 @@ return {
 		'less',
 		'mandoc',
 		'netbsd-curses',
+		'openntpd',
 		'openssh',
 		'tz',
 		'util-linux',
