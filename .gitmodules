@@ -141,3 +141,7 @@
 	path = pkg/zstd/src
 	url = https://github.com/facebook/zstd
 	ignore = all
+[submodule "pkg/the_silver_searcher/src"]
+	path = pkg/the_silver_searcher/src
+	url = https://github.com/ggreer/the_silver_searcher
+	ignore = all

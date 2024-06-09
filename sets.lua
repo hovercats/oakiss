@@ -45,6 +45,7 @@ return {
 		'nasm', 
 		'qbe',
 		'strace',
+		'the_silver_searcher',
 	},
 	net={
 		'catgirl',
