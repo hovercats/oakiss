@@ -14,6 +14,7 @@ rm -rf subprojects
 
 meson setup \
     -Dprefix=/usr \
+    -Dlibdir=/usr/lib \
     -Dgtk_doc=false \
     -Dintrospection=disabled \
     output
