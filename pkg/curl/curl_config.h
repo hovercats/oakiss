@@ -1,3 +1,4 @@
+/* #undef CARES_NO_DEPRECATED */
 /* #undef CURLDEBUG */
 #define CURL_CA_BUNDLE "/etc/ssl/cert.pem"
 /* #undef CURL_CA_FALLBACK */
@@ -48,7 +49,6 @@
 #define CURL_SA_FAMILY_T sa_family_t
 /* #undef CURL_WITH_MULTI_SSL */
 /* #undef DEBUGBUILD */
-/* #undef ENABLE_IPV6 */
 #define GETHOSTNAME_TYPE_ARG2 size_t
 #define HAVE_ALARM 1
 /* #undef HAVE_ARC4RANDOM */
@@ -67,6 +67,7 @@
 #define HAVE_DECL_FSEEKO 1
 #define HAVE_DECL_GETPWUID_R 1
 /* #undef HAVE_DECL_GETPWUID_R_MISSING */
+#define HAVE_DIRENT_H 1
 #define HAVE_DLFCN_H 1
 /* #undef HAVE_ERR_H */
 #define HAVE_FCNTL 1
@@ -77,7 +78,7 @@
 #define HAVE_FSEEKO 1
 #define HAVE_FSETXATTR 1
 #define HAVE_FSETXATTR_5 1
-/* #undef HAVE_FSETXATTR_5 */
+/* #undef HAVE_FSETXATTR_6 */
 #define HAVE_FTRUNCATE 1
 #define HAVE_GETADDRINFO 1
 #define HAVE_GETADDRINFO_THREADSAFE 1
@@ -156,6 +157,7 @@
 /* #undef HAVE_NGTCP2_NGTCP2_CRYPTO_H */
 /* #undef HAVE_NGTCP2_NGTCP2_H */
 /* #undef HAVE_OLD_GSSMIT */
+#define HAVE_OPENDIR 1
 /* #undef HAVE_OPENSSL3 */
 /* #undef HAVE_OPENSSL_CRYPTO_H */
 /* #undef HAVE_OPENSSL_ERR_H */
@@ -194,9 +196,10 @@
 #define HAVE_SOCKET 1
 #define HAVE_SOCKETPAIR 1
 /* #undef HAVE_SOCKET_H */
-/* #undef HAVE_SSL_GET_ECH_STATUS */
+/* #undef HAVE_SSL_ECH_SET1_ECHCONFIG */
 /* #undef HAVE_SSL_H */
 /* #undef HAVE_SSL_SET0_WBIO */
+/* #undef HAVE_SSL_SET1_ECH_CONFIG_LIST */
 /* #undef HAVE_SSL_SET_QUIC_USE_LEGACY_CODEPOINT */
 #define HAVE_STDATOMIC_H 1
 #define HAVE_STDBOOL_H 1
@@ -239,6 +242,7 @@
 #define HAVE_UTIMES 1
 #define HAVE_UTIME_H 1
 /* #undef HAVE_WOLFSSH_SSH_H */
+/* #undef HAVE_WOLFSSL_CTX_GENERATEECHCONFIG */
 /* #undef HAVE_WOLFSSL_DES_ECB_ENCRYPT */
 /* #undef HAVE_WOLFSSL_FULL_BIO */
 /* #undef HAVE_WOLFSSL_GET_PEER_CERTIFICATE */
@@ -252,8 +256,6 @@
 /* #undef NEED_LBER_H */
 /* #undef NEED_REENTRANT */
 /* #undef NEED_THREAD_SAFE */
-/* #undef NTLM_WB_ENABLED */
-/* #undef NTLM_WB_FILE */
 #define OS "x86_64-pc-linux-musl"
 #define PACKAGE "curl"
 #define PACKAGE_BUGREPORT "a suitable curl mailing list: https://curl.se/mail/"
@@ -261,7 +263,7 @@
 #define PACKAGE_STRING "curl -"
 #define PACKAGE_TARNAME "curl"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "-"
+#define PACKAGE_VERSION "8.8.0"
 /* #undef RANDOM_FILE */
 #define SIZEOF_CURL_OFF_T 8
 #define SIZEOF_CURL_SOCKET_T 4
@@ -278,7 +280,9 @@
 /* #undef USE_ECH */
 /* #undef USE_GNUTLS */
 /* #undef USE_GSASL */
+/* #undef USE_HTTPSRR */
 /* #undef USE_HYPER */
+/* #undef USE_IPV6 */
 /* #undef USE_LIBPSL */
 /* #undef USE_LIBRTMP */
 /* #undef USE_LIBSSH */
@@ -315,7 +319,7 @@
 /* #undef USE_WINDOWS_SSPI */
 /* #undef USE_WOLFSSH */
 /* #undef USE_WOLFSSL */
-#define VERSION "-"
+#define VERSION "8.8.0"
 #ifndef _ALL_SOURCE
 /* #  undef _ALL_SOURCE */
 #endif
@@ -323,8 +327,5 @@
 /* #undef _LARGE_FILES */
 /* #undef const */
 /* #undef in_addr_t */
-#ifndef __cplusplus
-/* #undef inline */
-#endif
 /* #undef size_t */
 /* #undef ssize_t */
