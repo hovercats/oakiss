@@ -5,6 +5,7 @@ export LDFLAGS="$LDFLAGS -static"
 
 cmake -G Ninja -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBEXECDIR=/usr/lib \
     -DCMAKE_BUILD_TYPE=Release \
     -DREDIS_STORAGE_BACKEND=OFF \
     -DENABLE_TESTING=OFF \
