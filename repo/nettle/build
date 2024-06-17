@@ -2,6 +2,7 @@
 
 ./configure \
     --prefix=/usr \
+    --libdir=/usr/lib \
     --enable-static \
     --enable-mini-gmp \
     --disable-documentation
