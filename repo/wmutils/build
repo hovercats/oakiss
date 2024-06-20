@@ -1,17 +1,21 @@
 #!/bin/sh -e 
 
-
-# remove atomx and slw, as theyre giving me linking issues.
-sed '/atomx.c/d' Makefile > _
-mv -f _ Makefile
-sed '/slw.c/d' Makefile > _
-mv -f _ Makefile
-sed 's/wmp.c.*/wmp.c/' Makefile > _
-mv -f _ Makefile
-
 make \
 	CFLAGS="$CFLAGS -I/usr/include" \
-	LDFLAGS="$LDFLAGS -static -L/usr/lib -lxcb -lxcb-shm -lxcb-util -lxcb-image -lxcb-render-util -lxcb-render -lxcb-cursor -lXau"
+	LDFLAGS="$LDFLAGS -static -L/usr/lib -lxcb -lxcb-shm -lxcb-util -lxcb-image -lxcb-render-util -lxcb-render -lxcb-cursor -lXau /usr/lib/*.a"
+make \
+	MANPREFIX=/usr/share/man \
+	PREFIX=/usr \
+	DESTDIR="$1" \
+	install
+
+cd opt
+
+# fix order so that we can build things statically linked
+sed 's/$(LDFLAGS) util.o/util.o $(LDFLAGS)/' Makefile > _
+mv -f _ Makefile
+
+make LDFLAGS="$LDFLAGS -static -lxcb -lxcb-util -lXau"
 make \
 	MANPREFIX=/usr/share/man \
 	PREFIX=/usr \
