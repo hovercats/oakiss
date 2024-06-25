@@ -144,3 +144,6 @@
 	path = pkg/the_silver_searcher/src
 	url = https://github.com/ggreer/the_silver_searcher
 	ignore = all
+[submodule "pkg/smu/src"]
+	path = pkg/smu/src
+	url = https://github.com/gottox/smu
