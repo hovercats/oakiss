@@ -125,7 +125,7 @@
 	ignore = all
 [submodule "pkg/xz/src"]
 	path = pkg/xz/src
-	url = https://git.tukaani.org/xz.git
+	url = https://github.com/tukaani-project/xz.git
 [submodule "pkg/zlib/src"]
 	path = pkg/zlib/src
 	url = https://github.com/madler/zlib
