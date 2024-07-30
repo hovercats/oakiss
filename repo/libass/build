@@ -1,11 +1,13 @@
 #!/bin/sh -e
 
+export DESTDIR="$1"
+
 patch -p1 < 0001-remove-fribidi-dependency.patch
 
-./configure \
-    FRIBIDI_LIBS="  " \
-    --prefix=/usr \
-    --enable-fontconfig
+meson setup \
+	-Dprefix=/usr \
+	-Dfontconfig=enabled \
+	output
 
-make
-make DESTDIR="$1" install
+samu -C output
+samu -C output install
