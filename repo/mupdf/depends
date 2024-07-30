@@ -5,7 +5,6 @@ libXau            make
 libXext           make
 libjpeg-turbo     make
 libpng            make
-libressl          make
 libxcb            make
 pkgconf           make
 zlib              make
