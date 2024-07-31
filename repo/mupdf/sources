@@ -1,4 +1,4 @@
-https://mupdf.com/downloads/archive/mupdf-1.24.3-source.tar.gz
+https://mupdf.com/downloads/archive/mupdf-1.24.8-source.tar.gz
 patches/0001-remove-gumbo-parser-dependency.patch
 patches/0002-remove-openjpeg-dependency.patch
 patches/0003-change-OBJCOPY_CMD-to-work-on-non-GNU-linkers.patch
