@@ -1,4 +1,4 @@
-https://python.org/ftp/python/3.11.7/Python-3.11.7.tar.xz
+https://python.org/ftp/python/3.11.9/Python-3.11.9.tar.xz
 https://bootstrap.pypa.io/get-pip.py
 patches/0001-readd-support-for-libressl.patch
 patches/0002-fix-slow-startup-for-pyc-files.patch
