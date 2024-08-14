@@ -1,5 +1,5 @@
 https://dl.suckless.org/st/st-0.9.2.tar.gz
-patches/0001-apply-font2-patch.patch
+patches/0001-set-tamzen-as-default-font.patch
 patches/0002-set-borderpx-to-5.patch
 patches/0003-set-default-cursor-to-_.patch
 patches/0004-switch-keybindings-for-zoom-and-copy-paste.patch
