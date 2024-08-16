@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+
+make PREFIX=/usr USE_LUAJIT=1
+make DESTDIR="$1" PREFIX=/usr install
