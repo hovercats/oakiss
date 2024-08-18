@@ -1,0 +1,4 @@
+expat
+libffi
+meson   make
+pkgconf make
