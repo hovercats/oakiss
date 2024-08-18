@@ -147,3 +147,114 @@
 [submodule "pkg/smu/src"]
 	path = pkg/smu/src
 	url = https://github.com/gottox/smu
+[submodule "pkg/libinput/src"]
+	path = pkg/libinput/src
+	url = https://github.com/oasislinux/libinput
+[submodule "pkg/mtdev/src"]
+	path = pkg/mtdev/src
+	url = http://bitmath.org/git/mtdev.git
+	ignore = all
+[submodule "pkg/libevdev/src"]
+	path = pkg/libevdev/src
+	url = https://gitlab.freedesktop.org/libevdev/libevdev.git
+	ignore = all
+[submodule "pkg/pixman/src"]
+	path = pkg/pixman/src
+	url = https://gitlab.freedesktop.org/pixman/pixman.git
+	ignore = all
+[submodule "pkg/dmenu/src"]
+	path = pkg/dmenu/src
+	url = git://git.suckless.org/dmenu
+	ignore = all
+[submodule "pkg/xkeyboard-config/src"]
+	path = pkg/xkeyboard-config/src
+	url = https://gitlab.freedesktop.org/xkeyboard-config/xkeyboard-config.git
+[submodule "pkg/wld/src"]
+	path = pkg/wld/src
+	url = https://github.com/michaelforney/wld
+[submodule "pkg/wayland-protocols/src"]
+	path = pkg/wayland-protocols/src
+	url = https://gitlab.freedesktop.org/wayland/wayland-protocols.git
+[submodule "pkg/wayland/src"]
+	path = pkg/wayland/src
+	url = https://gitlab.freedesktop.org/wayland/wayland.git
+	ignore = all
+[submodule "pkg/velox/src"]
+	path = pkg/velox/src
+	url = https://github.com/michaelforney/velox
+[submodule "pkg/swc/src"]
+	path = pkg/swc/src
+	url = https://github.com/michaelforney/swc
+[submodule "pkg/utf8proc/src"]
+	path = pkg/utf8proc/src
+	url = https://github.com/JuliaLang/utf8proc
+[submodule "pkg/st/src"]
+	path = pkg/st/src
+	url = git://git.suckless.org/st
+	ignore = all
+[submodule "pkg/freetype/src"]
+	path = pkg/freetype/src
+	url = git://git.sv.nongnu.org/freetype/freetype2.git
+[submodule "pkg/jbig2dec/src"]
+	path = pkg/jbig2dec/src
+	url = git://git.ghostscript.com/jbig2dec.git
+[submodule "pkg/libffi/src"]
+	path = pkg/libffi/src
+	url = https://github.com/libffi/libffi
+	ignore = all
+[submodule "pkg/libpng/src"]
+	path = pkg/libpng/src
+	url = https://github.com/glennrp/libpng
+[submodule "pkg/mupdf/src"]
+	path = pkg/mupdf/src
+	url = https://github.com/oasislinux/mupdf.git
+[submodule "pkg/expat/src"]
+	path = pkg/expat/src
+	url = https://github.com/libexpat/libexpat
+[submodule "pkg/libxkbcommon/src"]
+	path = pkg/libxkbcommon/src
+	url = https://github.com/xkbcommon/libxkbcommon.git
+	ignore = all
+[submodule "pkg/libdrm/src"]
+	path = pkg/libdrm/src
+	url = https://anongit.freedesktop.org/git/mesa/drm.git
+[submodule "pkg/libjpeg-turbo/src"]
+	path = pkg/libjpeg-turbo/src
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo
+[submodule "pkg/netsurf/src"]
+	path = pkg/netsurf/src
+	url = https://github.com/oasislinux/netsurf
+[submodule "pkg/netsurf/libcss/src"]
+	path = pkg/netsurf/libcss/src
+	url = git://git.netsurf-browser.org/libcss.git
+	ignore = all
+[submodule "pkg/netsurf/libdom/src"]
+	path = pkg/netsurf/libdom/src
+	url = git://git.netsurf-browser.org/libdom.git
+	ignore = all
+[submodule "pkg/netsurf/libhubbub/src"]
+	path = pkg/netsurf/libhubbub/src
+	url = git://git.netsurf-browser.org/libhubbub.git
+[submodule "pkg/netsurf/libnsbmp/src"]
+	path = pkg/netsurf/libnsbmp/src
+	url = git://git.netsurf-browser.org/libnsbmp.git
+[submodule "pkg/netsurf/libnsgif/src"]
+	path = pkg/netsurf/libnsgif/src
+	url = git://git.netsurf-browser.org/libnsgif.git
+[submodule "pkg/netsurf/libnsutils/src"]
+	path = pkg/netsurf/libnsutils/src
+	url = git://git.netsurf-browser.org/libnsutils.git
+[submodule "pkg/netsurf/libparserutils/src"]
+	path = pkg/netsurf/libparserutils/src
+	url = git://git.netsurf-browser.org/libparserutils.git
+[submodule "pkg/netsurf/libsvgtiny/src"]
+	path = pkg/netsurf/libsvgtiny/src
+	url = git://git.netsurf-browser.org/libsvgtiny.git
+	ignore = all
+[submodule "pkg/netsurf/libwapcaplet/src"]
+	path = pkg/netsurf/libwapcaplet/src
+	url = git://git.netsurf-browser.org/libwapcaplet.git
+	ignore = all
+[submodule "pkg/hotplugd/src"]
+	path = pkg/hotplugd/src
+	url = https://github.com/oasislinux/hotplugd.git

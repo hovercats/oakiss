@@ -46,6 +46,7 @@ return {
 		'qbe',
 		'strace',
 		'the_silver_searcher',
+		'wayland',
 	},
 	net={
 		'catgirl',
@@ -53,5 +54,17 @@ return {
 		'sdhcp',
 		'transmission',
 		'wpa_supplicant',
+	},
+	desktop={
+		'dmenu',
+		'liberation-fonts',
+		'libinput',
+		'mupdf',
+		'netsurf',
+		'st',
+		'swc',
+		'tamzen-font',
+		'velox',
+		'xkeyboard-config',
 	},
 }
