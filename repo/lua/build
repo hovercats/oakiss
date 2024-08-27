@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+make MYCFLAGS="$CFLAGS -fPIC" \
+     MYLDFLAGS="$LDFLAGS -static" \
+     posix
+     
+sed "s/install -p/install/" Makefile > _
+mv -f _ Makefile
+
+make INSTALL_TOP="$1/usr" \
+     INSTALL_DATA="cp -P" \
+     INSTALL_MAN="$1/usr/share/man/man1" \
+     install
