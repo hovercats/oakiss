@@ -6,7 +6,7 @@ glib
 gtk+3
 libsoup3
 lua-filesystem
-#luajit
+luajit
 pango
 sqlite
 webkit2gtk
