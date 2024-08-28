@@ -1,0 +1,8 @@
+output = "source-sans-3.028R.tar.gz"
+url = "https://github.com/adobe-fonts/source-sans/archive/3.028R.tar.gz"
+
+output = "source-serif-4.004R.tar.gz"
+url = "https://github.com/adobe-fonts/source-serif/archive/4.004R.tar.gz"
+
+output = "source-code-pro-2.038R-ro_1.058R-it_1.018R-VAR.tar.gz"
+url = "https://github.com/adobe-fonts/source-code-pro/archive/2.038R-ro/1.058R-it/1.018R-VAR.tar.gz"

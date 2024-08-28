@@ -1,4 +1,5 @@
 subgen 'awk'
+subgen 'adobe-source-fonts'
 subgen 'b3sum'
 subgen 'bc'
 subgen 'bearssl'
