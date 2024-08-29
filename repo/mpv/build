@@ -12,6 +12,7 @@ meson setup \
     -Ddrm=disabled \
     -Dgbm=disabled \
     -Dstdatomic=disabled \
+    -Db_colorout=never \
     build
 
 samu -C build
