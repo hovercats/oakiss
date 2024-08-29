@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+patch -p1 < 0001-add-configure-check-for-Wno-error-incompatible-point.patch
+
 ./configure \
     --cc="${CC:-cc}" \
     --cxx="${CXX:-c++}" \

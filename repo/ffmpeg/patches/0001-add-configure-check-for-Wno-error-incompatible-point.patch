@@ -1,0 +1,24 @@
+From a5d76751b5e62b95db9004e745767748bc560602 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 29 Aug 2024 11:28:09 +0200
+Subject: [PATCH] add configure check for -Wno-error=incompatible-pointer-types
+
+---
+ configure | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configure b/configure
+index 8642513..f933a4e 100755
+--- a/configure
++++ b/configure
+@@ -7540,6 +7540,7 @@ elif enabled gcc; then
+     check_cflags -Werror=return-type
+     check_cflags -Werror=vla
+     check_cflags -Wformat
++    check_cflags -Wno-error=incompatible-pointer-types
+     check_cflags -fdiagnostics-color=auto
+     enabled extra_warnings || check_disable_warning -Wno-maybe-uninitialized
+     if enabled x86_32; then
+-- 
+2.45.1
+

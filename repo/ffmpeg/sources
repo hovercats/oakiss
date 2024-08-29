@@ -1,1 +1,2 @@
-https://ffmpeg.org/releases/ffmpeg-6.1.1.tar.xz
+https://ffmpeg.org/releases/ffmpeg-7.0.2.tar.xz
+patches/0001-add-configure-check-for-Wno-error-incompatible-point.patch
