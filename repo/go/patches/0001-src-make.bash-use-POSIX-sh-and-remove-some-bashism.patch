@@ -1,0 +1,31 @@
+From 438f1fcaef381fe3950ee7b6bfddc1233d487f73 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 29 Aug 2024 06:44:15 +0200
+Subject: [PATCH] src/make.bash: use POSIX sh and remove some bashism
+
+---
+ src/make.bash | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/make.bash b/src/make.bash
+index 814b7e8..b5344b1 100755
+--- a/src/make.bash
++++ b/src/make.bash
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env bash
++#!/bin/sh
+ # Copyright 2009 The Go Authors. All rights reserved.
+ # Use of this source code is governed by a BSD-style
+ # license that can be found in the LICENSE file.
+@@ -164,7 +164,7 @@ bootstrapenv() {
+ }
+ 
+ export GOROOT="$(cd .. && pwd)"
+-IFS=$'\n'; for go_exe in $(type -ap go); do
++for go_exe in $(command -v go); do
+ 	if [[ ! -x "$GOROOT_BOOTSTRAP/bin/go" ]]; then
+ 		goroot_bootstrap=$GOROOT_BOOTSTRAP
+ 		GOROOT_BOOTSTRAP=""
+-- 
+2.45.1
+

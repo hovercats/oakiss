@@ -1,2 +1,2 @@
-https://golang.org/dl/go1.22.5.src.tar.gz
-patches/0001-use-POSIX-sh-and-remove-some-bashism.patch
+https://golang.org/dl/go1.23.0.src.tar.gz
+patches/0001-src-make.bash-use-POSIX-sh-and-remove-some-bashism.patch
