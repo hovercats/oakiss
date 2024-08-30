@@ -3,7 +3,7 @@
 export GOPATH="$PWD/go"
 export GO111MODULE=on
 
-CGO_ENABLED=0 go build -a -ldflags '-extldflags "-static"'\
+CGO_ENABLED=0 go build -a -ldflags="-w -s -extldflags '-static'"\
     -modcacherw \
     -trimpath \
     ./cmd/gh
