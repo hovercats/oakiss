@@ -1,0 +1,23 @@
+From 68a418338f7c397dc7a77575936827400263ffb6 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Fri, 30 Aug 2024 07:33:56 +0200
+Subject: [PATCH] remove the need for vulkan-headers
+
+---
+ src/vulkan/meson.build | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/vulkan/meson.build b/src/vulkan/meson.build
+index 64c5572..b4bd46a 100644
+--- a/src/vulkan/meson.build
++++ b/src/vulkan/meson.build
+@@ -54,6 +54,4 @@ if vulkan_build.allowed()
+     build_deps += vulkan_loader
+     tests += 'vulkan.c'
+   endif
+-else
+-  sources += 'vulkan/stubs.c'
+ endif
+-- 
+2.45.1
+

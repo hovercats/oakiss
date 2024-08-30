@@ -1,0 +1,16 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+patch -p1 < 0001-remove-the-need-for-vulkan-headers.patch
+
+meson setup \
+    -Dprefix=/usr \
+    -Dbuildtype=release \
+    -Dvulkan=disabled \
+    -Ddemos=false \
+    -Dopengl=disabled \
+    output
+
+samu -C output
+samu -C output install
