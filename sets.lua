@@ -55,6 +55,12 @@ return {
 		'transmission',
 		'wpa_supplicant',
 	},
+	media={
+		'alsa-lib',
+		'ffmpeg',
+		'mpv',
+		'tinyalsa',
+		},
 	desktop={
 		'liberation-fonts',
 		'adobe-source-fonts',

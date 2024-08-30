@@ -1,0 +1,45 @@
+From 423031475f19346601a913dd24ae5ace3d0d9739 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Tue, 7 Sep 2021 01:44:53 -0700
+Subject: [PATCH] libavcodec: Use #if to prevent some unintended dependencies
+
+---
+ libavcodec/mpegvideo_motion.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/libavcodec/mpegvideo_motion.c b/libavcodec/mpegvideo_motion.c
+index 8922f5b1a5..40c364a5cc 100644
+--- a/libavcodec/mpegvideo_motion.c
++++ b/libavcodec/mpegvideo_motion.c
+@@ -207,10 +207,11 @@ void mpeg_motion_internal(MpegEncContext *s,
+         pix_op[s->chroma_x_shift][uvdxy]
+             (dest_cr, ptr_cr, uvlinesize, h >> s->chroma_y_shift);
+     }
+-    if (!is_mpeg12 && (CONFIG_H261_ENCODER || CONFIG_H261_DECODER) &&
+-        s->out_format == FMT_H261) {
++#if CONFIG_H261_ENCODER || CONFIG_H261_DECODER
++    if (!is_mpeg12 && s->out_format == FMT_H261) {
+         ff_h261_loop_filter(s);
+     }
++#endif
+ }
+ /* apply one mpeg motion vector to the three components */
+ static void mpeg_motion(MpegEncContext *s,
+@@ -702,11 +703,12 @@ static av_always_inline void mpv_motion_internal(MpegEncContext *s,
+                         0, 0, 0,
+                         ref_picture, pix_op, qpix_op,
+                         s->mv[dir][0][0], s->mv[dir][0][1], 16);
+-        } else if (!is_mpeg12 && (CONFIG_WMV2_DECODER || CONFIG_WMV2_ENCODER) &&
+-                   s->mspel && s->codec_id == AV_CODEC_ID_WMV2) {
++#if CONFIG_WMV2_DECODER || CONFIG_WMV2_ENCODER
++        } else if (!is_mpeg12 && s->mspel && s->codec_id == AV_CODEC_ID_WMV2) {
+             ff_mspel_motion(s, dest_y, dest_cb, dest_cr,
+                             ref_picture, pix_op,
+                             s->mv[dir][0][0], s->mv[dir][0][1], 16);
++#endif
+         } else {
+             mpeg_motion(s, dest_y, dest_cb, dest_cr, 0,
+                         ref_picture, pix_op,
+-- 
+2.37.3
+

@@ -1,0 +1,21 @@
+From 9d8d34c6a318c90f3414de2d73bbe6652d5637f6 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Fri, 1 Jul 2016 20:09:02 -0700
+Subject: [PATCH] Add include/alsa symlink
+
+---
+ include/alsa | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 120000 include/alsa
+
+diff --git a/include/alsa b/include/alsa
+new file mode 120000
+index 00000000..945c9b46
+--- /dev/null
++++ b/include/alsa
+@@ -0,0 +1 @@
++.
+\ No newline at end of file
+-- 
+2.15.0
+

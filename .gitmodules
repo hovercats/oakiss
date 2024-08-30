@@ -258,3 +258,29 @@
 [submodule "pkg/hotplugd/src"]
 	path = pkg/hotplugd/src
 	url = https://github.com/oasislinux/hotplugd.git
+[submodule "pkg/alsa-lib/src"]
+	path = pkg/alsa-lib/src
+	url = https://github.com/alsa-project/alsa-lib.git
+	ignore = all
+[submodule "pkg/mpv/src"]
+	path = pkg/mpv/src
+	url = https://github.com/mpv-player/mpv
+	ignore = all
+[submodule "pkg/ffmpeg/src"]
+	path = pkg/ffmpeg/src
+	url = https://git.ffmpeg.org/ffmpeg.git
+	ignore = all
+[submodule "pkg/libplacebo/src"]
+	path = pkg/libplacebo/src
+	url = https://code.videolan.org/videolan/libplacebo.git
+[submodule "pkg/dav1d/src"]
+	path = pkg/dav1d/src
+	url = https://github.com/videolan/dav1d.git
+	ignore = all
+[submodule "pkg/libass/src"]
+	path = pkg/libass/src
+	url = https://github.com/libass/libass
+	ignore = all
+[submodule "pkg/fribidi/src"]
+	path = pkg/fribidi/src
+	url = https://github.com/fribidi/fribidi
