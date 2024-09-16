@@ -1,7 +1,0 @@
-#!/bin/sh -e
-
-make PREFIX=/usr
-make PREFIX=/usr DESTDIR="$1" install
-
-# Compress manpages
-find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
