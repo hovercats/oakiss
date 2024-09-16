@@ -6,6 +6,7 @@ libXinerama
 libXpresent
 libXrandr
 libass
+libplacebo
 libxkbcommon
-meson make
+meson   make
 python  make
