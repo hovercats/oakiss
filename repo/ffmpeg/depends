@@ -9,6 +9,5 @@ libvpx
 libwebp
 libxcb
 opus
-pkgconf make
 xvidcore
 zlib

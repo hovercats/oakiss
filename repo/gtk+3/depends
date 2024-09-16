@@ -16,5 +16,4 @@ libxkbcommon
 mesa
 meson   make
 pango
-pkgconf make
 python  make

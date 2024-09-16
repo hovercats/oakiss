@@ -10,7 +10,6 @@ libelf
 libxcb
 libxshmfence
 meson         make
-pkgconf       make
 python        make
 python-mako   make
 xorgproto

@@ -1,3 +1,2 @@
 libxcb
-pkgconf  make
 xcb-util make

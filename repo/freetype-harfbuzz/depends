@@ -13,4 +13,3 @@ libxcb
 libxshmfence
 meson   make
 pixman
-pkgconf make

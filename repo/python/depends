@@ -1,5 +1,4 @@
 libffi
 libressl
-pkgconf make
 sqlite
 zlib

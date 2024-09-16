@@ -284,3 +284,6 @@
 [submodule "pkg/fribidi/src"]
 	path = pkg/fribidi/src
 	url = https://github.com/fribidi/fribidi
+[submodule "pkg/u-config/src"]
+	path = pkg/u-config/src
+	url = https://github.com/skeeto/u-config

@@ -1,4 +1,3 @@
 libX11
 libXext
-pkgconf   make
 xorgproto make

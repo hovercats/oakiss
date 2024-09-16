@@ -7,5 +7,4 @@ libpng
 mesa
 meson   make
 pixman
-pkgconf make
 zlib

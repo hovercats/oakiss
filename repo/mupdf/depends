@@ -6,5 +6,4 @@ libXext           make
 libjpeg-turbo     make
 libpng            make
 libxcb            make
-pkgconf           make
 zlib              make

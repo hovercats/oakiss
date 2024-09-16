@@ -1,6 +1,5 @@
 libXau
 libxcb
-pkgconf make
 xcb-util
 xcb-util-image
 xcb-util-renderutil

@@ -1,4 +1,3 @@
 libXfixes
 libXrender
-pkgconf   make
 xorgproto make

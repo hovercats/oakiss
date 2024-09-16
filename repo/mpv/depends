@@ -8,5 +8,4 @@ libXrandr
 libass
 libxkbcommon
 meson make
-pkgconf make
 python  make

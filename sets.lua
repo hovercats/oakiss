@@ -46,6 +46,7 @@ return {
 		'qbe',
 		'strace',
 		'the_silver_searcher',
+		'u-config',
 		'wayland',
 	},
 	net={
