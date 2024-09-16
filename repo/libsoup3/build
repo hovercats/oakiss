@@ -9,9 +9,6 @@ rm -rf subprojects/
 sed "/subdir('po')/d" meson.build > _
 mv -f _ meson.build
 
-# Enable gobject-introspection if it is installed.
-pkg-config --exists gobject-introspection-1.0 && gi=en
-
 # Needed to make the build succeed.
 export CFLAGS="$CFLAGS -w"
 export CXXFLAGS="$CXXFLAGS -w"
@@ -28,7 +25,7 @@ meson setup \
     -Dbrotli=disabled \
     -Dsysprof=disabled \
     -Dpkcs11_tests=disabled \
-    -Dintrospection="${gi:-dis}abled" \
+    -Dintrospection=disabled \
     output
 
 samu -C output

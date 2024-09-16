@@ -8,13 +8,6 @@ export CCACHE_SLOPPINESS=time_macros,include_file_mtime
 export CFLAGS="$CFLAGS -DNDEBUG"
 export CXXFLAGS="$CXXFLAGS -DNDEBUG -Wno-deprecated-declarations -Wno-deprecated-copy"
 
-# Enable streaming related options if gstreamer is installed.
-pkg-config --exists gstreamer-video-1.0 && video=ON
-pkg-config --exists gstreamer-audio-1.0 && audio=ON
-
-# Enable the use of openjpeg if the package is installed.
-pkg-config --exists openjpeg2 && jpeg=ON
-
 # Use clang if installed, decreases compilation time by 25%.
 if command -v clang; then
 	export CC=clang 
@@ -83,9 +76,7 @@ cmake -G Ninja -B build \
     -DENABLE_PDFJS=OFF \
     -DENABLE_SAMPLING_PROFILER=OFF \
     -DENABLE_SPELLCHECK=OFF \
-    -DENABLE_VIDEO="${video:-OFF}" \
     -DENABLE_WAYLAND_TARGET=OFF \
-    -DENABLE_WEB_AUDIO="${audio:-OFF}" \
     -DUSE_AVIF=OFF \
     -DUSE_GSTREAMER_GL=OFF \
     -DUSE_GSTREAMER_TRANSCODER=OFF \
@@ -96,7 +87,7 @@ cmake -G Ninja -B build \
     -DUSE_LIBHYPHEN=OFF \
     -DUSE_LIBNOTIFY=OFF \
     -DUSE_LIBSECRET=OFF \
-    -DUSE_OPENJPEG="${jpeg:-OFF}" \
+    -DUSE_OPENJPEG=OFF \
     -DUSE_SOUP2=OFF \
     -DUSE_SYSTEMD=OFF \
     -DUSE_WOFF2=OFF \
