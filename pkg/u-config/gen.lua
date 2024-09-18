@@ -1,3 +1,14 @@
+cflags{
+	'-fno-builtin',
+	'-fno-asynchronous-unwind-tables',
+	'-ffreestanding',
+}
+
+set('ldflags', {
+	'$ldflags',
+	'-Wl,--gc-sections',
+})
+
 exe('u-config', {'generic_main.c'})
 
 file('bin/u-config', '755', '$outdir/u-config')
