@@ -4,3 +4,9 @@ export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
 make PREFIX=/usr USE_LUAJIT=1
 make DESTDIR="$1" PREFIX=/usr install
+
+rm -rf \
+	"$1/usr/share/pixmaps" \
+	"$1/usr/share/applications" \
+	"$1/usr/share/luakit/doc" \
+	"$1/usr/share/luakit/resources"
