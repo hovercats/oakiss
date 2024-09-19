@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+export CFLAGS="$CFLAGS -fasynchronous-unwind-tables"
+
 make amalg   PREFIX=/usr
 make install PREFIX=/usr DESTDIR="$1"
 
