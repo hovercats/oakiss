@@ -1,11 +1,12 @@
 #!/bin/sh -e
 
 export CFLAGS="$CFLAGS -fasynchronous-unwind-tables"
+export LDFLAGS="$LDFLAGS -static-libgcc"
+
+patch -p1 < 0001-fix-check-for-toolchain-generateing-unwind-tables.patch
 
 make amalg   PREFIX=/usr
-make install PREFIX=/usr DESTDIR="$1"
+make install PREFIX=/usr DESTDIR="$1" INSTALL_TNAME=luajit
 
-# Create these symlinks ourselves as luajit relies
-# on ldconfig to do so and musl does not provide it.
-ln -sf libluajit-5.1.so.2.0.5 "$1/usr/lib/libluajit-5.1.so"
-ln -sf libluajit-5.1.so.2.0.5 "$1/usr/lib/libluajit-5.1.so.2"
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +

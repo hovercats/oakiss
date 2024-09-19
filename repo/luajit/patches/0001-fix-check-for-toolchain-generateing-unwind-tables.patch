@@ -1,0 +1,25 @@
+From c5a326cc3911b0e498522aab845a5e32fcaa1280 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 19 Sep 2024 21:13:15 +0200
+Subject: [PATCH] fix check for toolchain generateing unwind tables
+
+---
+ src/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Makefile b/src/Makefile
+index 71857ed6..e85a9448 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -342,7 +342,7 @@ ifeq (iOS,$(TARGET_SYS))
+ else
+   ifeq (,$(findstring LJ_NO_UNWIND 1,$(TARGET_TESTARCH)))
+     # Find out whether the target toolchain always generates unwind tables.
+-    TARGET_TESTUNWIND=$(shell exec 2>/dev/null; echo 'extern void b(void);int a(void){b();return 0;}' | $(TARGET_CC) -c -x c - -o tmpunwind.o && { grep -qa -e eh_frame -e __unwind_info tmpunwind.o || grep -qU -e eh_frame -e __unwind_info tmpunwind.o; } && echo E; rm -f tmpunwind.o)
++    TARGET_TESTUNWIND=$(shell exec 2>/dev/null; echo 'extern void b(void);int a(void){b();return 0;}' | $(TARGET_CC) -c -x c - -o tmpunwind.o && { strings tmpunwind.o | grep -q -e eh_frame -e __unwind_info; } && echo E; rm -f tmpunwind.o)
+     ifneq (,$(findstring E,$(TARGET_TESTUNWIND)))
+       TARGET_XCFLAGS+= -DLUAJIT_UNWIND_EXTERNAL
+     endif
+-- 
+2.45.1
+
