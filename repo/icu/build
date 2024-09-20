@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+export CXXFLAGS="$CXXFLAGS -static-libstdc++ -static-libgcc"
+
 # Change the order for checking installed compilers as
 # the ccache clang symlink might exist, but clang might not be installed.
 sed 's/clang gcc cc/cc clang gcc/g' icu4c/source/configure > _
