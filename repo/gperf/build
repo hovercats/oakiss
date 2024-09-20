@@ -1,6 +1,8 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
+export LDFLAGS="$LDFLAGS -static-pie"
+export CFLAGS="$CFLAGS -fPIE"
 
 ./configure \
     --prefix=/usr
