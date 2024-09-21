@@ -5,7 +5,8 @@
     --disable-shared \
     --disable-rpath \
     --enable-install-static-library \
-    --with-static-linked-ext
+    --with-static-linked-ext \
+    --without-openssl
 
 make
 make DESTDIR="$1" install
