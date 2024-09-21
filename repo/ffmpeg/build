@@ -8,6 +8,7 @@ patch -p1 < 0001-add-configure-check-for-Wno-error-incompatible-point.patch
     --prefix=/usr \
     --disable-debug \
     --disable-libxml2 \
+    --disable-libtls \
     --enable-static \
     --enable-gpl \
     --enable-libdrm \
@@ -19,7 +20,6 @@ patch -p1 < 0001-add-configure-check-for-Wno-error-incompatible-point.patch
     --enable-libwebp \
     --enable-libxvid \
     --enable-nonfree \
-    --enable-libtls \
     --disable-sndio \
     --enable-alsa \
     --enable-shared \
