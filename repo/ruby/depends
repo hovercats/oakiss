@@ -1,4 +1,3 @@
 libffi   make
-libressl
-libyaml  make
+libyaml
 zlib
