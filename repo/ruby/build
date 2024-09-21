@@ -2,9 +2,10 @@
 
 ./configure \
     --prefix=/usr \
-    --enable-shared \
-    --enable-static \
-    --disable-rpath
+    --disable-shared \
+    --disable-rpath \
+    --enable-install-static-library \
+    --with-static-linked-ext
 
 make
 make DESTDIR="$1" install
