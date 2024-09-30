@@ -41,6 +41,7 @@ return {
 		'linux-headers',
 		'make',
 		'man-pages-posix',
+		'muon',
 		'musl',
 		'nasm', 
 		'qbe',
