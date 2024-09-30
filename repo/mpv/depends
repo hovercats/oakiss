@@ -8,5 +8,4 @@ libXrandr
 libass
 libplacebo
 libxkbcommon
-meson   make
 python  make

@@ -1,0 +1,55 @@
+From 9cd30f390bd4faf06ac5bfc135aa83fa134324ad Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 3 Oct 2024 13:05:43 +0200
+Subject: [PATCH] fix enum-types for muon
+
+---
+ atk/meson.build | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
+
+diff --git a/atk/meson.build b/atk/meson.build
+index d19bbba..070730f 100644
+--- a/atk/meson.build
++++ b/atk/meson.build
+@@ -94,14 +94,32 @@ atk_marshals = gnome.genmarshal('atkmarshal',
+ atk_marshal_h = atk_marshals[1]
+ 
+ # Enumerations for GType
+-atk_enums = gnome.mkenums('atk-enum-types',
+-  sources: atk_headers,
+-  c_template: 'atk-enum-types.c.template',
+-  h_template: 'atk-enum-types.h.template',
++atk_enums = []
++atk_enums += custom_target('atk-enum-types_h',
++  capture: true,
++  output: 'atk-enum-types.h',
++  input: atk_headers,
+   install_dir: join_paths(atk_includedir, atk_api_path),
+-  install_header: true,
++  install: true,
++  command: [
++    find_program('glib-mkenums'),
++    '--template', files('atk-enum-types.h.template'),
++    '@INPUT@',
++  ],
++)
++
++atk_enums += custom_target('atk-enum-types_c',
++  capture: true,
++  output: 'atk-enum-types.c',
++  input: atk_headers,
++  command: [
++    find_program('glib-mkenums'),
++    '--template', files('atk-enum-types.c.template'),
++    '@INPUT@',
++  ],
+ )
+-atk_enum_h = atk_enums[1]
++
++atk_enum_h = atk_enums[0]
+ 
+ atk_cflags = [
+   '-DG_LOG_DOMAIN="Atk"',
+-- 
+2.45.1
+

@@ -1,5 +1,4 @@
 libffi
-meson   make
 pcre2
 python-packaging make
 zlib

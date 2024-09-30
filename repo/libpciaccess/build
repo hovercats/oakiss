@@ -2,10 +2,10 @@
 
 export DESTDIR="$1"
 
-meson setup \
+muon setup \
     -Dprefix=/usr \
     -Ddefault_library=static \
     build
 
 samu -C build
-samu -C build install
+muon -C build install

@@ -11,5 +11,4 @@ libdrm
 libpng
 libxcb
 libxshmfence
-meson   make
 pixman

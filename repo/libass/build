@@ -4,10 +4,12 @@ export DESTDIR="$1"
 
 patch -p1 < 0001-remove-fribidi-dependency.patch
 
-meson setup \
+muon setup \
 	-Dprefix=/usr \
 	-Dfontconfig=enabled \
+	-Ddefault_library=both \
+	-Dpkg_config_path=/usr/lib/pkgconfig \
 	build
 
 samu -C build
-samu -C build install
+muon -C build install

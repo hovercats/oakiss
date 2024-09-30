@@ -1,1 +1,2 @@
 https://download.gnome.org/sources/gdk-pixbuf/2.42/gdk-pixbuf-2.42.12.tar.xz
+patches/0001-fix-enum-types-for-muon.patch

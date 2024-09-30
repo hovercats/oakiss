@@ -5,6 +5,5 @@ libXext
 libXrender
 libpng
 mesa
-meson   make
 pixman
 zlib

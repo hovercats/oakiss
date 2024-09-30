@@ -2,11 +2,15 @@
 
 export DESTDIR="$1"
 
+patch -p1 < 0001-remove-gio-querymodule-post-install.patch
+
 # Don't build tests that fail due to `gnutls` not being built with `p11-kit`.
 sed "/subdir('tests')/d" tls/meson.build > _
 mv -f _ tls/meson.build
 
-meson setup \
+: > po/meson.build
+
+muon setup \
     -Dprefix=/usr \
     -Dsysconfdir=/etc \
     -Dlocalstatedir=/var \
@@ -14,7 +18,9 @@ meson setup \
     -Dopenssl=disabled \
     -Dgnutls=enabled \
     -Dgnome_proxy=disabled \
+    -Ddefault_library=both \
+    -Dpkg_config_path=/usr/lib/pkgconfig \
     build
 
 samu -C build
-samu -C build install
+muon -C build install

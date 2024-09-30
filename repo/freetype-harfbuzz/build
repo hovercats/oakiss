@@ -7,16 +7,18 @@ export CXXFLAGS="$CXXFLAGS -I/usr/include"
 build_freetype() (
     cd freetype
 
-    meson setup \
+    muon setup \
         -Dprefix=/usr \
         -Ddefault_library=both \
         -Dbzip2=disabled \
         -Dzlib=disabled \
+        -Dpkg_config_path=/usr/lib/pkgconfig \
+        -Db_colorout=never \
         "$@" \
         build
 
     samu -C build
-    samu -C build install
+    muon -C build install
 )
 
 build_harfbuzz() (
@@ -28,9 +30,9 @@ build_harfbuzz() (
 # further.
 kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
 
-    meson setup \
+    muon setup \
         -Dprefix=/usr \
-        -Dpkg_config_path="$DESTDIR/usr/lib/pkgconfig" \
+        -Dpkg_config_path="$DESTDIR/usr/lib/pkgconfig:/usr/lib/pkgconfig" \
         -Ddefault_library=both \
         -Dglib=disabled \
         -Dfreetype=enabled \
@@ -44,7 +46,7 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
         build
 
     samu -C build
-    samu -C build install
+    muon -C build install
 )
 
 # Point Freetype to the Harfbuzz files.
@@ -58,4 +60,4 @@ export CXXFLAGS="$CXXFLAGS -L$DESTDIR/usr/lib"
 
 build_freetype -Dharfbuzz=disabled
 build_harfbuzz
-build_freetype -Dharfbuzz=enabled --reconfigure
+build_freetype -Dharfbuzz=enabled
