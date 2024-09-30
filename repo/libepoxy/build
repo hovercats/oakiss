@@ -5,7 +5,7 @@ export DESTDIR="$1"
 # Disable building tests.
 : > test/meson.build
 
-meson setup \
+muon setup \
     -Dprefix=/usr \
     -Dsysconfdir=/etc \
     -Dmandir=/usr/share/man \
@@ -14,4 +14,4 @@ meson setup \
     output
 
 samu -C output
-samu -C output install
+muon -C output install
