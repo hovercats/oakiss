@@ -1,12 +1,19 @@
 cflags{
+	'-Wall',
+	'-std=c99',
+	'-Wpedantic',
 	'-D MUON_PLATFORM_posix',
 	'-D MUON_ENDIAN=0',
 	'-D MUON_STATIC',
-	'-std=c99',
+	'-D MUON_BOOTSTRAPPED',
 	'-I $srcdir/include',
+	'-I $dir',
+	'-isystem $builddir/pkg/libpkgconf',
 }
 
 build('copy', '$outdir/version.c', '$dir/version.c')
+
+pkg.deps = {'pkg/libpkgconf/headers'}
 
 exe('muon', [[
 $outdir/version.c
@@ -71,10 +78,12 @@ src/(
     )
     external/(
     	libarchive_null.c libcurl_null.c 
-    	libpkgconf_null.c samurai_null.c 
+    	libpkgconf.c samurai_null.c 
     	tinyjson_null.c readline_builtin.c
     )
-)]])
+)
+$builddir/pkg/libpkgconf/libpkgconf.a
+]])
 
 file('bin/muon', '755', '$outdir/muon')
 
