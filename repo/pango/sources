@@ -1,2 +1,3 @@
 https://github.com/GNOME/pango/archive/1.54.tar.gz
 patches/0001-remove-fribidi-dependency.patch
+patches/0002-fix-muon-not-being-able-to-find-pango-enum-types-fil.patch

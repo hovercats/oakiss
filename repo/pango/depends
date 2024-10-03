@@ -3,4 +3,3 @@ fontconfig
 freetype-harfbuzz
 glib
 libXrender
-meson   make
