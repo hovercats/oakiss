@@ -7,6 +7,8 @@ patch -p1 < 0001-remove-fribidi-dependency.patch
 muon setup \
 	-Dprefix=/usr \
 	-Dfontconfig=enabled \
+	-Ddefault_library=both \
+	-Dpkg_config_path=/usr/lib/pkgconfig \
 	output
 
 samu -C output
