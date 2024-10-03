@@ -4,7 +4,7 @@ export DESTDIR="$1"
 
 patch -p1 < 0001-remove-the-need-for-vulkan-headers.patch
 
-meson setup \
+muon setup \
     -Dprefix=/usr \
     -Dbuildtype=release \
     -Dvulkan=disabled \
@@ -13,4 +13,4 @@ meson setup \
     output
 
 samu -C output
-samu -C output install
+muon -C output install
