@@ -4,14 +4,19 @@ export DESTDIR="$1"
 
 patch -p1 < 0001-remove-the-need-for-vulkan-headers.patch
 
-muon setup \
-    -Dprefix=/usr \
-    -Dbuildtype=release \
-    -Dvulkan=disabled \
-    -Ddemos=false \
-    -Dopengl=disabled \
-    -Ddefault_library=shared \
-    output
+mk() (
+	muon setup \
+	    -Dprefix=/usr \
+	    -Dbuildtype=release \
+	    -Dvulkan=disabled \
+	    -Ddemos=false \
+	    -Dopengl=disabled \
+	    "$@" \
+	    output
+	
+	samu -C output
+	muon -C output install
+)
 
-samu -C output
-muon -C output install
+mk -Ddefault_library=static
+mk -Ddefault_library=shared
