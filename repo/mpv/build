@@ -2,7 +2,7 @@
 
 export DESTDIR="$1"
 
-meson setup \
+muon setup \
     -Dprefix=/usr \
     -Dx11=enabled \
     -Dmanpage-build=disabled \
@@ -12,10 +12,11 @@ meson setup \
     -Ddrm=disabled \
     -Dgbm=disabled \
     -Db_colorout=never \
+    -Dpkg_config_path=/usr/lib/pkgconfig \
     build
 
 samu -C build
-samu -C build install
+muon -C build install
 
 # we probably dont need these
 rm -rf \
