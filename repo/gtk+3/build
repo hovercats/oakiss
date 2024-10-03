@@ -28,10 +28,10 @@ meson setup \
     -Ddemos=false \
     -Dexamples=false \
     -Dtests=false \
-    output
+    build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install
 
 # We don't compile with librsvg which leads to this utility solely causing
 # compiler errors for some packages. It has no use at all.

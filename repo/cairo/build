@@ -11,7 +11,7 @@ meson setup \
 	-Dxlib=enabled \
 	-Dxlib-xcb=enabled \
 	-Dtests=disabled \
-	output
+	build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install

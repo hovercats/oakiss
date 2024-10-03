@@ -13,7 +13,7 @@ build_freetype() (
         -Dbzip2=disabled \
         -Dzlib=disabled \
         "$@" \
-        output
+        build
 
     samu -C output
     samu -C output install
@@ -40,10 +40,10 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
         -Dicu="${icu_enabled:-enabled}" \
         -Dtests=disabled \
         -Dintrospection=disabled \
-        output
+        build
 
-    samu -C output
-    samu -C output install
+    samu -C build
+    samu -C build install
 )
 
 # Point Freetype to the Harfbuzz files.

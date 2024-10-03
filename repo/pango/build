@@ -17,7 +17,7 @@ meson setup \
     -Dlibdir=/usr/lib \
     -Dgtk_doc=false \
     -Dintrospection=disabled \
-    output
+    build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install
