@@ -11,7 +11,7 @@ muon setup \
     -Dmandir=/usr/share/man \
     -Dpkg_config_path=/usr/lib/pkgconfig \
     -Dx11=true \
-    output
+    build
 
-samu -C output
-muon -C output install
+samu -C build
+muon -C build install

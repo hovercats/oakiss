@@ -12,10 +12,10 @@ mk() (
 	    -Ddemos=false \
 	    -Dopengl=disabled \
 	    "$@" \
-	    output
+	    build
 	
-	samu -C output
-	muon -C output install
+	samu -C build
+	muon -C build install
 )
 
 mk -Ddefault_library=static

@@ -34,7 +34,7 @@ meson setup \
     -Dvulkan-drivers='' \
     -Dglvnd="${glvnd_enabled:-false}" \
     -Db_colorout=never \
-    output
+    build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install

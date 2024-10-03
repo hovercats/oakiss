@@ -6,7 +6,7 @@ muon setup \
     -Dprefix=/usr \
     -Dgtk=disabled \
     -Ddefault_library=both \
-    output
+    build
 
-samu -C output
-muon -C output install
+samu -C build
+muon -C build install
