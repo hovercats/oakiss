@@ -7,6 +7,7 @@ cflags{
 	'-D MUON_STATIC',
 	'-D MUON_BOOTSTRAPPED',
 	'-I $srcdir/include',
+	'-I $srcdir/subprojects/tinyjson',
 	'-I $dir',
 	'-isystem $builddir/pkg/libpkgconf',
 }
@@ -14,6 +15,8 @@ cflags{
 build('copy', '$outdir/version.c', '$dir/version.c')
 
 pkg.deps = {'pkg/libpkgconf/headers'}
+
+lib('libtinyjson.a', {'subprojects/tinyjson/tiny-json.c'})
 
 exe('muon', [[
 $outdir/version.c
@@ -79,9 +82,10 @@ src/(
     external/(
     	libarchive_null.c libcurl_null.c 
     	libpkgconf.c samurai_null.c 
-    	tinyjson_null.c readline_builtin.c
+    	tinyjson.c readline_builtin.c
     )
 )
+libtinyjson.a
 $builddir/pkg/libpkgconf/libpkgconf.a
 ]])
 
