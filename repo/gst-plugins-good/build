@@ -8,7 +8,7 @@ meson setup \
 	-Ddoc=disabled \
 	-Dtests=disabled \
 	-Db_colorout=never \
-	output
+	build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install

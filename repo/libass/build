@@ -7,7 +7,7 @@ patch -p1 < 0001-remove-fribidi-dependency.patch
 meson setup \
 	-Dprefix=/usr \
 	-Dfontconfig=enabled \
-	output
+	build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install

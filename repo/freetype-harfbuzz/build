@@ -13,10 +13,10 @@ build_freetype() (
         -Dbzip2=disabled \
         -Dzlib=disabled \
         "$@" \
-        output
+        build
 
-    samu -C output
-    samu -C output install
+    samu -C build
+    samu -C build install
 )
 
 build_harfbuzz() (
@@ -40,10 +40,11 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
         -Dicu="${icu_enabled:-enabled}" \
         -Dtests=disabled \
         -Dintrospection=disabled \
-        output
+        -Db_colorout=never \
+        build
 
-    samu -C output
-    samu -C output install
+    samu -C build
+    samu -C build install
 )
 
 # Point Freetype to the Harfbuzz files.
@@ -57,4 +58,4 @@ export CXXFLAGS="$CXXFLAGS -L$DESTDIR/usr/lib"
 
 build_freetype -Dharfbuzz=disabled
 build_harfbuzz
-build_freetype -Dharfbuzz=enabled  --reconfigure
+build_freetype -Dharfbuzz=enabled --reconfigure

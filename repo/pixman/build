@@ -5,8 +5,7 @@ export DESTDIR="$1"
 meson setup \
     -Dprefix=/usr \
     -Dgtk=disabled \
-    -Ddefault_library=static \
-    output
+    build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install

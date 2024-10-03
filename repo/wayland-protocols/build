@@ -6,7 +6,7 @@ meson setup \
     -Dprefix=/usr \
     -Dbuildtype=release \
     -Dtests=false \
-    output
+    build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install

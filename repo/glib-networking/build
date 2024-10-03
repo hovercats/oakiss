@@ -14,7 +14,7 @@ meson setup \
     -Dopenssl=disabled \
     -Dgnutls=enabled \
     -Dgnome_proxy=disabled \
-    output
+    build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install
