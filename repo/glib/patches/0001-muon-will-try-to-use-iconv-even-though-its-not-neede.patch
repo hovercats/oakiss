@@ -1,0 +1,38 @@
+From 77ecb0c79968f5e6ccea8b2950f88dedf22ff93a Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 3 Oct 2024 07:15:59 +0200
+Subject: [PATCH] muon will try to use iconv, even though its not needed
+
+---
+ glib/meson.build | 1 -
+ meson.build      | 2 --
+ 2 files changed, 3 deletions(-)
+
+diff --git a/glib/meson.build b/glib/meson.build
+index 9f1515b..f8f9389 100644
+--- a/glib/meson.build
++++ b/glib/meson.build
+@@ -420,7 +420,6 @@ libglib = library('glib-2.0',
+   dependencies : [
+     atomic_dep,
+     gnulib_libm_dependency,
+-    libiconv,
+     libintl_deps,
+     libm,
+     librt,
+diff --git a/meson.build b/meson.build
+index c659096..221d692 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2195,8 +2195,6 @@ if host_system == 'windows'
+   # We have a #include "win_iconv.c" in gconvert.c on Windows, so we don't need
+   # any external library for it
+   libiconv = []
+-else
+-  libiconv = dependency('iconv')
+ endif
+ 
+ pcre2_req = '>=10.32'
+-- 
+2.45.1
+
