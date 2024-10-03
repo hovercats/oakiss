@@ -2,7 +2,11 @@
 
 export DESTDIR="$1"
 
-meson setup \
+patch -p1 < 0001-fix-enum-types-for-muon.patch
+
+: > po/meson.build
+
+muon setup \
     -Dprefix=/usr \
     -Dsysconfdir=/etc \
     -Dmandir=/usr/share/man \
@@ -11,13 +15,17 @@ meson setup \
     -Dpng=enabled \
     -Dtiff=disabled \
     -Dgtk_doc=false \
+    -Ddocs=false \
     -Dman=false \
     -Dgio_sniffing=false \
     -Dtests=false \
     -Dinstalled_tests=false \
     -Dbuiltin_loaders=all \
+    -Dgio_sniffing=false \
     -Dwrap_mode=nofallback \
+    -Dpkg_config_path=/usr/lib/pkgconfig \
+    -Ddefault_library=both \
     build
 
 samu -C build
-samu -C build install
+muon -C build install
