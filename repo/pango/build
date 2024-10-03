@@ -17,6 +17,10 @@ meson setup \
     -Dlibdir=/usr/lib \
     -Dgtk_doc=false \
     -Dintrospection=disabled \
+    -Dlibthai=disabled \
+    -Dxft=disabled \
+    -Dbuild-testsuite=false \
+    -Dbuild-examples=false \
     build
 
 samu -C build
