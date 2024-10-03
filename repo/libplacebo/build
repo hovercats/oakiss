@@ -10,6 +10,7 @@ muon setup \
     -Dvulkan=disabled \
     -Ddemos=false \
     -Dopengl=disabled \
+    -Ddefault_library=shared \
     output
 
 samu -C output
