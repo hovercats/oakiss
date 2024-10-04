@@ -296,3 +296,7 @@
 [submodule "pkg/libpkgconf/src"]
 	path = pkg/libpkgconf/src
 	url = https://github.com/pkgconf/pkgconf
+[submodule "pkg/fuse/src"]
+	path = pkg/fuse/src
+	url = https://github.com/libfuse/libfuse
+	ignore = all
