@@ -31,6 +31,7 @@ return {
 		'netbsd-curses',
 		'openntpd',
 		'openssh',
+		'squashfs-tools-ng',
 		'tz',
 		'util-linux',
 		'vis',
