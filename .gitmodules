@@ -300,3 +300,6 @@
 	path = pkg/fuse/src
 	url = https://github.com/libfuse/libfuse
 	ignore = all
+[submodule "pkg/squashfs-tools-ng/src"]
+	path = pkg/squashfs-tools-ng/src
+	url = https://github.com/AgentD/squashfs-tools-ng
