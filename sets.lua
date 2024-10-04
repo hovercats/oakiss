@@ -25,6 +25,7 @@ return {
 		'dosfstools',
 		'e2fsprogs',
 		'file',
+		'fuse',
 		'less',
 		'mandoc',
 		'netbsd-curses',
