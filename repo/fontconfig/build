@@ -1,8 +1,5 @@
 #!/bin/sh -e
 
-export LIBS="-L/usr/lib"
-export CFLAGS="$CFLAGS -I/usr/include"
-
 # Make the build system run /bin/true to generate
 # a dummy file so our pre-generated one is used.
 sed 's/fcobjshash\.h/fcjunk.h/' src/Makefile.in > _
