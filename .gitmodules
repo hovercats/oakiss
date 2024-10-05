@@ -303,3 +303,7 @@
 [submodule "pkg/squashfs-tools-ng/src"]
 	path = pkg/squashfs-tools-ng/src
 	url = https://github.com/AgentD/squashfs-tools-ng
+[submodule "pkg/bubblewrap/src"]
+	path = pkg/bubblewrap/src
+	url = https://github.com/containers/bubblewrap
+	ignore = all
