@@ -35,4 +35,4 @@ for _, font in ipairs(fonts) do
 	file(path, '644', src)
 end
 
-fetch 'curl'
+fetch 'git'
