@@ -310,3 +310,6 @@
 [submodule "pkg/tamzen-font/src"]
 	path = pkg/tamzen-font/src
 	url = https://github.com/sunaku/tamzen-font
+[submodule "pkg/liberation-fonts/src"]
+	path = pkg/liberation-fonts/src
+	url = https://github.com/liberationfonts/liberation-fonts
