@@ -3,6 +3,7 @@
 export DESTDIR="$1"
 export LDFLAGS="$LDFLAGS -static-pie"
 export CFLAGS="$CFLAGS \
+	-I/src/oakiss/out/pkg/jbig2dec/include \
 	-fPIE \
     -DNDEBUG \
     -DFZ_ENABLE_JS=0 \
@@ -29,7 +30,7 @@ make \
     USE_SYSTEM_OPENJPEG=no \
     USE_SYSTEM_LIBS=yes \
     shared=no \
-    THIRD_LIBS="/usr/lib/*.a -lfreetype -lharfbuzz -lfontconfig -ljbig2dec -ljpeg -lz -lpng16" \
+    THIRD_LIBS="/usr/lib/*.a -lfreetype -lharfbuzz -lfontconfig -ljpeg -lz -lpng16 /src/oakiss/out/pkg/jbig2dec/libjbig2dec.a" \
     X11_LIBS="-lxcb -lX11 -lXau -lXext" \
     install-apps install-docs
 
