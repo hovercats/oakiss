@@ -307,3 +307,6 @@
 	path = pkg/bubblewrap/src
 	url = https://github.com/containers/bubblewrap
 	ignore = all
+[submodule "pkg/tamzen-font/src"]
+	path = pkg/tamzen-font/src
+	url = https://github.com/sunaku/tamzen-font
