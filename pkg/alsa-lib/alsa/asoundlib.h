@@ -40,9 +40,11 @@
 #include <stdarg.h>
 #include <endian.h>
 
+#ifndef DOC_HIDDEN
 #ifndef __GNUC__
 #define __inline__ inline
 #endif
+#endif /* DOC_HIDDEN */
 
 #include <alsa/asoundef.h>
 #include <alsa/version.h>
@@ -53,6 +55,7 @@
 #include <alsa/conf.h>
 #include <alsa/pcm.h>
 #include <alsa/rawmidi.h>
+#include <alsa/ump.h>
 #include <alsa/timer.h>
 #include <alsa/control.h>
 #include <alsa/mixer.h>
