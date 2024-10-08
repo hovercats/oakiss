@@ -34,6 +34,7 @@ pkg.hdrs = {
 		'seq_midi_event.h',
 		'seqmid.h',
 		'timer.h',
+		'ump.h',
 	}),
 	copy('$outdir/include/alsa', '$dir/alsa', {'asoundlib.h', 'version.h'}),
 }
@@ -54,6 +55,7 @@ lib('libasound.a', [[src/(
 		control.c control_hw.c control_empty.c
 		setup.c ctlparse.c
 		control_symbols.c
+		control_remap.c
 		control_shm.c
 		control_ext.c
 	)
@@ -86,6 +88,8 @@ lib('libasound.a', [[src/(
 		pcm_asym.c
 		pcm_iec958.c
 		pcm_softvol.c
+		pcm_extplug.c
+		pcm_ioplug.c
 		pcm_mmap_emul.c
 	)
 	rawmidi/(
