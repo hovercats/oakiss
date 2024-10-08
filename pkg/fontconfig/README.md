@@ -10,9 +10,9 @@ Generated with
 	./configure \
 		--disable-nls \
 		--with-default-fonts=/share/fonts \
-		FREETYPE_CFLAGS=-I/src/oasis/out/pkg/freetype/include \
-		FREETYPE_LIBS=/src/oasis/out/pkg/freetype/libfreetype.a \
-		UUID_CFLAGS=-I/src/oasis/out/pkg/util-linux/include \
-		UUID_LIBS=/src/oasis/out/pkg/util-linux/libuuid.a \
-		EXPAT_CFLAGS=-I/src/oasis/out/pkg/expat/include \
-		EXPAT_LIBS='/src/oasis/out/pkg/expat/libexpat.a /src/oasis/out/pkg/openbsd/libbsd.a'
+		FREETYPE_CFLAGS=-I/src/oakiss/out/pkg/freetype/include \
+		FREETYPE_LIBS=/src/oakiss/out/pkg/freetype/libfreetype.a \
+		UUID_CFLAGS=-I/src/oakiss/out/pkg/util-linux/include \
+		UUID_LIBS=/src/oakiss/out/pkg/util-linux/libuuid.a \
+		EXPAT_CFLAGS=-I/src/oakiss/out/pkg/expat/include \
+		EXPAT_LIBS='/src/oakiss/out/pkg/expat/libexpat.a /src/oakiss/out/pkg/openbsd/libbsd.a'
