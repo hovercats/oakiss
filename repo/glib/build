@@ -2,9 +2,11 @@
 
 export DESTDIR="$1"
 
+patch -p1 < 0001-muon-will-try-to-use-iconv-even-though-its-not-neede.patch
+
 : > fuzzing/meson.build
 
-meson setup \
+muon setup \
     -Dprefix=/usr \
     -Dlibexecdir=/usr/lib \
     -Dlibmount=disabled \
@@ -14,9 +16,11 @@ meson setup \
     -Dlibelf=disabled \
     -Dnls=disabled \
     -Dsysprof=disabled \
+    -Ddefault_library=both \
+    -Dpkg_config_path=/usr/lib/pkgconfig \
     build
 
 samu -C build
-samu -C build install
+muon -C build install
 
 rm -rf "$1/usr/bin/gdbus"

@@ -1,0 +1,26 @@
+From 33db26f37240f8445b85bd863c73a4b3cef2d462 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Thu, 3 Oct 2024 10:17:30 +0200
+Subject: [PATCH] remove gio-querymodule post-install
+
+---
+ meson.build | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index a774ea6..5703009 100644
+--- a/meson.build
++++ b/meson.build
+@@ -146,9 +146,6 @@ subdir('po')
+ subdir('proxy')
+ subdir('tls')
+ 
+-# Will automatically pick it up from the cross file if defined
+-gnome.post_install(gio_querymodules: gio_module_dir)
+-
+ summary({
+   'GnuTLS support': giomodules.contains('giognutls'),
+   'OpenSSL support': giomodules.contains('gioopenssl'),
+-- 
+2.45.1
+

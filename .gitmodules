@@ -290,3 +290,23 @@
 [submodule "pkg/scdoc/src"]
 	path = pkg/scdoc/src
 	url = https://git.sr.ht/~sircmpwn/scdoc
+[submodule "pkg/muon/src"]
+	path = pkg/muon/src
+	url = https://git.sr.ht/~lattis/muon/
+[submodule "pkg/libpkgconf/src"]
+	path = pkg/libpkgconf/src
+	url = https://github.com/pkgconf/pkgconf
+[submodule "pkg/fuse/src"]
+	path = pkg/fuse/src
+	url = https://github.com/libfuse/libfuse
+	ignore = all
+[submodule "pkg/squashfs-tools-ng/src"]
+	path = pkg/squashfs-tools-ng/src
+	url = https://github.com/AgentD/squashfs-tools-ng
+[submodule "pkg/bubblewrap/src"]
+	path = pkg/bubblewrap/src
+	url = https://github.com/containers/bubblewrap
+	ignore = all
+[submodule "pkg/tamzen-font/src"]
+	path = pkg/tamzen-font/src
+	url = https://github.com/sunaku/tamzen-font

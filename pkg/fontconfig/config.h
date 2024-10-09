@@ -2,7 +2,7 @@
 #define FC_NO_MT /* we don't use fontconfig in multi-threaded programs */
 #define FC_TEMPLATEDIR "/share/fontconfig/conf.avail"
 #define FONTCONFIG_PATH "/etc/fonts"
-
+#define CONFIGDIR "/etc/conf.d"
 /* #undef AC_APPLE_UNIVERSAL_BUILD */
 #define ALIGNOF_DOUBLE 8
 #define ALIGNOF_VOID_P 8
@@ -40,7 +40,7 @@
 #define HAVE_LINK 1
 #define HAVE_LRAND48 1
 #define HAVE_LSTAT 1
-#define HAVE_MEMORY_H 1
+/* #undef HAVE_MINIX_CONFIG_H */
 #define HAVE_MKDTEMP 1
 #define HAVE_MKOSTEMP 1
 #define HAVE_MKSTEMP 1
@@ -48,6 +48,7 @@
 /* #undef HAVE_NDIR_H */
 #define HAVE_POSIX_FADVISE 1
 #define HAVE_PTHREAD 1
+/* Have PTHREAD_PRIO_INHERIT. */
 #define HAVE_PTHREAD_PRIO_INHERIT 1
 #define HAVE_RAND 1
 #define HAVE_RANDOM 1
@@ -57,7 +58,9 @@
 /* #undef HAVE_SCHED_H */
 /* #undef HAVE_SCHED_YIELD */
 /* #undef HAVE_SOLARIS_ATOMIC_OPS */
+#define HAVE_STDATOMIC_PRIMITIVES 1
 #define HAVE_STDINT_H 1
+#define HAVE_STDIO_H 1
 #define HAVE_STDLIB_H 1
 #define HAVE_STRERROR 1
 #define HAVE_STRERROR_R 1
@@ -80,8 +83,8 @@
 #define HAVE_SYS_VFS_H 1
 #define HAVE_UNISTD_H 1
 #define HAVE_VPRINTF 1
-/* Can use #warning in C files */
 #define HAVE_WARNING_CPP_DIRECTIVE 1
+#define HAVE_WCHAR_H 1
 /* #undef HAVE_XMLPARSE_H */
 #define HAVE_XML_SETDOCTYPEDECLHANDLER 1
 /* #undef HAVE__MKTEMP_S */
@@ -89,10 +92,10 @@
 #define PACKAGE "fontconfig"
 #define PACKAGE_BUGREPORT "https://gitlab.freedesktop.org/fontconfig/fontconfig/issues/new"
 #define PACKAGE_NAME "fontconfig"
-#define PACKAGE_STRING "fontconfig 2.13.1"
+#define PACKAGE_STRING "fontconfig 2.15.0"
 #define PACKAGE_TARNAME "fontconfig"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "2.13.1"
+#define PACKAGE_VERSION "2.15.0"
 /* #undef PTHREAD_CREATE_JOINABLE */
 /* #undef SIZEOF_CHAR */
 /* #undef SIZEOF_INT */
@@ -105,19 +108,64 @@
 #ifndef _ALL_SOURCE
 # define _ALL_SOURCE 1
 #endif
-#ifndef _GNU_SOURCE
-# define _GNU_SOURCE 1
-#endif
-#ifndef _POSIX_PTHREAD_SEMANTICS
-# define _POSIX_PTHREAD_SEMANTICS 1
-#endif
-#ifndef _TANDEM_SOURCE
-# define _TANDEM_SOURCE 1
+#ifndef _DARWIN_C_SOURCE
+# define _DARWIN_C_SOURCE 1
 #endif
 #ifndef __EXTENSIONS__
 # define __EXTENSIONS__ 1
 #endif
-#define VERSION "2.13.1"
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE 1
+#endif
+#ifndef _HPUX_ALT_XOPEN_SOCKET_API
+# define _HPUX_ALT_XOPEN_SOCKET_API 1
+#endif
+#ifndef _MINIX
+/* # undef _MINIX */
+#endif
+#ifndef _NETBSD_SOURCE
+# define _NETBSD_SOURCE 1
+#endif
+#ifndef _OPENBSD_SOURCE
+# define _OPENBSD_SOURCE 1
+#endif
+#ifndef _POSIX_SOURCE
+/* # undef _POSIX_SOURCE */
+#endif
+#ifndef _POSIX_1_SOURCE
+/* # undef _POSIX_1_SOURCE */
+#endif
+#ifndef _POSIX_PTHREAD_SEMANTICS
+# define _POSIX_PTHREAD_SEMANTICS 1
+#endif
+#ifndef __STDC_WANT_IEC_60559_ATTRIBS_EXT__
+# define __STDC_WANT_IEC_60559_ATTRIBS_EXT__ 1
+#endif
+#ifndef __STDC_WANT_IEC_60559_BFP_EXT__
+# define __STDC_WANT_IEC_60559_BFP_EXT__ 1
+#endif
+#ifndef __STDC_WANT_IEC_60559_DFP_EXT__
+# define __STDC_WANT_IEC_60559_DFP_EXT__ 1
+#endif
+#ifndef __STDC_WANT_IEC_60559_FUNCS_EXT__
+# define __STDC_WANT_IEC_60559_FUNCS_EXT__ 1
+#endif
+#ifndef __STDC_WANT_IEC_60559_TYPES_EXT__
+# define __STDC_WANT_IEC_60559_TYPES_EXT__ 1
+#endif
+#ifndef __STDC_WANT_LIB_EXT2__
+# define __STDC_WANT_LIB_EXT2__ 1
+#endif
+#ifndef __STDC_WANT_MATH_SPEC_FUNCS__
+# define __STDC_WANT_MATH_SPEC_FUNCS__ 1
+#endif
+#ifndef _TANDEM_SOURCE
+# define _TANDEM_SOURCE 1
+#endif
+#ifndef _XOPEN_SOURCE
+/* # undef _XOPEN_SOURCE */
+#endif
+#define VERSION "2.15.0"
 #if defined AC_APPLE_UNIVERSAL_BUILD
 # if defined __BIG_ENDIAN__
 #  define WORDS_BIGENDIAN 1
@@ -127,14 +175,8 @@
 /* #  undef WORDS_BIGENDIAN */
 # endif
 #endif
-#ifndef _DARWIN_USE_64_BIT_INODE
-# define _DARWIN_USE_64_BIT_INODE 1
-#endif
 /* #undef _FILE_OFFSET_BITS */
 /* #undef _LARGE_FILES */
-/* #undef _MINIX */
-/* #undef _POSIX_1_SOURCE */
-/* #undef _POSIX_SOURCE */
 /* #undef const */
 #ifndef __cplusplus
 /* #undef inline */
