@@ -2,6 +2,7 @@ cflags{
 	'-I $dir',
 	'-I $srcdir/include',
 	'-I $srcdir/src',
+	'-I $srcdir/src/compose',
 }
 
 pkg.hdrs = copy('$outdir/include/xkbcommon', '$srcdir/include/xkbcommon', {
