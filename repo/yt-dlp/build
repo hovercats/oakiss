@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
-make lazy-extractors
-make yt-dlp
+make PYTHON=/usr/bin/python lazy-extractors
+make PYTHON=/usr/bin/python yt-dlp
 
 chmod 755 yt-dlp
 
