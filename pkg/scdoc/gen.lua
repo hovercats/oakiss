@@ -1,6 +1,7 @@
 cflags{ 
 	[[-D 'VERSION="1.11.3"']],
 	'-std=c99',
+	'-pedantic',
 	'-Wall',
 	'-Wno-unused-parameter',
 	'-I $srcdir/include',
