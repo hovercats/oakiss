@@ -13,6 +13,7 @@ if kiss l cmake; then
         -DCMAKE_USE_SYSTEM_ZLIB=True \
         -DCMAKE_USE_SYSTEM_BZIP2=False \
         -DCMAKE_USE_SYSTEM_NGHTTP2=False \
+        -DCMAKE_USE_OPENSSL=OFF \
         -DBUILD_CursesDialog=OFF \
         -DBUILD_TESTING=OFF
 
@@ -26,6 +27,7 @@ else
         --system-expat \
         --system-zlib \
         --no-system-bzip2 \
+        --no-system-openssl \
         --generator=Ninja \
         --parallel="$(grep -scF 'core id' /proc/cpuinfo)" -- \
         -DBUILD_CursesDialog=OFF
