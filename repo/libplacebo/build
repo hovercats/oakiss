@@ -4,29 +4,13 @@ export DESTDIR="$1"
 
 patch -p1 < 0001-remove-the-need-for-vulkan-headers.patch
 
-<<<<<<< HEAD
 meson setup \
     -Dprefix=/usr \
     -Dbuildtype=release \
     -Dvulkan=disabled \
     -Ddemos=false \
     -Dopengl=disabled \
-    output
-=======
-mk() (
-	muon setup \
-	    -Dprefix=/usr \
-	    -Dbuildtype=release \
-	    -Dvulkan=disabled \
-	    -Ddemos=false \
-	    -Dopengl=disabled \
-	    "$@" \
-	    build
-	
-	samu -C build
-	muon -C build install
-)
->>>>>>> 5e23bc7 (repo/: be consistent with builddir used by meson/muon)
+    build
 
-samu -C output
-samu -C output install
+samu -C build
+samu -C build install
