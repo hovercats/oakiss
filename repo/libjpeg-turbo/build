@@ -11,7 +11,8 @@ cmake -G Ninja -B build \
     -DCMAKE_SHARED_LIBS=False \
     -DCMAKE_STATIC_LIBS=True \
     -DCMAKE_BUILD_TYPE=Release \
-    -DWITH_JPEG8=1
+    -DWITH_JPEG8=1 \
+    -Wno-dev
 
 samu -C build
 samu -C build install

@@ -11,7 +11,8 @@ cmake -G Ninja -B build \
     -DENABLE_TESTING=OFF \
     -DZSTD_LIBRARY=/src/oakiss/out/pkg/zstd/libzstd.a \
     -DZSTD_INCLUDE_DIR=/src/oakiss/out/pkg/zstd/include \
-    -DZSTD_FROM_INTERNET=OFF
+    -DZSTD_FROM_INTERNET=OFF \
+    -Wno-dev
 
 samu -C build
 samu -C build install
