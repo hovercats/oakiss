@@ -1,6 +1,5 @@
 #!/bin/sh -e
 
-export DESTDIR="$1"
 export LDFLAGS="$LDFLAGS -static-pie"
 export CFLAGS="$CFLAGS -fPIE"
 
@@ -8,7 +7,7 @@ export CFLAGS="$CFLAGS -fPIE"
     --prefix=/usr
 
 make
-make install
+make DESTDIR="$1" install
 
 # Remove HTML documentation.
 rm -rf "$1/usr/share/doc"

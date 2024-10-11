@@ -1,6 +1,5 @@
 #!/bin/sh -e
 
-export DESTDIR="$1"
 export LIBS="-L/usr/lib"
 export CFLAGS="$CFLAGS -I/usr/include"
 
@@ -14,7 +13,7 @@ TMPDIR="$1/tmp"
     ac_cv_lib_Xdmcp_XdmcpWrap=no
 
 make
-make install
+make DESTDIR="$1" install
 
 # Some X11 packages install to /usr/share.
 ! [ -d "$1/usr/share/pkgconfig" ] || {

@@ -1,6 +1,5 @@
 #!/bin/sh -e
 
-export DESTDIR="$1"
 
 ./configure \
     --prefix=/usr \
@@ -8,4 +7,4 @@ export DESTDIR="$1"
     --enable-visibility-hiding
 
 make
-make install
+make DESTDIR="$1" install

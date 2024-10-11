@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-export DESTDIR="$1"
-
 TMPDIR="$1/tmp"
 
 ./configure \
@@ -15,7 +13,7 @@ TMPDIR="$1/tmp"
     --enable-shared
 
 make
-make install
+make DESTDIR="$1" install
 
 # Some X11 packages install to /usr/share.
 ! [ -d "$1/usr/share/pkgconfig" ] || {

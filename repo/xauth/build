@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-export DESTDIR="$1"
-
 TMPDIR="$1/tmp"
 
 ./configure \
@@ -12,7 +10,7 @@ TMPDIR="$1/tmp"
     XAUTH_CFLAGS="-static"
 
 make LIBS="/usr/lib/*.a /usr/lib/libXau.a /usr/lib/libxcb.a"
-make install
+make DESTDIR="$1" install
 
 # Some X11 packages install to /usr/share.
 ! [ -d "$1/usr/share/pkgconfig" ] || {
