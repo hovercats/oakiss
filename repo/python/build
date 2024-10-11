@@ -51,3 +51,6 @@ ln -s pip3    "$1/usr/bin/pip"
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
+
+# A lot of python scripts use #!/usr/bin/env python
+ln -sf ../../bin/env "$1/usr/bin/env"
