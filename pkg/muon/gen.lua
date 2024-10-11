@@ -1,7 +1,7 @@
 cflags{
 	'-Wall',
 	'-std=c99',
-	'-Wpedantic',
+	'-pedantic',
 	'-D MUON_PLATFORM_posix',
 	'-D MUON_ENDIAN=0',
 	'-D MUON_STATIC',
