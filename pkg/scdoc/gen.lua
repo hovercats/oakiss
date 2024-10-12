@@ -19,11 +19,4 @@ exe('scdoc', [[
 
 file('bin/scdoc', '755', '$outdir/scdoc')
 
-rule('doc', '$outdir/scdoc < $in >$out')
-build('doc', '$outdir/scdoc.1', '$srcdir/scdoc.1.scd')
-build('doc', '$outdir/scdoc.5', '$srcdir/scdoc.5.scd')
-
-man{'$outdir/scdoc.1'}
-man{'$outdir/scdoc.5'}
-
 fetch 'git'
