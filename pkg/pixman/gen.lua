@@ -4,10 +4,10 @@ cflags{
 	'-I $outdir/include',
 }
 
-build('cat', '$outdir/config.h', {
+build('cat', '$outdir/pixman-config.h', {
 	'$builddir/probe/HAVE__THREAD_LOCAL',
 	'$builddir/probe/HAVE___BUILTIN_CLZ',
-	'$dir/config.h',
+	'$dir/pixman-config.h',
 })
 
 build('sed', '$outdir/include/pixman-version.h', '$srcdir/pixman/pixman-version.h.in', {
@@ -24,7 +24,7 @@ pkg.hdrs = {
 }
 pkg.deps = {
 	'$gendir/headers',
-	'$outdir/config.h',
+	'$outdir/pixman-config.h',
 }
 
 -- x86_64
