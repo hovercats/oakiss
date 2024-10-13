@@ -1,5 +1,6 @@
 cflags{
-	'-I $outdir',
+	'-I $dir',
+	'-I $srcdir',
 }
 
 pkg.hdrs = { 
@@ -9,9 +10,7 @@ pkg.hdrs = {
 		'stdinc.h',
 		'libpkgconf-api.h',
 		'iter.h',
-	}),
-	copy('$outdir/libpkgconf', '$dir', {'config.h'}),
-}
+	})}
 
 lib('libpkgconf.a', [[libpkgconf/(
 		audit.c cache.c client.c
