@@ -4,6 +4,6 @@
 Generated with
 
 	./configure \
-		CPPFLAGS=-I/src/oasis/pkg/openbsd/include \
-		LDFLAGS='-L/src/oasis/pkg/openbsd' \
+		CPPFLAGS=-I/src/oakiss/out/pkg/openbsd/include \
+		LDFLAGS='-L/src/oakiss/out/pkg/openbsd' \
 		LIBS='-lbsd'
