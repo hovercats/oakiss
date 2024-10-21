@@ -20,7 +20,9 @@
 #define HAVE_UNISTD_H 1
 #define PACKAGE foo
 #define SIZEOF_LONG 8
-#define TLS __thread
+#ifdef HAVE__THREAD_LOCAL
+# define TLS _Thread_local
+#endif
 #define TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR 1
 #define USE_GCC_INLINE_ASM 1
 #define USE_SSE2 1
