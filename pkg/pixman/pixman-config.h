@@ -1,7 +1,9 @@
 #pragma once
 #define ASM_HAVE_FUNC_DIRECTIVE 1
 #define HAVE_ALARM 1
-#define HAVE_BUILTIN_CLZ 1
+#ifdef HAVE___BUILTIN_CLZ
+# define HAVE_BUILTIN_CLZ /**/
+#endif
 #define HAVE_FEDIVBYZERO 1
 #define HAVE_FENV_H 1
 #define HAVE_FLOAT128 1
