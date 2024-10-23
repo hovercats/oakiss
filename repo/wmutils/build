@@ -11,10 +11,6 @@ make \
 
 cd opt
 
-# fix order so that we can build things statically linked
-sed 's/$(LDFLAGS) util.o/util.o $(LDFLAGS)/' Makefile > _
-mv -f _ Makefile
-
 make LDFLAGS="$LDFLAGS -static -lxcb -lxcb-util -lXau"
 make \
 	MANPREFIX=/usr/share/man \
