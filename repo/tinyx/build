@@ -15,8 +15,6 @@ patch -p1 < 0001-Xext-INITARGS-does-not-specify-a-type.-change-to-int.patch
 make
 make DESTDIR="$1" install
 
-chmod u+s "$1/usr/bin/Xfbdev"
-
 # not compatible
 rm -rf    "$1/usr/bin/Xvesa"
 
