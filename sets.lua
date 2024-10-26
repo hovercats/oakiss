@@ -65,6 +65,7 @@ return {
 		'ffmpeg',
 		'mpv',
 		'tinyalsa',
+		'yt-dlp',
 		},
 	desktop={
 		'liberation-fonts',

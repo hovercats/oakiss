@@ -1,0 +1,248 @@
+From 85781c9dc7a882b8638dcfdd60da14261178f437 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Mon, 4 Jul 2016 16:14:18 -0700
+Subject: [PATCH] Disable use of ctypes and dynamic loading
+
+---
+ yt_dlp/cookies.py      | 100 -----------------------------------------
+ yt_dlp/utils/_utils.py |  85 +----------------------------------
+ 2 files changed, 2 insertions(+), 183 deletions(-)
+
+diff --git a/yt_dlp/cookies.py b/yt_dlp/cookies.py
+index 070d2fcb9..e527fdec4 100644
+--- a/yt_dlp/cookies.py
++++ b/yt_dlp/cookies.py
+@@ -400,8 +400,6 @@ def decrypt(self, encrypted_value):
+ def get_cookie_decryptor(browser_root, browser_keyring_name, logger, *, keyring=None):
+     if sys.platform == 'darwin':
+         return MacChromeCookieDecryptor(browser_keyring_name, logger)
+-    elif sys.platform in ('win32', 'cygwin'):
+-        return WindowsChromeCookieDecryptor(browser_root, logger)
+     return LinuxChromeCookieDecryptor(browser_keyring_name, logger, keyring=keyring)
+ 
+ 
+@@ -488,43 +486,6 @@ def decrypt(self, encrypted_value):
+             return encrypted_value
+ 
+ 
+-class WindowsChromeCookieDecryptor(ChromeCookieDecryptor):
+-    def __init__(self, browser_root, logger):
+-        self._logger = logger
+-        self._v10_key = _get_windows_v10_key(browser_root, logger)
+-        self._cookie_counts = {'v10': 0, 'other': 0}
+-
+-    def decrypt(self, encrypted_value):
+-        version = encrypted_value[:3]
+-        ciphertext = encrypted_value[3:]
+-
+-        if version == b'v10':
+-            self._cookie_counts['v10'] += 1
+-            if self._v10_key is None:
+-                self._logger.warning('cannot decrypt v10 cookies: no key found', only_once=True)
+-                return None
+-
+-            # https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/os_crypt/sync/os_crypt_win.cc
+-            #   kNonceLength
+-            nonce_length = 96 // 8
+-            # boringssl
+-            #   EVP_AEAD_AES_GCM_TAG_LEN
+-            authentication_tag_length = 16
+-
+-            raw_ciphertext = ciphertext
+-            nonce = raw_ciphertext[:nonce_length]
+-            ciphertext = raw_ciphertext[nonce_length:-authentication_tag_length]
+-            authentication_tag = raw_ciphertext[-authentication_tag_length:]
+-
+-            return _decrypt_aes_gcm(ciphertext, self._v10_key, nonce, authentication_tag, self._logger)
+-
+-        else:
+-            self._cookie_counts['other'] += 1
+-            # any other prefix means the data is DPAPI encrypted
+-            # https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/os_crypt/sync/os_crypt_win.cc
+-            return _decrypt_windows_dpapi(encrypted_value, self._logger).decode()
+-
+-
+ def _extract_safari_cookies(profile, logger):
+     if sys.platform != 'darwin':
+         raise ValueError(f'unsupported platform: {sys.platform}')
+@@ -971,33 +932,6 @@ def _get_mac_keyring_password(browser_keyring_name, logger):
+         return None
+ 
+ 
+-def _get_windows_v10_key(browser_root, logger):
+-    """
+-    References:
+-        - [1] https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/os_crypt/sync/os_crypt_win.cc
+-    """
+-    path = _newest(_find_files(browser_root, 'Local State', logger))
+-    if path is None:
+-        logger.error('could not find local state file')
+-        return None
+-    logger.debug(f'Found local state file at "{path}"')
+-    with open(path, encoding='utf8') as f:
+-        data = json.load(f)
+-    try:
+-        # kOsCryptEncryptedKeyPrefName in [1]
+-        base64_key = data['os_crypt']['encrypted_key']
+-    except KeyError:
+-        logger.error('no encrypted key in Local State')
+-        return None
+-    encrypted_key = base64.b64decode(base64_key)
+-    # kDPAPIKeyPrefix in [1]
+-    prefix = b'DPAPI'
+-    if not encrypted_key.startswith(prefix):
+-        logger.error('invalid key')
+-        return None
+-    return _decrypt_windows_dpapi(encrypted_key[len(prefix):], logger)
+-
+-
+ def pbkdf2_sha1(password, salt, iterations, key_length):
+     return hashlib.pbkdf2_hmac('sha1', password, salt, iterations, key_length)
+ 
+@@ -1027,40 +961,6 @@ def _decrypt_aes_gcm(ciphertext, key, nonce, authentication_tag, logger):
+         return None
+ 
+ 
+-def _decrypt_windows_dpapi(ciphertext, logger):
+-    """
+-    References:
+-        - https://docs.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectdata
+-    """
+-
+-    import ctypes
+-    import ctypes.wintypes
+-
+-    class DATA_BLOB(ctypes.Structure):
+-        _fields_ = [('cbData', ctypes.wintypes.DWORD),
+-                    ('pbData', ctypes.POINTER(ctypes.c_char))]
+-
+-    buffer = ctypes.create_string_buffer(ciphertext)
+-    blob_in = DATA_BLOB(ctypes.sizeof(buffer), buffer)
+-    blob_out = DATA_BLOB()
+-    ret = ctypes.windll.crypt32.CryptUnprotectData(
+-        ctypes.byref(blob_in),  # pDataIn
+-        None,  # ppszDataDescr: human readable description of pDataIn
+-        None,  # pOptionalEntropy: salt?
+-        None,  # pvReserved: must be NULL
+-        None,  # pPromptStruct: information about prompts to display
+-        0,  # dwFlags
+-        ctypes.byref(blob_out),  # pDataOut
+-    )
+-    if not ret:
+-        logger.warning('failed to decrypt with DPAPI', only_once=True)
+-        return None
+-
+-    result = ctypes.string_at(blob_out.pbData, blob_out.cbData)
+-    ctypes.windll.kernel32.LocalFree(blob_out.pbData)
+-    return result
+-
+-
+ def _config_home():
+     return os.environ.get('XDG_CONFIG_HOME', os.path.expanduser('~/.config'))
+ 
+diff --git a/yt_dlp/utils/_utils.py b/yt_dlp/utils/_utils.py
+index 0d3e707c5..357f145d7 100644
+--- a/yt_dlp/utils/_utils.py
++++ b/yt_dlp/utils/_utils.py
+@@ -1482,64 +1482,7 @@ def __init__(self):
+         super().__init__(self.msg)
+ 
+ 
+-# Cross-platform file locking
+-if sys.platform == 'win32':
+-    import ctypes
+-    import ctypes.wintypes
+-    import msvcrt
+-
+-    class OVERLAPPED(ctypes.Structure):
+-        _fields_ = [
+-            ('Internal', ctypes.wintypes.LPVOID),
+-            ('InternalHigh', ctypes.wintypes.LPVOID),
+-            ('Offset', ctypes.wintypes.DWORD),
+-            ('OffsetHigh', ctypes.wintypes.DWORD),
+-            ('hEvent', ctypes.wintypes.HANDLE),
+-        ]
+-
+-    kernel32 = ctypes.WinDLL('kernel32')
+-    LockFileEx = kernel32.LockFileEx
+-    LockFileEx.argtypes = [
+-        ctypes.wintypes.HANDLE,     # hFile
+-        ctypes.wintypes.DWORD,      # dwFlags
+-        ctypes.wintypes.DWORD,      # dwReserved
+-        ctypes.wintypes.DWORD,      # nNumberOfBytesToLockLow
+-        ctypes.wintypes.DWORD,      # nNumberOfBytesToLockHigh
+-        ctypes.POINTER(OVERLAPPED),  # Overlapped
+-    ]
+-    LockFileEx.restype = ctypes.wintypes.BOOL
+-    UnlockFileEx = kernel32.UnlockFileEx
+-    UnlockFileEx.argtypes = [
+-        ctypes.wintypes.HANDLE,     # hFile
+-        ctypes.wintypes.DWORD,      # dwReserved
+-        ctypes.wintypes.DWORD,      # nNumberOfBytesToLockLow
+-        ctypes.wintypes.DWORD,      # nNumberOfBytesToLockHigh
+-        ctypes.POINTER(OVERLAPPED),  # Overlapped
+-    ]
+-    UnlockFileEx.restype = ctypes.wintypes.BOOL
+-    whole_low = 0xffffffff
+-    whole_high = 0x7fffffff
+-
+-    def _lock_file(f, exclusive, block):
+-        overlapped = OVERLAPPED()
+-        overlapped.Offset = 0
+-        overlapped.OffsetHigh = 0
+-        overlapped.hEvent = 0
+-        f._lock_file_overlapped_p = ctypes.pointer(overlapped)
+-
+-        if not LockFileEx(msvcrt.get_osfhandle(f.fileno()),
+-                          (0x2 if exclusive else 0x0) | (0x0 if block else 0x1),
+-                          0, whole_low, whole_high, f._lock_file_overlapped_p):
+-            # NB: No argument form of "ctypes.FormatError" does not work on PyPy
+-            raise BlockingIOError(f'Locking file failed: {ctypes.FormatError(ctypes.GetLastError())!r}')
+-
+-    def _unlock_file(f):
+-        assert f._lock_file_overlapped_p
+-        handle = msvcrt.get_osfhandle(f.fileno())
+-        if not UnlockFileEx(handle, 0, whole_low, whole_high, f._lock_file_overlapped_p):
+-            raise OSError(f'Unlocking file failed: {ctypes.FormatError()!r}')
+-
+-else:
++if True:
+     try:
+         import fcntl
+ 
+@@ -1888,31 +1831,7 @@ def fix_xml_ampersands(xml_str):
+ 
+ 
+ def setproctitle(title):
+-    assert isinstance(title, str)
+-
+-    # Workaround for https://github.com/yt-dlp/yt-dlp/issues/4541
+-    try:
+-        import ctypes
+-    except ImportError:
+-        return
+-
+-    try:
+-        libc = ctypes.cdll.LoadLibrary('libc.so.6')
+-    except OSError:
+-        return
+-    except TypeError:
+-        # LoadLibrary in Windows Python 2.7.13 only expects
+-        # a bytestring, but since unicode_literals turns
+-        # every string into a unicode string, it fails.
+-        return
+-    title_bytes = title.encode()
+-    buf = ctypes.create_string_buffer(len(title_bytes))
+-    buf.value = title_bytes
+-    try:
+-        # PR_SET_NAME = 15      Ref: /usr/include/linux/prctl.h
+-        libc.prctl(15, buf, 0, 0, 0)
+-    except AttributeError:
+-        return  # Strange libc, just skip this
++    return
+ 
+ 
+ def remove_start(s, start):
+-- 
+2.44.0
+
