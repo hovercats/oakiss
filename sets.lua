@@ -46,6 +46,7 @@ return {
 		'muon',
 		'musl',
 		'nasm', 
+		'python',
 		'qbe',
 		'strace',
 		'the_silver_searcher',
