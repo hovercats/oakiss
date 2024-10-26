@@ -107,6 +107,7 @@ yt_dlp/extractor/bandaichannel.py
 yt_dlp/extractor/bandcamp.py
 yt_dlp/extractor/bannedvideo.py
 yt_dlp/extractor/bbc.py
+yt_dlp/extractor/beacon.py
 yt_dlp/extractor/beatbump.py
 yt_dlp/extractor/beatport.py
 yt_dlp/extractor/beeg.py
@@ -333,6 +334,7 @@ yt_dlp/extractor/gedidigital.py
 yt_dlp/extractor/generic.py
 yt_dlp/extractor/genericembeds.py
 yt_dlp/extractor/genius.py
+yt_dlp/extractor/germanupa.py
 yt_dlp/extractor/getcourseru.py
 yt_dlp/extractor/gettr.py
 yt_dlp/extractor/giantbomb.py
@@ -433,6 +435,7 @@ yt_dlp/extractor/khanacademy.py
 yt_dlp/extractor/kick.py
 yt_dlp/extractor/kicker.py
 yt_dlp/extractor/kickstarter.py
+yt_dlp/extractor/kika.py
 yt_dlp/extractor/kinja.py
 yt_dlp/extractor/kinopoisk.py
 yt_dlp/extractor/kommunetv.py
@@ -471,7 +474,7 @@ yt_dlp/extractor/litv.py
 yt_dlp/extractor/livejournal.py
 yt_dlp/extractor/livestream.py
 yt_dlp/extractor/livestreamfails.py
-yt_dlp/extractor/lnkgo.py
+yt_dlp/extractor/lnk.py
 yt_dlp/extractor/loom.py
 yt_dlp/extractor/lovehomeporn.py
 yt_dlp/extractor/lrt.py
@@ -522,6 +525,7 @@ yt_dlp/extractor/mixcloud.py
 yt_dlp/extractor/mlb.py
 yt_dlp/extractor/mlssoccer.py
 yt_dlp/extractor/mocha.py
+yt_dlp/extractor/mojevideo.py
 yt_dlp/extractor/mojvideo.py
 yt_dlp/extractor/monstercat.py
 yt_dlp/extractor/motherless.py
@@ -751,10 +755,12 @@ yt_dlp/extractor/screen9.py
 yt_dlp/extractor/screencast.py
 yt_dlp/extractor/screencastify.py
 yt_dlp/extractor/screencastomatic.py
+yt_dlp/extractor/screenrec.py
 yt_dlp/extractor/scrippsnetworks.py
 yt_dlp/extractor/scrolller.py
 yt_dlp/extractor/scte.py
 yt_dlp/extractor/sejmpl.py
+yt_dlp/extractor/sen.py
 yt_dlp/extractor/senalcolombia.py
 yt_dlp/extractor/senategov.py
 yt_dlp/extractor/sendtonews.py
@@ -781,6 +787,7 @@ yt_dlp/extractor/slideshare.py
 yt_dlp/extractor/slideslive.py
 yt_dlp/extractor/slutload.py
 yt_dlp/extractor/smotrim.py
+yt_dlp/extractor/snapchat.py
 yt_dlp/extractor/snotr.py
 yt_dlp/extractor/sohu.py
 yt_dlp/extractor/sonyliv.py
@@ -951,6 +958,7 @@ yt_dlp/extractor/videofyme.py
 yt_dlp/extractor/videoken.py
 yt_dlp/extractor/videomore.py
 yt_dlp/extractor/videopress.py
+yt_dlp/extractor/vidflex.py
 yt_dlp/extractor/vidio.py
 yt_dlp/extractor/vidlii.py
 yt_dlp/extractor/vidly.py
