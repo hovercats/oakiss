@@ -1,4 +1,3 @@
-#pragma once
 #define ASM_HAVE_FUNC_DIRECTIVE 1
 #define HAVE_ALARM 1
 #ifdef HAVE___BUILTIN_CLZ

@@ -1,4 +1,3 @@
-#pragma once
 #define DEFAULT_XKB_LAYOUT "us"
 #define DEFAULT_XKB_MODEL "pc105"
 #define DEFAULT_XKB_OPTIONS NULL
