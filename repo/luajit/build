@@ -5,7 +5,7 @@ export LDFLAGS="$LDFLAGS -static-libgcc"
 
 patch -p1 < 0001-fix-check-for-toolchain-generateing-unwind-tables.patch
 
-make amalg   PREFIX=/usr
+make PREFIX=/usr
 make install PREFIX=/usr DESTDIR="$1" INSTALL_TNAME=luajit
 
 # Compress manpages
