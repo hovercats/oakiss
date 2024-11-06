@@ -6,7 +6,7 @@ export DESTDIR="$1"
 sed 's/byacc/yacc/g' meson.build > _
 mv -f _ meson.build
 
-meson setup \
+muon setup \
     -Dprefix=/usr \
     -Dlibexecdir=/usr/lib \
     -Ddefault_library=static \
@@ -17,7 +17,7 @@ meson setup \
     build
 
 samu -C build
-samu -C build install
+muon -C build install
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
