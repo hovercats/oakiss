@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+: > missing
+
 # this should be fixed
 # build once with shared libs
 ./configure \
