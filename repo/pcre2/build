@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+: > missing
+
 ./configure \
     --prefix=/usr \
     --enable-pcre2-16 \
