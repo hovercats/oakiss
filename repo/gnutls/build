@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+: > build-aux/missing
+
 ./configure \
     --prefix=/usr \
     --disable-nls \
