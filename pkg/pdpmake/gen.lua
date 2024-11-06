@@ -19,4 +19,4 @@ exe('pdpmake', {
 
 file('bin/pdpmake', '755', '$outdir/pdpmake')
 
-man('pdpmake.1')
+man{'pdpmake.1'}
