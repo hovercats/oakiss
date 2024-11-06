@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+: > build-aux/missing
+
 export LIBS="-L/usr/lib"
 export CFLAGS="$CFLAGS -I/usr/include"
 
