@@ -5,6 +5,8 @@
 sed 's/fcobjshash\.h/fcjunk.h/' src/Makefile.in > _
 mv -f _ src/Makefile.in
 
+: > missing
+
 ./configure \
     GPERF=/bin/true \
     --prefix=/usr \
