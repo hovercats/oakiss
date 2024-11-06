@@ -8,7 +8,7 @@ make \
 	CFLAGS="$CFLAGS -I/usr/include"
 )
 
-make
+make CFLAGS="$CFLAGS -Ilibwm"
 make DESTDIR="$1" PREFIX=/usr install
 
 # Makefile doesnt install manpages
