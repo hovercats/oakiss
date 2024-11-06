@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+: > config/missing
+
 ./configure \
     --prefix=/usr
 
