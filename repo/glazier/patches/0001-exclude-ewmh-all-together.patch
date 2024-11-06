@@ -1,0 +1,48 @@
+From c583ae08571f8b1f7820aaff881c0cf56483a411 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Wed, 6 Nov 2024 08:35:18 +0100
+Subject: [PATCH] exclude ewmh all together
+
+---
+ makefile | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/makefile b/makefile
+index 22c5c41..e7555ca 100644
+--- a/makefile
++++ b/makefile
+@@ -1,28 +1,22 @@
+ include config.mk
+ 
+-all: glazier ewmh
++all: glazier
+ 
+ glazier: glazier.o
+ 	$(LD) -o $@ glazier.o $(LDFLAGS)
+ 
+-ewmh: ewmh.o
+-	$(LD) -o $@ ewmh.o $(LDFLAGS)
+-
+ glazier.o: glazier.c config.h
+ 
+ config.h: config.def.h
+ 	cp config.def.h config.h
+ 
+ clean:
+-	rm -f glazier ewmh *.o
++	rm -f glazier *.o
+ 
+-install: glazier ewmh
++install: glazier
+ 	mkdir -p $(DESTDIR)$(PREFIX)/bin
+ 	cp glazier $(DESTDIR)$(PREFIX)/bin/glazier
+-	cp ewmh $(DESTDIR)$(PREFIX)/bin/ewmh
+ 	chmod 755 $(DESTDIR)$(PREFIX)/bin/glazier
+-	chmod 755 $(DESTDIR)$(PREFIX)/bin/ewmh
+ 
+ uninstall:
+ 	rm $(DESTDIR)$(PREFIX)/bin/glazier
+-	rm $(DESTDIR)$(PREFIX)/bin/ewmh
+-- 
+2.45.1
+

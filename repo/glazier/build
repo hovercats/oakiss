@@ -8,7 +8,11 @@ make \
 	CFLAGS="$CFLAGS -I/usr/include"
 )
 
-make CFLAGS="$CFLAGS -Ilibwm"
+patch -p1 < 0001-exclude-ewmh-all-together.patch
+
+make CFLAGS="$CFLAGS -I./libwm" \
+	LDFLAGS="$LDFLAGS -L./libwm -lwm -lxcb -lXau -lxcb-cursor -lxcb-render -lxcb-render-util -lxcb-image -lxcb-shm -lxcb-util -lxcb-randr -static"
+
 make DESTDIR="$1" PREFIX=/usr install
 
 # Makefile doesnt install manpages
