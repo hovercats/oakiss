@@ -1,8 +1,8 @@
 #!/bin/sh -e
 
 make \
-	MYCFLAGS="$CFLAGS -fPIC" \
-	MYLDFLAGS="$LDFLAGS -static" \
+	CFLAGS="$CFLAGS -fPIC" \
+	LDFLAGS="$LDFLAGS -static" \
 	posix
      
 sed "s/install -p/install/" Makefile > _
