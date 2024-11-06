@@ -310,3 +310,6 @@
 [submodule "pkg/tamzen-font/src"]
 	path = pkg/tamzen-font/src
 	url = https://github.com/sunaku/tamzen-font
+[submodule "pkg/pdpmake/src"]
+	path = pkg/pdpmake/src
+	url = https://github.com/rmyorston/pdpmake

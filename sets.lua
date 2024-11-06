@@ -46,6 +46,7 @@ return {
 		'muon',
 		'musl',
 		'nasm', 
+		'pdpmake',
 		'python',
 		'qbe',
 		'strace',
