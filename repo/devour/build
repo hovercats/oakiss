@@ -1,4 +1,6 @@
 #!/bin/sh -e
 
-make CFLAGS="$CFLAGS -I/usr/include"
+make \
+	CFLAGS="$CFLAGS -I/usr/include" \
+	LDFLAGS="$LDFLAGS -L/usr/lib -lX11 -lXau -lxcb"
 make DESTDIR="$1" BIN_DIR="$1/usr/bin" install
