@@ -19,6 +19,10 @@ mv -f _ gtk/a11y/gtkaccessibility.c
 
 meson setup \
     -Dprefix=/usr \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
     -Dx11_backend=true \
     -Dwayland_backend=false \
     -Dxinerama=yes \

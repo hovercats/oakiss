@@ -8,6 +8,10 @@ meson setup \
     -Dprefix=/usr \
     -Dsysconfdir=/etc \
     -Dmandir=/usr/share/man \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
     -Ddocs=false \
     -Dintrospection=false \
     build

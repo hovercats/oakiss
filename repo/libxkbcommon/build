@@ -9,6 +9,10 @@ mv -f _ meson.build
 muon setup \
     -Dprefix=/usr \
     -Dlibexecdir=/usr/lib \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
     -Ddefault_library=static \
     -Denable-docs=false \
     -Denable-wayland=false \

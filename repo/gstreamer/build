@@ -7,12 +7,14 @@ patch -p1 < 0001-fix-incompatability-with-byacc.patch
 meson setup \
     -Dprefix=/usr \
     -Dlibexecdir=/usr/lib \
-    -Dbuildtype=release \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
     -Ddbghelp=disabled \
     -Dintrospection=disabled \
     -Dexamples=disabled \
     -Ddoc=disabled \
-    -Db_colorout=never \
     -Dtests=disabled \
     build
 

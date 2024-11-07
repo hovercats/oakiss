@@ -6,6 +6,10 @@ patch -p1 < 0001-remove-fribidi-dependency.patch
 
 meson setup \
 	-Dprefix=/usr \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
 	-Dfontconfig=enabled \
 	-Ddefault_library=both \
 	build

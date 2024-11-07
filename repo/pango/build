@@ -15,6 +15,10 @@ rm -rf subprojects
 meson setup \
     -Dprefix=/usr \
     -Dlibdir=/usr/lib \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
     -Dgtk_doc=false \
     -Dintrospection=disabled \
     build

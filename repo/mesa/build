@@ -23,7 +23,10 @@ meson setup \
     -Dsysconfdir=/etc \
     -Dmandir=/usr/share/man \
     -Dlocalstatedir=/var \
-    -Dbuildtype=release \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
     -Dglx-read-only-text=true \
     -Dplatforms=x11 \
     -Dglx=auto \
@@ -33,7 +36,6 @@ meson setup \
     -Dzstd=disabled \
     -Dvulkan-drivers='' \
     -Dglvnd=false \
-    -Db_colorout=never \
     build
 
 samu -C build

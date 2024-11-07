@@ -10,6 +10,10 @@ build_freetype() (
     meson setup \
         -Dprefix=/usr \
         -Ddefault_library=both \
+		-Dbuildtype=release \
+		-Db_colorout=never \
+		-Ddebug=false \
+		-Doptimization=s \
         -Dbzip2=disabled \
         -Dzlib=disabled \
         "$@" \
@@ -31,6 +35,10 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
     meson setup \
         -Dprefix=/usr \
         -Dpkg_config_path="$DESTDIR/usr/lib/pkgconfig" \
+		-Dbuildtype=release \
+		-Db_colorout=never \
+		-Ddebug=false \
+		-Doptimization=s \
         -Ddefault_library=both \
         -Dglib=disabled \
         -Dfreetype=enabled \

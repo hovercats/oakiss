@@ -17,6 +17,10 @@ meson setup \
     -Dprefix=/usr \
     -Dsysconfdir=/etc \
     -Dlocalstatedir=/var \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
     -Dtests=false \
     -Ddocs=disabled \
     -Dtls_check=false \

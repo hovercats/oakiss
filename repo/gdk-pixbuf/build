@@ -6,7 +6,10 @@ meson setup \
     -Dprefix=/usr \
     -Dsysconfdir=/etc \
     -Dmandir=/usr/share/man \
-    -Ddebug=false \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
     -Djpeg=enabled \
     -Dpng=enabled \
     -Dtiff=disabled \

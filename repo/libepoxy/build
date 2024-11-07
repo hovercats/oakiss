@@ -9,6 +9,10 @@ meson setup \
     -Dprefix=/usr \
     -Dsysconfdir=/etc \
     -Dmandir=/usr/share/man \
+	-Dbuildtype=release \
+	-Db_colorout=never \
+	-Ddebug=false \
+	-Doptimization=s \
     -Dpkg_config_path=/usr/lib/pkgconfig \
     -Dx11=true \
     build
