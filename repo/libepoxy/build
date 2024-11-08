@@ -5,7 +5,7 @@ export DESTDIR="$1"
 # Disable building tests.
 : > test/meson.build
 
-meson setup \
+muon setup \
     -Dprefix=/usr \
     -Dsysconfdir=/etc \
     -Dmandir=/usr/share/man \
@@ -14,8 +14,9 @@ meson setup \
 	-Ddebug=false \
 	-Doptimization=s \
     -Dpkg_config_path=/usr/lib/pkgconfig \
+    -Ddefault_library=shared \
     -Dx11=true \
     build
 
 samu -C build
-samu -C build install
+muon -C build install
