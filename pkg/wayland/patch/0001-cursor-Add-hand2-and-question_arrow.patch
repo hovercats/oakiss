@@ -1,15 +1,15 @@
-From 0861bb71b7a595fcf484db70fdc440b16ac8f970 Mon Sep 17 00:00:00 2001
+From 25e4247c73e392be9bda7fec4eb8666c5acb8dcf Mon Sep 17 00:00:00 2001
 From: Michael Forney <mforney@mforney.org>
 Date: Fri, 30 Dec 2016 02:16:59 -0800
 Subject: [PATCH] cursor: Add hand2 and question_arrow
 
 ---
  cursor/convert_font.c |   4 +-
- cursor/cursor-data.h  | 124 ++++++++++++++++++++++++++++++++++++++++----------
+ cursor/cursor-data.h  | 124 +++++++++++++++++++++++++++++++++---------
  2 files changed, 102 insertions(+), 26 deletions(-)
 
 diff --git a/cursor/convert_font.c b/cursor/convert_font.c
-index 45b6ac6..de1b0f4 100644
+index 74e45fb..9116ef8 100644
 --- a/cursor/convert_font.c
 +++ b/cursor/convert_font.c
 @@ -488,7 +488,9 @@ static struct {
@@ -24,7 +24,7 @@ index 45b6ac6..de1b0f4 100644
  
  static void
 diff --git a/cursor/cursor-data.h b/cursor/cursor-data.h
-index dd7a80a..8ff4acc 100644
+index 2ee2f8a..fcdcf7e 100644
 --- a/cursor/cursor-data.h
 +++ b/cursor/cursor-data.h
 @@ -486,49 +486,121 @@ static uint32_t cursor_data[] = {
@@ -173,7 +173,7 @@ index dd7a80a..8ff4acc 100644
  	0x00000000, 0x00000000,
  };
  
-@@ -550,5 +622,7 @@ static struct cursor_metadata {
+@@ -550,7 +622,9 @@ static struct cursor_metadata {
  	{ "top_side", 15, 16, 7, 1, 2160 },
  	{ "xterm", 9, 16, 4, 8, 2400 },
  	{ "hand1", 13, 16, 12, 0, 2544 },
@@ -181,7 +181,9 @@ index dd7a80a..8ff4acc 100644
 +	{ "hand2", 16, 16, 0, 1, 2752 },
 +	{ "watch", 16, 16, 15, 9, 3008 },
 +	{ "question_arrow", 11, 16, 5, 8, 3264 },
- };
+ 
+ 	/* https://www.freedesktop.org/wiki/Specifications/cursor-spec/ */
+ 	{ "sw-resize", 16, 16, 1, 14, 0 },
 -- 
-2.11.0
+2.45.1
 
