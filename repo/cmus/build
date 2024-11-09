@@ -7,7 +7,7 @@ done
 ./configure \
     prefix=/usr
 
-make
+make NCURSES_LIBS="-lcurses -lterminfo"
 make DESTDIR="$1"  install
 
 # Compress manpages

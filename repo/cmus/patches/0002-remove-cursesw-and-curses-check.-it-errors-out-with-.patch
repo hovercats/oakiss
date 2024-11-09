@@ -1,0 +1,56 @@
+From 4df30bd425fae0981fc608df2553ea3f2587391b Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sat, 9 Nov 2024 08:17:25 +0100
+Subject: [PATCH] remove cursesw and curses check. it errors out with oasis's
+ netbsd-curses
+
+---
+ configure | 32 +++-----------------------------
+ 1 file changed, 3 insertions(+), 29 deletions(-)
+
+diff --git a/configure b/configure
+index fb750ad..882e9b0 100755
+--- a/configure
++++ b/configure
+@@ -178,35 +178,9 @@ int main(void)
+ 
+ check_ncurses()
+ {
+-	if pkg_config NCURSES "ncursesw" "" "-lncursesw"
+-	then
+-		widechars=y
+-	elif pkg_config NCURSES "ncurses" "" "-lncurses" || pkg_config NCURSES "curses" "" "-lcurses"
+-	then
+-		widechars=n
+-		msg_error "Your ncurses does not support wide characters!"
+-		msg_error "Install ncursesw if you need wide character support,"
+-		msg_error "you can ignore this warning otherwise."
+-	fi
+-	test -z "$widechars" && return 1
+-
+-	msg_checking "for working ncurses setup"
+-	for flag in "" "-I/usr/include/ncurses" "-I/usr/include/ncursesw"
+-	do
+-		if try_compile_link "$ncurses_code" $flag $NCURSES_LIBS
+-		then
+-			NCURSES_CFLAGS="$NCURSES_CFLAGS $flag"
+-			msg_result yes
+-			working_curses=y
+-			break
+-		fi
+-	done
+-	if test -z "$working_curses"
+-	then
+-		msg_result no
+-		return 1
+-	fi
+-
++	widechars=n
++	working_curses=y
++	
+ 	check_function "resizeterm" $NCURSES_CFLAGS $NCURSES_LIBS
+ 	HAVE_RESIZETERM=`test $? -ne 0 ; echo $?`
+ 
+-- 
+2.45.1
+
