@@ -1,9 +1,0 @@
-#!/bin/sh -e
-
-make PROGS= all-static 
-make \
-	DESTDIR="$1" \
-	PREFIX=/usr \
-	install-stalibs \
-	install-headers \
-	install-pcs
