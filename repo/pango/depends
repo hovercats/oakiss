@@ -4,4 +4,3 @@ freetype-harfbuzz
 glib
 libXft
 libXrender
-meson   make

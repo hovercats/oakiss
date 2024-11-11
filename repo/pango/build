@@ -2,7 +2,9 @@
 
 export DESTDIR="$1"
 
-patch -p1 < 0001-remove-fribidi-dependency.patch
+for p in *.patch; do
+	patch -p1 < "$p"
+done
 
 # Disable download of missing (optional) dependencies
 # during the build. This cannot be turned off otherwise.
@@ -12,7 +14,7 @@ rm -rf subprojects
 : > examples/meson.build
 : > docs/meson.build
 
-meson setup \
+muon setup \
     -Dprefix=/usr \
     -Dlibdir=/usr/lib \
 	-Dbuildtype=release \
@@ -21,7 +23,9 @@ meson setup \
 	-Doptimization=s \
     -Dgtk_doc=false \
     -Dintrospection=disabled \
+    -Dpkg_config_path=/usr/lib/pkgconfig \
+    -Ddefault_library=shared \
     build
 
 samu -C build
-samu -C build install
+muon -C build install
