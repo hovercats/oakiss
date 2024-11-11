@@ -8,6 +8,10 @@ done
 sed 's/4.0/4.1/g' config.mk > _
 mv -f _ config.mk
 
+# Set a more sane default window size
+sed 's/800, 600/800, 900/' config.def.h > _
+mv -f _ config.def.h
+
 make
 make DESTDIR="$1" PREFIX=/usr install
 
