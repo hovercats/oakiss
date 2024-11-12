@@ -5,20 +5,20 @@ export DESTDIR="$1"
 : > fuzzing/meson.build
 
 meson setup \
-    -Dprefix=/usr \
-    -Dlibexecdir=/usr/lib \
+	-Dprefix=/usr \
+	-Dlibexecdir=/usr/lib \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Ddebug=false \
 	-Doptimization=s \
-    -Dlibmount=disabled \
-    -Dinstalled_tests=false \
-    -Dman-pages=disabled \
-    -Dtests=false \
-    -Dlibelf=disabled \
-    -Dnls=disabled \
-    -Dsysprof=disabled \
-    build
+	-Dlibmount=disabled \
+	-Dinstalled_tests=false \
+	-Dman-pages=disabled \
+	-Dtests=false \
+	-Dlibelf=disabled \
+	-Dnls=disabled \
+	-Dsysprof=disabled \
+	build
 
 samu -C build
 samu -C build install

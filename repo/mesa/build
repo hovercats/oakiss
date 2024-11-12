@@ -19,24 +19,24 @@ sed '/rust_std=2021/d' meson.build > _
 mv -f _ meson.build
 
 meson setup \
-    -Dprefix=/usr \
-    -Dsysconfdir=/etc \
-    -Dmandir=/usr/share/man \
-    -Dlocalstatedir=/var \
+	-Dprefix=/usr \
+	-Dsysconfdir=/etc \
+	-Dmandir=/usr/share/man \
+	-Dlocalstatedir=/var \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Ddebug=false \
 	-Doptimization=s \
-    -Dglx-read-only-text=true \
-    -Dplatforms=x11 \
-    -Dglx=auto \
-    -Dgallium-drivers=swrast \
-    -Degl=enabled \
-    -Dvalgrind=false \
-    -Dzstd=disabled \
-    -Dvulkan-drivers='' \
-    -Dglvnd=false \
-    build
+	-Dglx-read-only-text=true \
+	-Dplatforms=x11 \
+	-Dglx=auto \
+	-Dgallium-drivers=swrast \
+	-Degl=enabled \
+	-Dvalgrind=false \
+	-Dzstd=disabled \
+	-Dvulkan-drivers='' \
+	-Dglvnd=false \
+	build
 
 samu -C build
 samu -C build install

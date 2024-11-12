@@ -18,21 +18,21 @@ sed '/<atk-bridge.h>/d;/atk_bridge_adaptor_init/d' \
 mv -f _ gtk/a11y/gtkaccessibility.c
 
 meson setup \
-    -Dprefix=/usr \
+	-Dprefix=/usr \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Ddebug=false \
 	-Doptimization=s \
-    -Dx11_backend=true \
-    -Dwayland_backend=false \
-    -Dxinerama=yes \
-    -Dprint_backends=file,lpr \
-    -Dcolord=no \
-    -Dintrospection=false \
-    -Ddemos=false \
-    -Dexamples=false \
-    -Dtests=false \
-    build
+	-Dx11_backend=true \
+	-Dwayland_backend=false \
+	-Dxinerama=yes \
+	-Dprint_backends=file,lpr \
+	-Dcolord=no \
+	-Dintrospection=false \
+	-Ddemos=false \
+	-Dexamples=false \
+	-Dtests=false \
+	build
 
 samu -C build
 samu -C build install

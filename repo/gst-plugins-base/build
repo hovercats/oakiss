@@ -3,21 +3,21 @@
 export DESTDIR="$1"
 
 meson setup \
-    -Dprefix=/usr \
+	-Dprefix=/usr \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Ddebug=false \
 	-Doptimization=s \
-    -Dgl=disabled \
-    -Dtests=disabled \
-    -Dtremor=disabled \
-    -Dexamples=disabled \
-    -Dcdparanoia=disabled \
-    -Dintrospection=disabled \
-    -Dnls=disabled \
-    -Ddoc=disabled \
-    -Dalsa=enabled \
-    build
+	-Dgl=disabled \
+	-Dtests=disabled \
+	-Dtremor=disabled \
+	-Dexamples=disabled \
+	-Dcdparanoia=disabled \
+	-Dintrospection=disabled \
+	-Dnls=disabled \
+	-Ddoc=disabled \
+	-Dalsa=enabled \
+	build
 
 samu -C build
 samu -C build install

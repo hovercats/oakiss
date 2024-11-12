@@ -14,23 +14,23 @@ export CFLAGS="$CFLAGS -w"
 export CXXFLAGS="$CXXFLAGS -w"
 
 meson setup \
-    -Dprefix=/usr \
-    -Dsysconfdir=/etc \
-    -Dlocalstatedir=/var \
+	-Dprefix=/usr \
+	-Dsysconfdir=/etc \
+	-Dlocalstatedir=/var \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Ddebug=false \
 	-Doptimization=s \
-    -Dtests=false \
-    -Ddocs=disabled \
-    -Dtls_check=false \
-    -Dvapi=disabled \
-    -Dgssapi=disabled \
-    -Dbrotli=disabled \
-    -Dsysprof=disabled \
-    -Dpkcs11_tests=disabled \
-    -Dintrospection=disabled \
-    build
+	-Dtests=false \
+	-Ddocs=disabled \
+	-Dtls_check=false \
+	-Dvapi=disabled \
+	-Dgssapi=disabled \
+	-Dbrotli=disabled \
+	-Dsysprof=disabled \
+	-Dpkcs11_tests=disabled \
+	-Dintrospection=disabled \
+	build
 
 samu -C build
 samu -C build install

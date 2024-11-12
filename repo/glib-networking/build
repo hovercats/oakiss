@@ -7,18 +7,18 @@ sed "/subdir('tests')/d" tls/meson.build > _
 mv -f _ tls/meson.build
 
 meson setup \
-    -Dprefix=/usr \
-    -Dsysconfdir=/etc \
-    -Dlocalstatedir=/var \
+	-Dprefix=/usr \
+	-Dsysconfdir=/etc \
+	-Dlocalstatedir=/var \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Ddebug=false \
 	-Doptimization=s \
-    -Dlibproxy=disabled \
-    -Dopenssl=disabled \
-    -Dgnutls=enabled \
-    -Dgnome_proxy=disabled \
-    build
+	-Dlibproxy=disabled \
+	-Dopenssl=disabled \
+	-Dgnutls=enabled \
+	-Dgnome_proxy=disabled \
+	build
 
 samu -C build
 samu -C build install

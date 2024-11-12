@@ -8,18 +8,18 @@ patch -p1 < 0001-fix-enum-types-for-muon.patch
 : > po/meson.build
 
 muon setup \
-    -Dprefix=/usr \
-    -Dsysconfdir=/etc \
-    -Dmandir=/usr/share/man \
+	-Dprefix=/usr \
+	-Dsysconfdir=/etc \
+	-Dmandir=/usr/share/man \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Ddebug=false \
 	-Doptimization=s \
-    -Ddocs=false \
-    -Dintrospection=false \
-    -Dpkg_config_path=/usr/lib/pkgconfig \
-    -Ddefault_library=shared \
-    build
+	-Ddocs=false \
+	-Dintrospection=false \
+	-Dpkg_config_path=/usr/lib/pkgconfig \
+	-Ddefault_library=shared \
+	build
 
 samu -C build
 muon -C build install

@@ -15,17 +15,17 @@ rm -rf subprojects
 : > docs/meson.build
 
 muon setup \
-    -Dprefix=/usr \
-    -Dlibdir=/usr/lib \
+	-Dprefix=/usr \
+	-Dlibdir=/usr/lib \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Ddebug=false \
 	-Doptimization=s \
-    -Dgtk_doc=false \
-    -Dintrospection=disabled \
-    -Dpkg_config_path=/usr/lib/pkgconfig \
-    -Ddefault_library=shared \
-    build
+	-Dgtk_doc=false \
+	-Dintrospection=disabled \
+	-Dpkg_config_path=/usr/lib/pkgconfig \
+	-Ddefault_library=shared \
+	build
 
 samu -C build
 muon -C build install

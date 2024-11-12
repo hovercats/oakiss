@@ -7,18 +7,18 @@ sed 's/byacc/yacc/g' meson.build > _
 mv -f _ meson.build
 
 muon setup \
-    -Dprefix=/usr \
-    -Dlibexecdir=/usr/lib \
+	-Dprefix=/usr \
+	-Dlibexecdir=/usr/lib \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Ddebug=false \
 	-Doptimization=s \
-    -Ddefault_library=static \
-    -Denable-docs=false \
-    -Denable-wayland=false \
-    -Denable-xkbregistry=false \
-    -Dpkg_config_path=/usr/lib/pkgconfig \
-    build
+	-Ddefault_library=static \
+	-Denable-docs=false \
+	-Denable-wayland=false \
+	-Denable-xkbregistry=false \
+	-Dpkg_config_path=/usr/lib/pkgconfig \
+	build
 
 samu -C build
 muon -C build install
