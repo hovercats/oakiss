@@ -313,3 +313,6 @@
 [submodule "pkg/pdpmake/src"]
 	path = pkg/pdpmake/src
 	url = https://github.com/rmyorston/pdpmake
+[submodule "pkg/dtach/src"]
+	path = pkg/dtach/src
+	url = https://github.com/crigler/dtach
