@@ -1,12 +1,12 @@
 cflags{
 	[[-D 'VERSION="0.6"']],
-	'-I $dir',
 	'-pedantic',
 	'-std=c99',
 	'-D _POSIX_C_SOURCE=200809L',
 	'-D _XOPEN_SOURCE=700',
 	'-D NDEBUG',
 	'-Wall',
+	'-I $dir',
 }
 
 exe('abduco', {'abduco.c'})
