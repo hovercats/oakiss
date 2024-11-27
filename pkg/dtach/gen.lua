@@ -1,5 +1,6 @@
 cflags{
-	'-I$dir',
+	'-I $dir',
+	'-I $srcdir',
 	'-pedantic',
 	'-Wall',
 	'-Wextra',
