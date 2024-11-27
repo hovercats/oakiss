@@ -1,4 +1,5 @@
 subgen 'awk'
+subgen 'abduco'
 subgen 'adobe-source-fonts'
 subgen 'alsa-lib'
 subgen 'b3sum'
