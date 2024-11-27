@@ -15,3 +15,5 @@ exe('dtach', {
 file('bin/dtach', '755', '$outdir/dtach')
 
 man{'dtach.1'}
+
+fetch 'git'
