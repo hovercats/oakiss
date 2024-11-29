@@ -1,17 +1,17 @@
-From 0149ac4bd9ac49ff2f42a6b79056eaf0375ba244 Mon Sep 17 00:00:00 2001
+From 1ed782bfe2ee0cf618e9a9c11265566c9aca559c Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Mon, 28 Aug 2023 21:51:35 +0000
-Subject: [PATCH 5/5] switch colorscheme
+Subject: [PATCH] switch colorscheme
 
 ---
  config.def.h | 51 ++++++++++++++++++++++-----------------------------
  1 file changed, 22 insertions(+), 29 deletions(-)
 
 diff --git a/config.def.h b/config.def.h
-index bd75078..baa0429 100644
+index d794b42..3c57301 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -101,42 +101,35 @@ unsigned int tabspaces = 8;
+@@ -96,42 +96,35 @@ unsigned int tabspaces = 8;
  /* Terminal colors (16 first used in escape sequence) */
  static const char *colorname[] = {
  	/* 8 normal colors */
@@ -77,5 +77,5 @@ index bd75078..baa0429 100644
  
  /*
 -- 
-2.42.0
+2.45.1
 

@@ -1,7 +1,7 @@
-From 81bee8a1eb4bbaf1f515f386156b1a8a318dba16 Mon Sep 17 00:00:00 2001
+From cb3e3fa3a803aeb1702ea0cfb77417f1d3bb9a46 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Thu, 15 Aug 2024 00:13:03 +0200
-Subject: [PATCH 1/5] set tamzen as default font
+Subject: [PATCH] set tamzen as default font
 
 ---
  config.def.h | 2 +-

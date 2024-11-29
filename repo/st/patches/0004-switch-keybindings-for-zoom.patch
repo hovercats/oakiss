@@ -1,0 +1,29 @@
+From 46491eb7d62574decda2ca1774e6693b16c30f86 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Mon, 28 Aug 2023 21:50:05 +0000
+Subject: [PATCH] switch keybindings for zoom
+
+---
+ config.def.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index 2cd740a..e65c050 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -193,9 +193,9 @@ static Shortcut shortcuts[] = {
+ 	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
+ 	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
+ 	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
+-	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
+-	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
+-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
++	{ ControlMask,          XK_KP_Add,      zoom,           {.f = +1} },
++	{ ControlMask,          XK_KP_Subtract, zoom,           {.f = -1} },
++	{ ControlMask,          XK_equal,       zoomreset,      {.f =  0} },
+ 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
+ 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
+ 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
+-- 
+2.45.1
+

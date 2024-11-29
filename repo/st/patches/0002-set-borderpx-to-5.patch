@@ -1,7 +1,7 @@
-From 666e445330cd1183beca770a691f94bed0651e8e Mon Sep 17 00:00:00 2001
+From 8a957548d9c065b91d2a847e75017ee23e1d9e91 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Mon, 28 Aug 2023 21:44:42 +0000
-Subject: [PATCH 2/5] set borderpx to 5
+Subject: [PATCH] set borderpx to 5
 
 ---
  config.def.h | 2 +-
