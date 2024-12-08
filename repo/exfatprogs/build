@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    --sbindir=/usr/bin
+
+make LDFLAGS="$LDFLAGS --static"
+make DESTDIR="$1" install
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
