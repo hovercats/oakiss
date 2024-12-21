@@ -42,7 +42,6 @@ lib('libutil.a', [[libutil/(
 	strsep.c
 	strnsubst.c
 	strtonum.c
-	random.c
 	unescape.c
 	writeall.c
 )]])
