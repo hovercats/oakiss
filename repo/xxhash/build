@@ -9,3 +9,11 @@ make PREFIX=/usr DESTDIR="$1" install_libxxhash.a \
 	install_libxxhash.pc \
 	install_xxhsum \
 	install_man
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
+
+# Fix symlinks
+for manpage in xxh64sum.1 xxh32sum.1 xxh128sum.1; do
+	ln -sf xxhsum.1.gz "$1/usr/share/man/man1/$manpage"
+done
