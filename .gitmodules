@@ -313,3 +313,6 @@
 [submodule "pkg/pdpmake/src"]
 	path = pkg/pdpmake/src
 	url = https://github.com/rmyorston/pdpmake
+[submodule "pkg/xxhash/src"]
+	path = pkg/xxhash/src
+	url = https://github.com/Cyan4973/xxHash
