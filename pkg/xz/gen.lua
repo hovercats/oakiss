@@ -14,6 +14,7 @@ cflags{
 
 build('cat', '$outdir/config.h', {
 	'$builddir/probe/HAVE_IMMINTRIN_H',
+	'$builddir/probe/HAVE__MM_CLMULEPI64_SI128',
 	'$builddir/probe/HAVE__MM_MOVEMASK_EPI8',
 	'$builddir/probe/HAVE___BUILTIN_ASSUME_ALIGNED',
 	'$builddir/probe/HAVE___BUILTIN_BSWAP16',
@@ -120,7 +121,6 @@ lib('liblzma.a', [[src/(
 			armthumb.c
 			arm64.c
 			sparc.c
-			riscv.c
 		)
 	)
 )]])
@@ -135,7 +135,6 @@ exe('xz', [[src/(
 		message.c
 		mytime.c
 		options.c
-		sandbox.c
 		signals.c
 		suffix.c
 		util.c
