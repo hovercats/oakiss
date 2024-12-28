@@ -28,7 +28,6 @@ else
         --system-expat \
         --system-zlib \
         --no-system-bzip2 \
-        --no-system-openssl \
         --generator=Ninja \
         --parallel="$(grep -scF 'core id' /proc/cpuinfo)" -- \
         -DBUILD_CursesDialog=OFF
