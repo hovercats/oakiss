@@ -80,6 +80,6 @@ for f in iterlines('lua.txt') do
 	file('share/vis/'..f, '644', '$srcdir/lua/'..f)
 end
 sym('share/vis/lexer.lua', 'lexers/lexer.lua')
-sym('share/vis/themes/default-16.lua', 'base-16.lua')
+sym('share/vis/themes/default.lua', 'base-16.lua')
 
 fetch 'git'
