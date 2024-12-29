@@ -92,6 +92,7 @@ local srcs = paths[[src/(
 	bjm.c
 	block.c
 	bpf.c
+	bpf_attr_check.c
 	bpf_filter.c
 	bpf_seccomp_filter.c
 	bpf_sock_filter.c
@@ -115,6 +116,7 @@ local srcs = paths[[src/(
 	dup.c
 	dyxlat.c
 	epoll.c
+	epoll_ioctl.c
 	error_prints.c
 	evdev.c
 	evdev_mpers.c
@@ -212,10 +214,12 @@ local srcs = paths[[src/(
 	net.c
 	netlink.c
 	netlink_crypto.c
+	netlink_generic.c
 	netlink_inet_diag.c
 	netlink_kobject_uevent.c
 	netlink_netfilter.c
 	netlink_netlink_diag.c
+	netlink_nlctrl.c
 	netlink_packet_diag.c
 	netlink_route.c
 	netlink_selinux.c
