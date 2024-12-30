@@ -1,6 +1,7 @@
 return {
 	core={
 		'awk',
+		'b3sum',
 		'bc',
 		'byacc',
 		'bzip2',
