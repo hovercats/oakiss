@@ -11,14 +11,12 @@ static const char *const preprocesscmd[] = {
 	/* we don't yet support these optional features */
 	"-D", "__STDC_NO_ATOMICS__",
 	"-D", "__STDC_NO_COMPLEX__",
-	"-D", "__STDC_NO_VLA__",
 	"-U", "__SIZEOF_INT128__",
 
 	/* we don't generate position-independent code */
 	"-U", "__PIC__",
 
-	/* ignore attributes and extension markers */
-	"-D", "__attribute__(x)=",
+	/* ignore extension markers */
 	"-D", "__extension__=",
 };
 static const char *const codegencmd[]    = {"qbe"};
