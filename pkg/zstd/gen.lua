@@ -6,6 +6,7 @@ cflags{
 pkg.hdrs = {
 	copy('$outdir/include', '$srcdir/lib', {'zstd.h', 'zdict.h', 'zstd_errors.h'}),
 }
+pkg.hdrs.install = true
 pkg.deps = {
 	'$gendir/headers',
 	'$dir/config.h',
@@ -45,6 +46,8 @@ lib('libzstd.a', [[lib/(
 		zstd_decompress_block.c
 	)
 )]])
+
+file('lib/libzstd.a', '644', '$outdir/libzstd.a')
 
 exe('zstd', [[
 	programs/(zstdcli.c util.c timefn.c fileio.c fileio_asyncio.c)
