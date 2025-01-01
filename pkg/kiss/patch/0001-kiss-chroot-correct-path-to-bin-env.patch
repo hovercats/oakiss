@@ -1,0 +1,25 @@
+From 0fcceeee325dd42a867bedad5eefc0d60640d64d Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Wed, 1 Jan 2025 23:31:00 +0100
+Subject: [PATCH] kiss-chroot: correct path to /bin/env
+
+---
+ contrib/kiss-chroot | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/contrib/kiss-chroot b/contrib/kiss-chroot
+index f82ab2e..cfc1921 100755
+--- a/contrib/kiss-chroot
++++ b/contrib/kiss-chroot
+@@ -78,7 +78,7 @@ main() {
+     log Entering chroot; {
+         _ret=1
+ 
+-        run chroot "$1" /usr/bin/env -i \
++        run chroot "$1" /bin/env -i \
+             HOME=/root \
+             TERM="$TERM" \
+             SHELL=/bin/sh \
+-- 
+2.45.1
+
