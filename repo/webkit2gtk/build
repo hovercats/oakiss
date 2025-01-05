@@ -92,6 +92,7 @@ cmake -G Ninja -B build \
     -DUSE_SYSTEMD=OFF \
     -DUSE_WOFF2=OFF \
     -DUSE_WPE_RENDERER=OFF \
+    -DUSE_SYSTEM_SYSPROF_CAPTURE=NO \
     -Wno-dev
 
 samu -C build
