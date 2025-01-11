@@ -4,6 +4,10 @@ export DESTDIR="$1"
 
 patch -p1 < 0001-remove-fribidi-dependency.patch
 
+# fix build for muon
+sed -E "/boolean/s~'(true|false)'~\1~g" meson_options.txt > _
+mv -f _ meson_options.txt
+
 # Disable native language support, disable atk-bridge, don't compile schemas.
 sed -e '/compile_schemas/s/true/false/' \
     -e '/ENABLE_NLS/s/1/0/' \
