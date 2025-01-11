@@ -21,16 +21,17 @@ lib('libtinyjson.a', {'subprojects/tinyjson/tiny-json.c'})
 exe('muon', [[
 $outdir/version.c
 src/(
-    args.c cmd_install.c cmd_test.c
+    args.c cmd_install.c cmd_subprojects.c cmd_test.c
     coerce.c compilers.c embedded.c
     error.c guess.c install.c log.c
     machine_file.c machines.c main.c
     memmem.c meson_opts.c options.c
-    opts.c rpmvercmp.c sha_256.c wrap.c
+    opts.c rpmvercmp.c sha_256.c 
+    vsenv.c wrap.c ui_null.c
     backend/(
-    	backend.c common_args.c ninja.c output.c
+    	backend.c common_args.c ninja.c output.c xcode.c
     	ninja/(
-    		alias_target.c build_target.c
+    		alias_target.c coverage.c build_target.c
     		custom_target.c rules.c
     	)
     )
@@ -39,7 +40,7 @@ src/(
     )
     formats/(
     	editorconfig.c ini.c
-    	lines.c tap.c
+    	lines.c tap.c xml.c
     )
     functions/(
     	array.c boolean.c both_libs.c
@@ -58,8 +59,8 @@ src/(
     		install.c options.c subproject.c
     	)
     	modules/(
-    		fs.c keyval.c pkgconfig.c
-    		python.c sourceset.c toolchain.c
+    		fs.c getopt.c keyval.c pkgconfig.c
+    		python.c sourceset.c subprojects.c toolchain.c
     	)
     )
     lang/(

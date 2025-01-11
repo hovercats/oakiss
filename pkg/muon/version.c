@@ -1,9 +1,14 @@
+/*
+ * SPDX-FileCopyrightText: Stone Tickle <lattis@mochiro.moe>
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+
 #include "compat.h"
 
 #include "version.h"
 
 const struct muon_version muon_version = {
-	.version = "0.3.0",
-	.vcs_tag = "3e8725c0",
+	.version = "0.4.0",
+	.vcs_tag = "9696c7e",
 	.meson_compat = "1.5.99",
 };
