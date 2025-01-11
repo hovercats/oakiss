@@ -19,8 +19,6 @@ muon setup \
 	-Dlibdir=/usr/lib \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Dgtk_doc=false \
 	-Dintrospection=disabled \
 	-Dpkg_config_path=/usr/lib/pkgconfig \

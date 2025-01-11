@@ -13,8 +13,6 @@ muon setup \
 	-Dmandir=/usr/share/man \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Ddocs=false \
 	-Dintrospection=false \
 	-Dpkg_config_path=/usr/lib/pkgconfig \

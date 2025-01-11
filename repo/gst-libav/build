@@ -6,8 +6,6 @@ muon setup \
 	-Dprefix=/usr \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Ddoc=disabled \
 	-Dtests=disabled \
 	-Dpkg_config_path=/usr/lib/pkgconfig \

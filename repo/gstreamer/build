@@ -9,8 +9,6 @@ meson setup \
 	-Dlibexecdir=/usr/lib \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Ddbghelp=disabled \
 	-Dintrospection=disabled \
 	-Dexamples=disabled \

@@ -11,8 +11,6 @@ muon setup \
 	-Dmandir=/usr/share/man \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Dpkg_config_path=/usr/lib/pkgconfig \
 	-Ddefault_library=shared \
 	-Dx11=true \

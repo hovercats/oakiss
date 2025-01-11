@@ -12,8 +12,6 @@ muon setup \
 	-Dmandir=/usr/share/man \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Djpeg=enabled \
 	-Dpng=enabled \
 	-Dtiff=disabled \

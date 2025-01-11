@@ -6,8 +6,6 @@ muon setup \
 	-Dprefix=/usr \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Dgtk=disabled \
 	-Ddefault_library=both \
 	build

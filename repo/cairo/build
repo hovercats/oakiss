@@ -8,8 +8,6 @@ muon setup \
 	-Dprefix=/usr \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Dtee=enabled \
 	-Dxcb=enabled \
 	-Dxlib=enabled \

@@ -12,8 +12,6 @@ build_freetype() (
         -Ddefault_library=both \
 		-Dbuildtype=release \
 		-Db_colorout=never \
-		-Ddebug=false \
-		-Doptimization=s \
         -Dbzip2=disabled \
         -Dzlib=disabled \
         "$@" \
@@ -37,8 +35,6 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
         -Dpkg_config_path="$DESTDIR/usr/lib/pkgconfig:/usr/lib/pkgconfig" \
 		-Dbuildtype=release \
 		-Db_colorout=never \
-		-Ddebug=false \
-		-Doptimization=s \
         -Ddefault_library=both \
         -Dglib=disabled \
         -Dfreetype=enabled \

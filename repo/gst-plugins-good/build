@@ -6,8 +6,6 @@ meson setup \
 	-Dprefix=/usr \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Ddoc=disabled \
 	-Dtests=disabled \
 	build

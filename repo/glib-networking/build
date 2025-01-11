@@ -16,8 +16,6 @@ muon setup \
 	-Dlocalstatedir=/var \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddebug=false \
-	-Doptimization=s \
 	-Dlibproxy=disabled \
 	-Dopenssl=disabled \
 	-Dgnutls=enabled \
