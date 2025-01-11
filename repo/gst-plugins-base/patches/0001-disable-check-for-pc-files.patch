@@ -1,0 +1,25 @@
+From 1549d40b089b09e8dbefd4feccca5ec98dae8e51 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sun, 12 Jan 2025 00:36:16 +0100
+Subject: [PATCH] disable check for pc files
+
+---
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 7c0762d..0188aa8 100644
+--- a/meson.build
++++ b/meson.build
+@@ -517,7 +517,7 @@ pkgconfig.generate(
+ # Desperate times, desperate measures... fix up escaping of our variables
+ run_command(meson_pkg_config_file_fixup_script,
+   'gstreamer-plugins-base-1.0', 'libraries',
+-  check: true)
++  check: false)
+ 
+ if have_orcc
+   update_orc_dist_files = find_program('scripts/update-orc-dist-files.py')
+-- 
+2.45.1
+

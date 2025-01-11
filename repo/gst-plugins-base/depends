@@ -5,6 +5,5 @@ libjpeg-turbo
 libpng
 libvorbis
 mesa
-meson make
 opus
 pango

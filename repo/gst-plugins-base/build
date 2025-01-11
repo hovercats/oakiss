@@ -2,7 +2,11 @@
 
 export DESTDIR="$1"
 
-meson setup \
+# muon seems to make the check fail, and files seems to no be generated before
+# check is ran. prompty making the build fail because pc files is missing.
+patch -p1 < 0001-disable-check-for-pc-files.patch
+
+muon setup \
 	-Dprefix=/usr \
 	-Dbuildtype=release \
 	-Db_colorout=never \
@@ -15,10 +19,12 @@ meson setup \
 	-Dnls=disabled \
 	-Ddoc=disabled \
 	-Dalsa=enabled \
+	-Dpkg_config_path=/usr/lib/pkgconfig \
+	-Ddefault_library=shared \
 	build
 
 samu -C build
-samu -C build install
+muon -C build install
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
