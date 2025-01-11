@@ -4,7 +4,7 @@ export DESTDIR="$1"
 
 patch -p1 < 0001-fix-incompatability-with-byacc.patch
 
-meson setup \
+muon setup \
 	-Dprefix=/usr \
 	-Dlibexecdir=/usr/lib \
 	-Dbuildtype=release \
@@ -14,10 +14,12 @@ meson setup \
 	-Dexamples=disabled \
 	-Ddoc=disabled \
 	-Dtests=disabled \
+	-Dpkg_config_path=/usr/lib/pkgconfig \
+	-Ddefault_library=shared \
 	build
 
 samu -C build
-samu -C build install
+muon -C build install
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
