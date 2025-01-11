@@ -3,8 +3,9 @@
 export DESTDIR="$1"
 
 : > fuzzing/meson.build
+: > subprojects/gvdb.wrap
 
-meson setup \
+muon setup \
 	-Dprefix=/usr \
 	-Dlibexecdir=/usr/lib \
 	-Dbuildtype=release \
@@ -16,9 +17,11 @@ meson setup \
 	-Dlibelf=disabled \
 	-Dnls=disabled \
 	-Dsysprof=disabled \
+	-Dpkg_config_path=/usr/lib/pkgconfig \
+	-Ddefault_library=shared \
 	build
 
 samu -C build
-samu -C build install
+muon -C build install
 
 rm -rf "$1/usr/bin/gdbus"
