@@ -1,7 +1,7 @@
-From 2a965a8e4faafaec25e49527f997b952d4cb4260 Mon Sep 17 00:00:00 2001
+From c87bb56eb3a2b12044306f6a1d79dfc2affcd7b4 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Sat, 1 Apr 2023 05:38:34 +0200
-Subject: [PATCH 3/3] change colorscheme
+Subject: [PATCH] change colorscheme
 
 ---
  config.def.h | 6 +++---
@@ -25,5 +25,5 @@ index 5c87304..898948d 100644
  /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
  static unsigned int lines      = 0;
 -- 
-2.44.0
+2.45.1
 

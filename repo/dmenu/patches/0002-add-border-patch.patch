@@ -1,7 +1,7 @@
-From c534a81cff5ebd7b97dcb9dd6b3f7920ebb08d9d Mon Sep 17 00:00:00 2001
+From 274868fccc3d3b5bb043b2bb65b5b99b00738e94 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Wed, 29 Mar 2023 20:18:05 +0200
-Subject: [PATCH 2/3] add border patch
+Subject: [PATCH] add border patch
 
 ---
  config.def.h | 3 +++
@@ -46,5 +46,5 @@ index b6cfd65..1fae794 100644
  			usage();
  
 -- 
-2.44.0
+2.45.1
 

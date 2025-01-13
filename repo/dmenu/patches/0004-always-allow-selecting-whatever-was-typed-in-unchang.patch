@@ -1,0 +1,46 @@
+From 627b14b0d91653fc4b5552424448cd0904ec4887 Mon Sep 17 00:00:00 2001
+From: "Franc[e]sco" <lolisamurai@tfwno.gf>
+Date: Fri, 12 Jun 2020 15:26:37 +0200
+Subject: [PATCH] always allow selecting whatever was typed in unchanged
+
+---
+ dmenu.c | 9 ++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/dmenu.c b/dmenu.c
+index 1fae794..56dda7a 100644
+--- a/dmenu.c
++++ b/dmenu.c
+@@ -44,6 +44,8 @@ static struct item *matches, *matchend;
+ static struct item *prev, *curr, *next, *sel;
+ static int mon = -1, screen;
+ 
++static struct item noneitem;
++
+ static Atom clip, utf8;
+ static Display *dpy;
+ static Window root, parentwin, win;
+@@ -254,6 +256,8 @@ match(void)
+ 	len = tokc ? strlen(tokv[0]) : 0;
+ 
+ 	matches = lprefix = lsubstr = matchend = prefixend = substrend = NULL;
++	noneitem.text = text;
++	appenditem(&noneitem, &matches, &matchend);
+ 	textsize = strlen(text) + 1;
+ 	for (item = items; item && item->text; item++) {
+ 		for (i = 0; i < tokc; i++)
+@@ -285,7 +289,10 @@ match(void)
+ 			matches = lsubstr;
+ 		matchend = substrend;
+ 	}
+-	curr = sel = matches;
++	/* first item is the option to just take what you typed which should not
++	 * be selected by default */
++	curr = matches;
++	sel = matches->right ? matches->right : matches;
+ 	calcoffsets();
+ }
+ 
+-- 
+2.45.1
+
