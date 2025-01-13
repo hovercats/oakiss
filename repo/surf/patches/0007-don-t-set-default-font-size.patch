@@ -1,0 +1,24 @@
+From 7a70a2da1e33bab652f71da5f2d5c6fd5669610d Mon Sep 17 00:00:00 2001
+From: "Franc[e]sco" <lolisamurai@tfwno.gf>
+Date: Thu, 11 Jun 2020 04:19:13 +0200
+Subject: [PATCH] don't set default font size
+
+---
+ surf.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/surf.c b/surf.c
+index 2d2ef12..262efd2 100644
+--- a/surf.c
++++ b/surf.c
+@@ -1150,7 +1150,6 @@ newview(Client *c, WebKitWebView *rv)
+ 		   "allow-universal-access-from-file-urls", curconfig[FileURLsCrossAccess].val.i,
+ 		   "auto-load-images", curconfig[LoadImages].val.i,
+ 		   "default-charset", curconfig[DefaultCharset].val.v,
+-		   "default-font-size", curconfig[FontSize].val.i,
+ 		   "enable-caret-browsing", curconfig[CaretBrowsing].val.i,
+ 		   "enable-developer-extras", curconfig[Inspector].val.i,
+ 		   "enable-dns-prefetching", curconfig[DNSPrefetch].val.i,
+-- 
+2.45.1
+

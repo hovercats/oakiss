@@ -1,4 +1,4 @@
-From a6a8878bb6a203b589d559025b94a78214f22878 Mon Sep 17 00:00:00 2001
+From 73f7772765667140052c978570c580789f0bbffa Mon Sep 17 00:00:00 2001
 From: Olivier Moreau <m242@protonmail.com>
 Date: Sun, 12 Jan 2020 11:23:11 +0000
 Subject: [PATCH] Added choice between PRIMARY and CLIPBOARD Gtk selections, as
@@ -10,10 +10,10 @@ Subject: [PATCH] Added choice between PRIMARY and CLIPBOARD Gtk selections, as
  2 files changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/config.def.h b/config.def.h
-index 34265f6..03bbe2b 100644
+index f47c36d..8057e88 100644
 --- a/config.def.h
 +++ b/config.def.h
-@@ -48,6 +48,7 @@ static Parameter defconfig[ParameterLast] = {
+@@ -53,6 +53,7 @@ static Parameter defconfig[ParameterLast] = {
  	[Style]               =       { { .i = 1 },     },
  	[WebGL]               =       { { .i = 0 },     },
  	[ZoomLevel]           =       { { .f = 1.0 },   },
@@ -22,10 +22,10 @@ index 34265f6..03bbe2b 100644
  
  static UriParameters uriparams[] = {
 diff --git a/surf.c b/surf.c
-index 2b54e3c..b8a9b2f 100644
+index f0e361f..2d2ef12 100644
 --- a/surf.c
 +++ b/surf.c
-@@ -82,6 +82,7 @@ typedef enum {
+@@ -116,6 +116,7 @@ typedef enum {
  	Style,
  	WebGL,
  	ZoomLevel,
@@ -33,7 +33,7 @@ index 2b54e3c..b8a9b2f 100644
  	ParameterLast
  } ParamName;
  
-@@ -291,6 +292,7 @@ static ParamName loadcommitted[] = {
+@@ -330,6 +331,7 @@ static ParamName loadcommitted[] = {
  	SpellLanguages,
  	Style,
  	ZoomLevel,
@@ -41,7 +41,7 @@ index 2b54e3c..b8a9b2f 100644
  	ParameterLast
  };
  
-@@ -1816,13 +1818,18 @@ showcert(Client *c, const Arg *a)
+@@ -1856,13 +1858,18 @@ print(Client *c, const Arg *a)
  void
  clipboard(Client *c, const Arg *a)
  {
@@ -63,5 +63,5 @@ index 2b54e3c..b8a9b2f 100644
  	}
  }
 -- 
-2.24.1
+2.45.1
 

@@ -1,7 +1,7 @@
-From 9e58d334893f059a1bc4fb45bba79debeef211af Mon Sep 17 00:00:00 2001
+From 847d9f04844e150626db39db9c67a91fd1d33c4a Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Tue, 29 Aug 2023 22:56:07 +0200
-Subject: [PATCH 1/4] remove the need for gcr
+Subject: [PATCH] remove the need for gcr
 
 ---
  Makefile     |  2 +-
@@ -14,7 +14,7 @@ Subject: [PATCH 1/4] remove the need for gcr
  delete mode 100644 arg.h
 
 diff --git a/Makefile b/Makefile
-index 1edf820..e071a91 100644
+index e5d4172..db98eda 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -22,7 +22,7 @@ options:
@@ -226,5 +226,5 @@ index af0fa74..9186fc7 100644
  clipboard(Client *c, const Arg *a)
  {
 -- 
-2.42.0
+2.45.1
 

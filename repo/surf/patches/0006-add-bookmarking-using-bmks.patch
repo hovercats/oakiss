@@ -1,4 +1,4 @@
-From cd4785280b4c02d1c71ea30d9278fea8f8bdca65 Mon Sep 17 00:00:00 2001
+From 8a6738460f48af138953852e7e8a39d0d89fdf4e Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Sun, 3 Dec 2023 16:36:54 +0100
 Subject: [PATCH] add bookmarking using bmks
@@ -45,10 +45,10 @@ index 8057e88..99dbf50 100644
  	{ MODKEY,                GDK_KEY_c,      stop,       { 0 } },
  	
 diff --git a/surf.1 b/surf.1
-index 78e8f9c..d9734cc 100644
+index 7fee3c3..ac32ba2 100644
 --- a/surf.1
 +++ b/surf.1
-@@ -158,6 +158,15 @@ Scroll horizontally to the right.
+@@ -161,6 +161,15 @@ Scroll horizontally to the right.
  .B Ctrl\-u
  Scroll horizontally to the left.
  .TP
@@ -65,5 +65,5 @@ index 78e8f9c..d9734cc 100644
  Zooms page in.
  .TP
 -- 
-2.43.0
+2.45.1
 

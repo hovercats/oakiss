@@ -1,7 +1,7 @@
-From 444ac633cedab97d6227b63665fa43a65aebca70 Mon Sep 17 00:00:00 2001
+From 203324d5e4fc84440ff4a494c9c802a05c5292e4 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Tue, 29 Aug 2023 23:34:53 +0200
-Subject: [PATCH 4/4] apply searchengines patch
+Subject: [PATCH] apply searchengines patch
 
 ---
  config.def.h |  6 ++++++
@@ -9,7 +9,7 @@ Subject: [PATCH 4/4] apply searchengines patch
  2 files changed, 27 insertions(+), 1 deletion(-)
 
 diff --git a/config.def.h b/config.def.h
-index a6a4692..6c26c34 100644
+index bbff6f0..f47c36d 100644
 --- a/config.def.h
 +++ b/config.def.h
 @@ -7,6 +7,12 @@ static char *certdir        = "~/etc/surf/certificates/";
@@ -80,5 +80,5 @@ index 7abb207..f0e361f 100644
  pasteuri(GtkClipboard *clipboard, const char *text, gpointer d)
  {
 -- 
-2.42.0
+2.45.1
 
