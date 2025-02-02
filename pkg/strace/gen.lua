@@ -92,7 +92,6 @@ local srcs = paths[[src/(
 	bjm.c
 	block.c
 	bpf.c
-	bpf_attr_check.c
 	bpf_filter.c
 	bpf_seccomp_filter.c
 	bpf_sock_filter.c
@@ -391,8 +390,8 @@ file('bin/strace', '755', '$outdir/strace')
 
 build('sed', '$outdir/strace.1', '$srcdir/doc/strace.1.in', {
 	expr={
-		[[-e 's,@STRACE_MANPAGE_DATE@,2024-03-13,']],
-		[[-e 's,@VERSION@,6.8,']],
+		[[-e 's,@STRACE_MANPAGE_DATE@,2024-06-30,']],
+		[[-e 's,@VERSION@,6.12,']],
 		[[-e 's,@ENABLE_STACKTRACE_TRUE@,#,']],
 		[[-e 's,@ENABLE_STACKTRACE_FALSE@,,']],
 		[[-e 's,@ENABLE_SECONTEXT_TRUE@,#,']],
