@@ -36,7 +36,7 @@ cc('common-main.c')
 cc('http.c')
 cc('compat/regex/regex.c', nil, {cflags='$cflags -DGAWK -DNO_MBSUPPORT'})
 
--- src/Makefile:/^REFTABLE_OBJS./+=
+-- src/Makefile:/^REFTABLE_OBJS.\+=
 lib('libreftable.a', [[
 	reftable/(
 		basics.c
@@ -54,7 +54,8 @@ lib('libreftable.a', [[
 		stack.c
 		tree.c
 		writer.c
-	) ]] )
+	)
+]])
 
 -- src/Makefile:/^LIB_OBJS.\+=
 lib('libgit.a', [[
