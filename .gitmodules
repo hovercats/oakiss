@@ -320,3 +320,6 @@
 [submodule "pkg/lz4/src"]
 	path = pkg/lz4/src
 	url = https://github.com/lz4/lz4
+[submodule "pkg/ncompress/src"]
+	path = pkg/ncompress/src
+	url = https://github.com/vapier/ncompress
