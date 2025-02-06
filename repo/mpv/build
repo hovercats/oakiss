@@ -9,7 +9,7 @@ muon setup \
     -Degl=disabled \
     -Degl-x11=disabled \
     -Dgl=disabled \
-    -Ddrm=disabled \
+    -Ddrm=enabled \
     -Dgbm=disabled \
     -Db_colorout=never \
     -Dlua=disabled \

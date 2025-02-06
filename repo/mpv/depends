@@ -6,6 +6,7 @@ libXinerama
 libXpresent
 libXrandr
 libass
+libdrm
 libplacebo
 libxkbcommon
 python  make
