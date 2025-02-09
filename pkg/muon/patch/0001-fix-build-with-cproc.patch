@@ -1,0 +1,100 @@
+From ad624c180bb847337453d4e857812c15253eebaf Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sun, 9 Feb 2025 09:10:06 +0100
+Subject: [PATCH] fix build with cproc
+
+Author: Micheal Forney
+
+---
+ src/backend/common_args.c | 2 --
+ src/backend/introspect.c  | 1 -
+ src/backend/xcode.c       | 1 -
+ src/lang/analyze.c        | 1 -
+ src/lang/object.c         | 1 -
+ src/main.c                | 2 +-
+ 6 files changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/src/backend/common_args.c b/src/backend/common_args.c
+index d840bcf0..54b3acea 100644
+--- a/src/backend/common_args.c
++++ b/src/backend/common_args.c
+@@ -404,7 +404,6 @@ ca_prepare_target_args(struct workspace *wk, const struct project *proj, struct
+ 	}
+ 
+ 	obj _lang, _n;
+-	(void)_n;
+ 	obj_dict_for(wk, tgt->required_compilers, _lang, _n) {
+ 		enum compiler_language lang = _lang;
+ 		obj comp_id;
+@@ -856,7 +855,6 @@ ca_regenerate_build_command(struct workspace *wk, bool opts_only)
+ 	}
+ 
+ 	obj key, val;
+-	(void)key;
+ 	obj_dict_for(wk, wk->global_opts, key, val) {
+ 		struct obj_option *o = get_obj_option(wk, val);
+ 		if (o->source != option_value_source_environment) {
+diff --git a/src/backend/introspect.c b/src/backend/introspect.c
+index 96cf9217..cc45691f 100644
+--- a/src/backend/introspect.c
++++ b/src/backend/introspect.c
+@@ -275,7 +275,6 @@ introspect_options(struct workspace *wk)
+ 	make_obj(wk, &doc, obj_array);
+ 
+ 	obj key, opt;
+-	(void)key;
+ 	obj_dict_for(wk, wk->global_opts, key, opt) {
+ 		obj_array_push(wk, doc, introspect_option(wk, opt));
+ 	}
+diff --git a/src/backend/xcode.c b/src/backend/xcode.c
+index 7db1e1c6..d1f178f9 100644
+--- a/src/backend/xcode.c
++++ b/src/backend/xcode.c
+@@ -525,7 +525,6 @@ xc_build_configuration_list(struct xc_ctx *ctx, struct project *proj, struct obj
+ 		obj pbx_gcc_preprocessor_definitions = xc_pbx_new(ctx, obj_array);
+ 
+ 		obj _lang, args;
+-		(void)_lang;
+ 		// TODO: This adds duplicates
+ 		obj_dict_for(ctx->wk, tgt->args, _lang, args) {
+ 			obj_array_for(ctx->wk, args, v) {
+diff --git a/src/lang/analyze.c b/src/lang/analyze.c
+index 4d08c390..5d1ab720 100644
+--- a/src/lang/analyze.c
++++ b/src/lang/analyze.c
+@@ -540,7 +540,6 @@ pop_scope_group(struct workspace *wk)
+ 
+ 	{ // Now, merge `merged` into base
+ 		obj k, aid;
+-		(void)k;
+ 		obj_dict_for(wk, merged, k, aid) {
+ 			struct assignment *a = bucket_arr_get(&assignments, aid), *b;
+ 			if ((b = assign_lookup(wk, a->name))) {
+diff --git a/src/lang/object.c b/src/lang/object.c
+index 3a66d0fe..b759a386 100644
+--- a/src/lang/object.c
++++ b/src/lang/object.c
+@@ -720,7 +720,6 @@ static obj *
+ obj_array_index_pointer_raw(struct workspace *wk, obj arr, int64_t i)
+ {
+ 	obj v;
+-	(void)v;
+ 	int64_t j = 0;
+ 	obj_array_for_(wk, arr, v, iter)
+ 	{
+diff --git a/src/main.c b/src/main.c
+index 47e047ca..ec47960a 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -622,7 +622,7 @@ static bool
+ cmd_dump_toolchains(void *_ctx, uint32_t argc, uint32_t argi, char *const argv[])
+ {
+ 	struct obj_compiler comp = { 0 };
+-	bool set_linker, set_static_linker;
++	bool set_linker = false, set_static_linker = false;
+ 
+ 	const char *n1_args[32] = { "<value1>", "<value2>" };
+ 	struct args n1 = { n1_args, 2 };
+-- 
+2.45.2
+
