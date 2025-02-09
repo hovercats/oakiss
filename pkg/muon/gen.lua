@@ -29,7 +29,7 @@ src/(
     opts.c rpmvercmp.c sha_256.c 
     vsenv.c wrap.c ui_null.c
     backend/(
-    	backend.c common_args.c ninja.c output.c xcode.c
+    	backend.c common_args.c introspect.c ninja.c output.c xcode.c
     	ninja/(
     		alias_target.c coverage.c build_target.c
     		custom_target.c rules.c
