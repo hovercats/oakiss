@@ -1,6 +1,6 @@
 #define CPU_INFO_BY_ASM 1
 /* #undef CPU_INFO_BY_C */
-#define CUSTOM_MODES 1
+/* #undef CUSTOM_MODES */
 #define DISABLE_DEBUG_FLOAT 1
 /* #undef DISABLE_DOT_PROD */
 /* #undef DISABLE_FLOAT_API */
@@ -8,7 +8,7 @@
 /* #undef ENABLE_ASSERTIONS */
 /* #undef ENABLE_DEEP_PLC */
 /* #undef ENABLE_DRED */
-/* #undef ENABLE_HARDENING 1 */
+/* #undef ENABLE_HARDENING */
 /* #undef ENABLE_LOSSGEN */
 /* #undef ENABLE_OSCE */
 /* #undef ENABLE_OSCE_TRAINING_DATA */
@@ -61,10 +61,10 @@
 /* #undef OPUS_X86_PRESUME_SSE4_1 */
 #define PACKAGE_BUGREPORT "opus@xiph.org"
 #define PACKAGE_NAME "opus"
-#define PACKAGE_STRING "opus 1.5.1"
+#define PACKAGE_STRING "opus 1.5.2"
 #define PACKAGE_TARNAME "opus"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "1.5.1"
+#define PACKAGE_VERSION "1.5.2"
 #define STDC_HEADERS 1
 /* #undef USE_ALLOCA */
 #define VAR_ARRAYS 1
