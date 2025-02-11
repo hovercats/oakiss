@@ -294,6 +294,7 @@
 [submodule "pkg/muon/src"]
 	path = pkg/muon/src
 	url = https://git.sr.ht/~lattis/muon/
+	ignore = all
 [submodule "pkg/libpkgconf/src"]
 	path = pkg/libpkgconf/src
 	url = https://github.com/pkgconf/pkgconf
