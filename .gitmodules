@@ -326,3 +326,6 @@
 [submodule "pkg/pax/src"]
 	path = pkg/pax/src
 	url = https://git.sr.ht/~mcf/pax
+[submodule "pkg/luaposix/src"]
+	path = pkg/luaposix/src
+	url = https://github.com/luaposix/luaposix.git
