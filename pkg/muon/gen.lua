@@ -5,10 +5,8 @@ cflags{
 	'-D MUON_PLATFORM_posix',
 	'-D MUON_ENDIAN=0',
 	'-D MUON_STATIC',
-	'-D MUON_BOOTSTRAPPED',
 	'-I $srcdir/include',
 	'-I $srcdir/subprojects/tinyjson',
-	'-I $dir',
 	'-isystem $builddir/pkg/libpkgconf',
 }
 
