@@ -5,10 +5,46 @@ cflags{
 	'-D MUON_PLATFORM_posix',
 	'-D MUON_ENDIAN=0',
 	'-D MUON_STATIC',
+	'-D MUON_BOOTSTRAPPED',
+	'-I $outdir',
 	'-I $srcdir/include',
 	'-I $srcdir/subprojects/tinyjson',
 	'-isystem $builddir/pkg/libpkgconf',
 }
+
+sub('tools.ninja', function()
+	toolchain(config.host)
+	cflags{'-I $srcdir/include'}
+	exe('embedder', {'tools/embedder.c'})
+end)
+
+rule('embedder', '$outdir/embedder $args  >$out')
+
+local embedded_files = {
+	'commands/copyfile.meson',
+	'commands/coverage.meson',
+	'commands/delete_suffix.meson',
+	'commands/i18n/gettext.meson',
+	'commands/i18n/itstool.meson',
+	'commands/i18n/msgfmthelper.meson',
+	'commands/vcs_tagger.meson',
+	'lib/cmake_prelude.meson',
+	'modules/_test.meson',
+	'modules/gnome.meson',
+	'modules/i18n.meson',
+	'options/global.meson',
+	'options/per_project.meson',
+	'python/python_info.py',
+	'runtime/dependencies.meson',
+}
+
+local args = {}
+for _, file in ipairs(embedded_files) do
+	table.insert(args, '$srcdir/src/script/'..file)
+	table.insert(args, file)
+end
+
+build('embedder', '$outdir/embedded_files.h', {expand{'$srcdir/src/script', embedded_files}, '|', '$outdir/embedder'}, {args=args})
 
 build('copy', '$outdir/version.c', '$dir/version.c')
 
