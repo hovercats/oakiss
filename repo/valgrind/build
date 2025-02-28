@@ -1,0 +1,26 @@
+#!/bin/sh -e
+
+# Disable stripping
+: > nostrip
+
+# Bypass ccache
+export CC="/bin/cc"
+export CXX="/bin/c++"
+export CFLAGS="$CFLAGS -fno-stack-protector -no-pie"
+
+./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --libexecdir=/usr/lib \
+    --mandir=/usr/share/man \
+    --infodir=/usr/share/info \
+    --localstatedir=/var \
+    --without-mpicc
+
+make
+make DESTDIR="$1" install
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
+
+rm -r "$1/usr/share/doc"
