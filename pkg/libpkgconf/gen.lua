@@ -13,7 +13,7 @@ pkg.hdrs = {
 	})}
 
 lib('libpkgconf.a', [[libpkgconf/(
-		audit.c cache.c client.c
+		audit.c buffer.c cache.c client.c
 		pkg.c bsdstubs.c fragment.c
 		argvsplit.c fileio.c tuple.c
 		dependency.c queue.c path.c
