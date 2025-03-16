@@ -10,6 +10,7 @@ muon setup \
 	-Dtests=disabled \
 	-Dpkg_config_path=/usr/lib/pkgconfig \
 	-Ddefault_library=shared \
+	-Dhls-crypto=nettle \
 	build
 
 samu -C build
