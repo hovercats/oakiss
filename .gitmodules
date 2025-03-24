@@ -87,7 +87,7 @@
 	url = https://github.com/madler/pigz
 [submodule "pkg/rc/src"]
 	path = pkg/rc/src
-	url = git://shithub.us/cinap_lenrek/rc
+	url = https://github.com/benavento/rc.git
 	ignore = all
 [submodule "pkg/rcinit/src"]
 	path = pkg/rcinit/src
