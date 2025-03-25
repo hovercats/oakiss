@@ -12,7 +12,6 @@ muon setup \
     -Ddrm=enabled \
     -Dgbm=disabled \
     -Db_colorout=never \
-    -Dlua=disabled \
     -Dpkg_config_path=/usr/lib/pkgconfig \
     build
 
