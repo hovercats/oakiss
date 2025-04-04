@@ -13,7 +13,7 @@ pkg.deps = {
 	'pkg/linux-headers/headers',
 }
 
-lib('libcommon.a', 'src/utils/(common.c config.c eloop.c os_unix.c wpabuf.c wpa_debug.c)')
+lib('libcommon.a', 'src/utils/(common.c eloop.c os_unix.c wpabuf.c wpa_debug.c)')
 
 exe('bin/wpa_supplicant', [[
 	src/ap/(
@@ -25,15 +25,16 @@ exe('bin/wpa_supplicant', [[
 		ctrl_iface_common.c
 		hw_features_common.c
 		ieee802_11_common.c
+		ptksa_cache.c
 		wpa_common.c
 	)
 	src/crypto/(
 		aes-internal-dec.c
 		aes-internal-enc.c
 		aes-internal.c
+		aes-omac1.c
 		aes-unwrap.c
 		aes-wrap.c
-		aes-omac1.c
 		crypto_bearssl.c
 		random.c
 		rc4.c
@@ -61,8 +62,15 @@ exe('bin/wpa_supplicant', [[
 		wpa.c
 		wpa_ie.c
 	)
-	src/utils/(bitfield.c ip_addr.c crc32.c radiotap.c)
+	src/utils/(
+		bitfield.c
+		config.c
+		crc32.c
+		ip_addr.c
+		radiotap.c
+	)
 	wpa_supplicant/(
+		bssid_ignore.c
 		bss.c
 		config.c
 		config_file.c
@@ -75,14 +83,11 @@ exe('bin/wpa_supplicant', [[
 		notify.c
 		op_classes.c
 		rrm.c
-		twt.c
-		robust_av.c
 		scan.c
 		sme.c
-		wmm_ac.c
+		twt.c
 		wpa_supplicant.c
 		wpas_glue.c
-		bssid_ignore.c
 	)
 	libcommon.a
 	$builddir/pkg/bearssl/libbearssl.a
