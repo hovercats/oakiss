@@ -36,11 +36,12 @@ lib('libzstd.a', [[lib/(
 		zstd_lazy.c
 		zstd_ldm.c
 		zstd_opt.c
+		zstd_preSplit.c
 		zstdmt_compress.c
 	)
 	decompress/(
+		@x86_64 huf_decompress_amd64.S
 		huf_decompress.c
-		huf_decompress_amd64.S
 		zstd_ddict.c
 		zstd_decompress.c
 		zstd_decompress_block.c
