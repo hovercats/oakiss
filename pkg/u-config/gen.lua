@@ -9,7 +9,7 @@ set('ldflags', {
 	'-Wl,--gc-sections',
 })
 
-exe('u-config', {'generic_main.c'})
+exe('u-config', {'main_posix.c'})
 
 file('bin/u-config', '755', '$outdir/u-config')
 man{'u-config.1'}
