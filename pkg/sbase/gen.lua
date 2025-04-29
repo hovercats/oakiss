@@ -10,6 +10,7 @@ lib('libutil.a', [[libutil/(
 	concat.c
 	cp.c
 	crypt.c
+	confirm.c
 	ealloc.c
 	enmasse.c
 	eprintf.c
