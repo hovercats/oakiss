@@ -52,5 +52,8 @@ ln -s pip3    "$1/usr/bin/pip"
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
 
+# fix broken symlink
+ln -sf python3.11.1.gz "$1/usr/share/man/man1/python3.1"
+
 # A lot of python scripts use #!/usr/bin/env python
 ln -sf ../../bin/env "$1/usr/bin/env"
