@@ -6,12 +6,13 @@
     --prefix=/usr \
     --sysconfdir=/etc \
     --mandir=/usr/share/man \
-    --localstatedir=/var
+    --localstatedir=/var \
+    --disable-nls \
+    --disable-doc \
+    --disable-tests
 
 make
 make DESTDIR="$1" install
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
-
-rm -rf "$1/usr/share/info"
