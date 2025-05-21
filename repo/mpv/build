@@ -22,4 +22,5 @@ muon -C build install
 rm -rf \
     "$1/usr/share/zsh" \
     "$1/usr/share/bash-completion" \
-    "$1/usr/share/icons"
+    "$1/usr/share/icons" \
+    "$1/usr/share/doc"
