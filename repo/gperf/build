@@ -9,8 +9,9 @@ export CFLAGS="$CFLAGS -fPIE"
 make
 make DESTDIR="$1" install
 
-# Remove HTML documentation.
-rm -rf "$1/usr/share/doc"
+rm -rf \
+	"$1/usr/share/doc" \
+	"$1/usr/share/info"
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
