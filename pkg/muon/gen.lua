@@ -48,7 +48,10 @@ build('embedder', '$outdir/embedded_files.h', {expand{'$srcdir/src/script', embe
 
 build('copy', '$outdir/version.c', '$dir/version.c')
 
-pkg.deps = {'pkg/libpkgconf/headers'}
+pkg.deps = {
+	'pkg/libpkgconf/headers',
+	'$outdir/embedded_files.h',
+}
 
 lib('libtinyjson.a', {'subprojects/tinyjson/tiny-json.c'})
 
