@@ -166,7 +166,6 @@ yt_dlp/extractor/canalc2.py
 yt_dlp/extractor/canalplus.py
 yt_dlp/extractor/canalsurmas.py
 yt_dlp/extractor/caracoltv.py
-yt_dlp/extractor/cartoonnetwork.py
 yt_dlp/extractor/cbc.py
 yt_dlp/extractor/cbs.py
 yt_dlp/extractor/cbsnews.py
@@ -416,6 +415,7 @@ yt_dlp/extractor/itprotv.py
 yt_dlp/extractor/itv.py
 yt_dlp/extractor/ivi.py
 yt_dlp/extractor/ivideon.py
+yt_dlp/extractor/ivoox.py
 yt_dlp/extractor/iwara.py
 yt_dlp/extractor/ixigua.py
 yt_dlp/extractor/izlesene.py
@@ -621,7 +621,6 @@ yt_dlp/extractor/oftv.py
 yt_dlp/extractor/oktoberfesttv.py
 yt_dlp/extractor/olympics.py
 yt_dlp/extractor/on24.py
-yt_dlp/extractor/once.py
 yt_dlp/extractor/ondemandkorea.py
 yt_dlp/extractor/onefootball.py
 yt_dlp/extractor/onenewsnz.py
@@ -641,6 +640,7 @@ yt_dlp/extractor/panopto.py
 yt_dlp/extractor/paramountplus.py
 yt_dlp/extractor/parler.py
 yt_dlp/extractor/parlview.py
+yt_dlp/extractor/parti.py
 yt_dlp/extractor/patreon.py
 yt_dlp/extractor/pbs.py
 yt_dlp/extractor/pearvideo.py
@@ -734,6 +734,7 @@ yt_dlp/extractor/rockstargames.py
 yt_dlp/extractor/rokfin.py
 yt_dlp/extractor/roosterteeth.py
 yt_dlp/extractor/rottentomatoes.py
+yt_dlp/extractor/roya.py
 yt_dlp/extractor/rozhlas.py
 yt_dlp/extractor/rte.py
 yt_dlp/extractor/rtl2.py
@@ -814,7 +815,6 @@ yt_dlp/extractor/sportdeutschland.py
 yt_dlp/extractor/spotify.py
 yt_dlp/extractor/spreaker.py
 yt_dlp/extractor/springboardplatform.py
-yt_dlp/extractor/sprout.py
 yt_dlp/extractor/sproutvideo.py
 yt_dlp/extractor/srgssr.py
 yt_dlp/extractor/srmediathek.py
@@ -1052,6 +1052,16 @@ yt_dlp/extractor/youtube/_redirect.py
 yt_dlp/extractor/youtube/_search.py
 yt_dlp/extractor/youtube/_tab.py
 yt_dlp/extractor/youtube/_video.py
+yt_dlp/extractor/youtube/pot/__init__.py
+yt_dlp/extractor/youtube/pot/_builtin/__init__.py
+yt_dlp/extractor/youtube/pot/_builtin/memory_cache.py
+yt_dlp/extractor/youtube/pot/_builtin/webpo_cachespec.py
+yt_dlp/extractor/youtube/pot/_director.py
+yt_dlp/extractor/youtube/pot/_provider.py
+yt_dlp/extractor/youtube/pot/_registry.py
+yt_dlp/extractor/youtube/pot/cache.py
+yt_dlp/extractor/youtube/pot/provider.py
+yt_dlp/extractor/youtube/pot/utils.py
 yt_dlp/extractor/zaiko.py
 yt_dlp/extractor/zapiks.py
 yt_dlp/extractor/zattoo.py
