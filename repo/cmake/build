@@ -2,8 +2,6 @@
 
 export DESTDIR="$1"
 
-patch -p1 < 0001-remove-arch4random_buf-call.-it-does-not-exist.patch
-
 if kiss l cmake; then
     cmake -G Ninja -B build \
         -DCMAKE_INSTALL_PREFIX=/usr \
