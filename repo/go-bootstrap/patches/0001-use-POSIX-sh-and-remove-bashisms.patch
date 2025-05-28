@@ -1,16 +1,16 @@
-From 0677e181c2e88f21c588933246beca6ac61e0db9 Mon Sep 17 00:00:00 2001
+From f5046858f3da701dad0647207d957e1301c0d7f8 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
-Date: Thu, 2 May 2024 18:37:05 +0200
-Subject: [PATCH] use POSIX sh and remove bashisms
+Date: Sun, 25 May 2025 06:52:08 +0200
+Subject: [PATCH] use POSIX sh and remove some bashism
 
 ---
  go1.17.13/src/make.bash       |  4 ++--
  go1.20.6/src/make.bash        |  4 ++--
  go1.4-bootstrap/src/make.bash | 10 +++++-----
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ 4 files changed, 26 insertions(+), 26 deletions(-)
 
 diff --git a/go1.17.13/src/make.bash b/go1.17.13/src/make.bash
-index 7986125a..9a770665 100755
+index 7986125a..d1a77270 100755
 --- a/go1.17.13/src/make.bash
 +++ b/go1.17.13/src/make.bash
 @@ -1,4 +1,4 @@
@@ -29,7 +29,7 @@ index 7986125a..9a770665 100755
  		goroot=$(GOROOT='' GOOS='' GOARCH='' "$go_exe" env GOROOT)
  		if [ "$goroot" != "$GOROOT" ]; then
 diff --git a/go1.20.6/src/make.bash b/go1.20.6/src/make.bash
-index c07f39bb..cc5c620d 100755
+index c07f39bb..7aefc113 100755
 --- a/go1.20.6/src/make.bash
 +++ b/go1.20.6/src/make.bash
 @@ -1,4 +1,4 @@
@@ -48,7 +48,7 @@ index c07f39bb..cc5c620d 100755
  		goroot=$(GOROOT='' GOOS='' GOARCH='' "$go_exe" env GOROOT)
  		if [ "$goroot" != "$GOROOT" ]; then
 diff --git a/go1.4-bootstrap/src/make.bash b/go1.4-bootstrap/src/make.bash
-index 104c3ba5..043d38ac 100755
+index 104c3ba5..f05a635c 100755
 --- a/go1.4-bootstrap/src/make.bash
 +++ b/go1.4-bootstrap/src/make.bash
 @@ -1,4 +1,4 @@
@@ -57,15 +57,6 @@ index 104c3ba5..043d38ac 100755
  # Copyright 2009 The Go Authors. All rights reserved.
  # Use of this source code is governed by a BSD-style
  # license that can be found in the LICENSE file.
-@@ -43,7 +43,7 @@
- # This is used by cgo.  Default is CC.
- #
- # CXX_FOR_TARGET: Command line to run to compile C++ code for GOARCH.
--# This is used by cgo. Default is CXX, or, if that is not set, 
-+# This is used by cgo. Default is CXX, or, if that is not set,
- # "g++" or "clang++".
- #
- # GO_DISTFLAGS: extra flags to provide to "dist bootstrap". Use "-s"
 @@ -102,7 +102,7 @@ done
  # Test for debian/kFreeBSD.
  # cmd/dist will detect kFreeBSD as freebsd/$GOARCH, but we need to
@@ -75,7 +66,7 @@ index 104c3ba5..043d38ac 100755
          export CGO_ENABLED=0
  fi
  
-@@ -122,12 +122,12 @@ case "$GOHOSTARCH" in
+@@ -122,15 +122,15 @@ case "$GOHOSTARCH" in
  386) mflag=-m32;;
  amd64) mflag=-m64;;
  esac
@@ -89,7 +80,11 @@ index 104c3ba5..043d38ac 100755
 +if [ -z "$CC" -a -z "$(command -v gcc)" -a -n "$(command -v clang)" ]; then
  	export CC=clang CXX=clang++
  fi
- ${CC:-gcc} $mflag -O2 -Wall -Werror -o cmd/dist/dist -Icmd/dist "$DEFGOROOT" cmd/dist/*.c
+-${CC:-gcc} $mflag -O2 -Wall -Werror -o cmd/dist/dist -Icmd/dist "$DEFGOROOT" cmd/dist/*.c
++${CC:-gcc} $mflag -std=gnu17 -O2 -Wall -Werror -o cmd/dist/dist -Icmd/dist "$DEFGOROOT" cmd/dist/*.c
+ 
+ # -e doesn't propagate out of eval, so check success by hand.
+ eval $(./cmd/dist/dist env -p || echo FAIL=true)
 -- 
-2.44.0
+2.49.0
 
