@@ -6,6 +6,7 @@ cflags{
 	'-D MUON_ENDIAN=0',
 	'-D MUON_STATIC',
 	'-D MUON_BOOTSTRAPPED',
+	'-D MUON_HAVE_LIBPKGCONF=1',
 	'-I $outdir',
 	'-I $srcdir/include',
 	'-I $srcdir/subprojects/tinyjson',
@@ -53,8 +54,6 @@ pkg.deps = {
 	'$outdir/embedded_files.h',
 }
 
-lib('libtinyjson.a', {'subprojects/tinyjson/tiny-json.c'})
-
 exe('muon', [[
 $outdir/version.c
 src/(
@@ -76,7 +75,7 @@ src/(
     	arr.c bucket_arr.c hash.c stack.c
     )
     formats/(
-    	editorconfig.c ini.c
+    	editorconfig.c ini.c json.c
     	lines.c tap.c xml.c
     )
     functions/(
@@ -96,13 +95,14 @@ src/(
     		install.c options.c subproject.c
     	)
     	modules/(
-    		fs.c getopt.c keyval.c pkgconfig.c
+    		curl.c fs.c getopt.c keyval.c pkgconfig.c
     		python.c sourceset.c subprojects.c toolchain.c
+    		json.c
     	)
     )
     lang/(
     	analyze.c compiler.c eval.c
-    	fmt.c func_lookup.c lexer.c
+    	fmt.c func_lookup.c lexer.c lsp.c
     	object.c object_iterators.c parser.c
     	serial.c string.c typecheck.c
     	vm.c workspace.c
@@ -119,8 +119,9 @@ src/(
     )
     external/(
     	libarchive_null.c libcurl_null.c 
-    	libpkgconf.c samurai_null.c 
-    	tinyjson.c readline_builtin.c
+    	pkgconfig_libpkgconf.c samurai_null.c
+    	readline_builtin.c pkgconfig.c
+    	pkgconfig_exec.c
     )
 )
 libtinyjson.a
