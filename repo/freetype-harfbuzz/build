@@ -1,8 +1,6 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
-export CXXFLAGS="$CXXFLAGS -I/usr/include"
-
 
 build_freetype() (
     cd freetype
@@ -51,13 +49,12 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
 )
 
 # Point Freetype to the Harfbuzz files.
-export CFLAGS="$CFLAGS -I$DESTDIR/usr/include/harfbuzz"
+export CPPFLAGS="$CPPFLAGS -I$DESTDIR/usr/include/harfbuzz"
 export LDFLAGS="$LDFLAGS -L$DESTDIR/usr/lib "
 export PKG_CONFIG_PATH="$DESTDIR/usr/lib/pkgconfig"
 
 # Point Harfbuzz to the Freetype files.
-export CXXFLAGS="$CXXFLAGS -I$DESTDIR/usr/include/freetype2"
-export CXXFLAGS="$CXXFLAGS -L$DESTDIR/usr/lib"
+export CPPFLAGS="$CPPFLAGS -I$DESTDIR/usr/include/freetype2"
 
 build_freetype -Dharfbuzz=disabled
 build_harfbuzz
