@@ -52,7 +52,7 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
 
 # Point Freetype to the Harfbuzz files.
 export CFLAGS="$CFLAGS -I$DESTDIR/usr/include/harfbuzz"
-export CFLAGS="$CFLAGS -L$DESTDIR/usr/lib "
+export LDFLAGS="$LDFLAGS -L$DESTDIR/usr/lib "
 export PKG_CONFIG_PATH="$DESTDIR/usr/lib/pkgconfig"
 
 # Point Harfbuzz to the Freetype files.
