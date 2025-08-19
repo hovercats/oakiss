@@ -30,7 +30,6 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
 
     muon setup \
         -Dprefix=/usr \
-        -Dpkg_config_path="$DESTDIR/usr/lib/pkgconfig:/usr/lib/pkgconfig" \
 		-Dbuildtype=release \
 		-Db_colorout=never \
         -Ddefault_library=both \
@@ -51,7 +50,7 @@ kiss list icu  >/dev/null 2>&1 || icu_enabled=disabled
 # Point Freetype to the Harfbuzz files.
 export CPPFLAGS="$CPPFLAGS -I$DESTDIR/usr/include/harfbuzz"
 export LDFLAGS="$LDFLAGS -L$DESTDIR/usr/lib "
-export PKG_CONFIG_PATH="$DESTDIR/usr/lib/pkgconfig"
+export PKG_CONFIG_PATH="$DESTDIR/usr/lib/pkgconfig:/usr/lib/pkgconfig"
 
 # Point Harfbuzz to the Freetype files.
 export CPPFLAGS="$CPPFLAGS -I$DESTDIR/usr/include/freetype2"
