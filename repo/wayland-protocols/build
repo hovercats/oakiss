@@ -10,3 +10,7 @@ muon setup \
 
 samu -C build
 muon -C build install
+
+# Fix pkgconf location
+mkdir -p "$1/usr/lib"
+mv -f "$1/usr/share/pkgconfig" "$1/usr/lib"
