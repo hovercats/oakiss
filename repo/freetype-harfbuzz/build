@@ -12,6 +12,7 @@ build_freetype() (
 		-Db_colorout=never \
         -Dbzip2=disabled \
         -Dzlib=disabled \
+        -Dpng=disabled \
         "$@" \
         build
 
