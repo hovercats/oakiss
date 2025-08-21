@@ -1,4 +1,4 @@
-From 274868fccc3d3b5bb043b2bb65b5b99b00738e94 Mon Sep 17 00:00:00 2001
+From 9325f07110722054d6e8ba623b4c50a8f724d947 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Wed, 29 Mar 2023 20:18:05 +0200
 Subject: [PATCH] add border patch
@@ -20,7 +20,7 @@ index 88ef264..5c87304 100644
 +/* Size of the window border */
 +static unsigned int border_width = 2;
 diff --git a/dmenu.c b/dmenu.c
-index b6cfd65..1fae794 100644
+index 6b32f76..5a0e516 100644
 --- a/dmenu.c
 +++ b/dmenu.c
 @@ -708,9 +708,11 @@ setup(void)
@@ -35,8 +35,8 @@ index b6cfd65..1fae794 100644
 +		XSetWindowBorder(dpy, win, scheme[SchemeSel][ColBg].pixel);
  	XSetClassHint(dpy, win, &ch);
  
- 
-@@ -784,6 +786,8 @@ main(int argc, char *argv[])
+ 	/* input methods */
+@@ -783,6 +785,8 @@ main(int argc, char *argv[])
  			colors[SchemeSel][ColFg] = argv[++i];
  		else if (!strcmp(argv[i], "-w"))   /* embedding window id */
  			embed = argv[++i];
@@ -46,5 +46,5 @@ index b6cfd65..1fae794 100644
  			usage();
  
 -- 
-2.45.1
+2.49.0
 
