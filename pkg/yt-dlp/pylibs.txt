@@ -83,7 +83,6 @@ yt_dlp/extractor/appletrailers.py
 yt_dlp/extractor/archiveorg.py
 yt_dlp/extractor/arcpublishing.py
 yt_dlp/extractor/ard.py
-yt_dlp/extractor/arkena.py
 yt_dlp/extractor/arnes.py
 yt_dlp/extractor/art19.py
 yt_dlp/extractor/arte.py
@@ -103,7 +102,6 @@ yt_dlp/extractor/axs.py
 yt_dlp/extractor/azmedien.py
 yt_dlp/extractor/baidu.py
 yt_dlp/extractor/banbye.py
-yt_dlp/extractor/bandaichannel.py
 yt_dlp/extractor/bandcamp.py
 yt_dlp/extractor/bandlab.py
 yt_dlp/extractor/bannedvideo.py
@@ -113,7 +111,6 @@ yt_dlp/extractor/beatbump.py
 yt_dlp/extractor/beatport.py
 yt_dlp/extractor/beeg.py
 yt_dlp/extractor/behindkink.py
-yt_dlp/extractor/bellmedia.py
 yt_dlp/extractor/berufetv.py
 yt_dlp/extractor/bet.py
 yt_dlp/extractor/bfi.py
@@ -140,10 +137,10 @@ yt_dlp/extractor/boxcast.py
 yt_dlp/extractor/bpb.py
 yt_dlp/extractor/br.py
 yt_dlp/extractor/brainpop.py
-yt_dlp/extractor/bravotv.py
 yt_dlp/extractor/breitbart.py
 yt_dlp/extractor/brightcove.py
 yt_dlp/extractor/brilliantpala.py
+yt_dlp/extractor/btvplus.py
 yt_dlp/extractor/bundesliga.py
 yt_dlp/extractor/bundestag.py
 yt_dlp/extractor/bunnycdn.py
@@ -195,7 +192,6 @@ yt_dlp/extractor/cloudflarestream.py
 yt_dlp/extractor/cloudycdn.py
 yt_dlp/extractor/clubic.py
 yt_dlp/extractor/clyp.py
-yt_dlp/extractor/cmt.py
 yt_dlp/extractor/cnbc.py
 yt_dlp/extractor/cnn.py
 yt_dlp/extractor/comedycentral.py
@@ -216,7 +212,6 @@ yt_dlp/extractor/crowdbunker.py
 yt_dlp/extractor/crtvg.py
 yt_dlp/extractor/cspan.py
 yt_dlp/extractor/ctsnews.py
-yt_dlp/extractor/ctv.py
 yt_dlp/extractor/ctvnews.py
 yt_dlp/extractor/cultureunplugged.py
 yt_dlp/extractor/curiositystream.py
@@ -261,7 +256,6 @@ yt_dlp/extractor/dumpert.py
 yt_dlp/extractor/duoplay.py
 yt_dlp/extractor/dvtv.py
 yt_dlp/extractor/dw.py
-yt_dlp/extractor/eagleplatform.py
 yt_dlp/extractor/ebaumsworld.py
 yt_dlp/extractor/ebay.py
 yt_dlp/extractor/egghead.py
@@ -294,6 +288,7 @@ yt_dlp/extractor/eyedotv.py
 yt_dlp/extractor/facebook.py
 yt_dlp/extractor/fancode.py
 yt_dlp/extractor/fathom.py
+yt_dlp/extractor/faulio.py
 yt_dlp/extractor/faz.py
 yt_dlp/extractor/fc2.py
 yt_dlp/extractor/fczenit.py
@@ -422,11 +417,9 @@ yt_dlp/extractor/izlesene.py
 yt_dlp/extractor/jamendo.py
 yt_dlp/extractor/japandiet.py
 yt_dlp/extractor/jeuxvideo.py
-yt_dlp/extractor/jiocinema.py
 yt_dlp/extractor/jiosaavn.py
 yt_dlp/extractor/jixie.py
 yt_dlp/extractor/joj.py
-yt_dlp/extractor/joqrag.py
 yt_dlp/extractor/jove.py
 yt_dlp/extractor/jstream.py
 yt_dlp/extractor/jtbc.py
@@ -472,7 +465,6 @@ yt_dlp/extractor/libraryofcongress.py
 yt_dlp/extractor/libsyn.py
 yt_dlp/extractor/lifenews.py
 yt_dlp/extractor/likee.py
-yt_dlp/extractor/limelight.py
 yt_dlp/extractor/linkedin.py
 yt_dlp/extractor/liputan6.py
 yt_dlp/extractor/listennotes.py
@@ -501,6 +493,7 @@ yt_dlp/extractor/markiza.py
 yt_dlp/extractor/massengeschmacktv.py
 yt_dlp/extractor/masters.py
 yt_dlp/extractor/matchtv.py
+yt_dlp/extractor/mave.py
 yt_dlp/extractor/mbn.py
 yt_dlp/extractor/mdr.py
 yt_dlp/extractor/medaltv.py
@@ -522,12 +515,14 @@ yt_dlp/extractor/microsoftembed.py
 yt_dlp/extractor/microsoftstream.py
 yt_dlp/extractor/minds.py
 yt_dlp/extractor/minoto.py
+yt_dlp/extractor/mir24tv.py
 yt_dlp/extractor/mirrativ.py
 yt_dlp/extractor/mirrorcouk.py
 yt_dlp/extractor/mit.py
 yt_dlp/extractor/mitele.py
 yt_dlp/extractor/mixch.py
 yt_dlp/extractor/mixcloud.py
+yt_dlp/extractor/mixlr.py
 yt_dlp/extractor/mlb.py
 yt_dlp/extractor/mlssoccer.py
 yt_dlp/extractor/mocha.py
@@ -593,7 +588,6 @@ yt_dlp/extractor/nobelprize.py
 yt_dlp/extractor/noice.py
 yt_dlp/extractor/nonktube.py
 yt_dlp/extractor/noodlemagazine.py
-yt_dlp/extractor/noovo.py
 yt_dlp/extractor/nosnl.py
 yt_dlp/extractor/nova.py
 yt_dlp/extractor/novaplay.py
@@ -662,9 +656,9 @@ yt_dlp/extractor/pinkbike.py
 yt_dlp/extractor/pinterest.py
 yt_dlp/extractor/piramidetv.py
 yt_dlp/extractor/pixivsketch.py
-yt_dlp/extractor/pladform.py
 yt_dlp/extractor/planetmarathi.py
 yt_dlp/extractor/platzi.py
+yt_dlp/extractor/playerfm.py
 yt_dlp/extractor/playplustv.py
 yt_dlp/extractor/playsuisse.py
 yt_dlp/extractor/playtvak.py
@@ -672,6 +666,7 @@ yt_dlp/extractor/playwire.py
 yt_dlp/extractor/pluralsight.py
 yt_dlp/extractor/plutotv.py
 yt_dlp/extractor/plvideo.py
+yt_dlp/extractor/plyr.py
 yt_dlp/extractor/podbayfm.py
 yt_dlp/extractor/podchaser.py
 yt_dlp/extractor/podomatic.py
@@ -759,6 +754,7 @@ yt_dlp/extractor/safari.py
 yt_dlp/extractor/saitosan.py
 yt_dlp/extractor/samplefocus.py
 yt_dlp/extractor/sapo.py
+yt_dlp/extractor/sauceplus.py
 yt_dlp/extractor/sbs.py
 yt_dlp/extractor/sbscokr.py
 yt_dlp/extractor/screen9.py
@@ -782,6 +778,7 @@ yt_dlp/extractor/shahid.py
 yt_dlp/extractor/sharepoint.py
 yt_dlp/extractor/sharevideos.py
 yt_dlp/extractor/shemaroome.py
+yt_dlp/extractor/shiey.py
 yt_dlp/extractor/showroomlive.py
 yt_dlp/extractor/sibnet.py
 yt_dlp/extractor/simplecast.py
@@ -808,7 +805,6 @@ yt_dlp/extractor/southpark.py
 yt_dlp/extractor/sovietscloset.py
 yt_dlp/extractor/spankbang.py
 yt_dlp/extractor/spiegel.py
-yt_dlp/extractor/spike.py
 yt_dlp/extractor/sport5.py
 yt_dlp/extractor/sportbox.py
 yt_dlp/extractor/sportdeutschland.py
@@ -839,7 +835,6 @@ yt_dlp/extractor/sunporno.py
 yt_dlp/extractor/sverigesradio.py
 yt_dlp/extractor/svt.py
 yt_dlp/extractor/swearnet.py
-yt_dlp/extractor/syfy.py
 yt_dlp/extractor/syvdk.py
 yt_dlp/extractor/sztvhu.py
 yt_dlp/extractor/tagesschau.py
@@ -873,6 +868,7 @@ yt_dlp/extractor/testurl.py
 yt_dlp/extractor/tf1.py
 yt_dlp/extractor/tfo.py
 yt_dlp/extractor/theguardian.py
+yt_dlp/extractor/thehighwire.py
 yt_dlp/extractor/theholetv.py
 yt_dlp/extractor/theintercept.py
 yt_dlp/extractor/theplatform.py
@@ -891,6 +887,7 @@ yt_dlp/extractor/toggle.py
 yt_dlp/extractor/toggo.py
 yt_dlp/extractor/tonline.py
 yt_dlp/extractor/toongoggles.py
+yt_dlp/extractor/toutiao.py
 yt_dlp/extractor/toutv.py
 yt_dlp/extractor/toypics.py
 yt_dlp/extractor/traileraddict.py
@@ -901,7 +898,6 @@ yt_dlp/extractor/trtworld.py
 yt_dlp/extractor/trueid.py
 yt_dlp/extractor/trunews.py
 yt_dlp/extractor/truth.py
-yt_dlp/extractor/trutv.py
 yt_dlp/extractor/tube8.py
 yt_dlp/extractor/tubetugraz.py
 yt_dlp/extractor/tubitv.py
@@ -921,7 +917,6 @@ yt_dlp/extractor/tvc.py
 yt_dlp/extractor/tver.py
 yt_dlp/extractor/tvigle.py
 yt_dlp/extractor/tviplayer.py
-yt_dlp/extractor/tvland.py
 yt_dlp/extractor/tvn24.py
 yt_dlp/extractor/tvnoe.py
 yt_dlp/extractor/tvopengr.py
@@ -944,6 +939,7 @@ yt_dlp/extractor/uktvplay.py
 yt_dlp/extractor/uliza.py
 yt_dlp/extractor/umg.py
 yt_dlp/extractor/unistra.py
+yt_dlp/extractor/unitednations.py
 yt_dlp/extractor/unity.py
 yt_dlp/extractor/unsupported.py
 yt_dlp/extractor/uol.py
@@ -959,7 +955,6 @@ yt_dlp/extractor/varzesh3.py
 yt_dlp/extractor/vbox7.py
 yt_dlp/extractor/veo.py
 yt_dlp/extractor/vesti.py
-yt_dlp/extractor/vevo.py
 yt_dlp/extractor/vgtv.py
 yt_dlp/extractor/vh1.py
 yt_dlp/extractor/vice.py
@@ -1106,6 +1101,8 @@ yt_dlp/utils/__init__.py
 yt_dlp/utils/_deprecated.py
 yt_dlp/utils/_legacy.py
 yt_dlp/utils/_utils.py
+yt_dlp/utils/jslib/__init__.py
+yt_dlp/utils/jslib/devalue.py
 yt_dlp/utils/networking.py
 yt_dlp/utils/progress.py
 yt_dlp/utils/traversal.py
