@@ -6,10 +6,10 @@ muon setup \
 	-Dprefix=/usr \
 	-Dintel=disabled \
 	-Dnouveau=disabled \
-	-Damdgpu=disabled \
-	-Dradeon=disabled \
+	-Damdgpu=enabled \
+	-Dradeon=enabled \
 	-Dvalgrind=disabled \
-	-Ddefault_library=static \
+	-Ddefault_library=both \
 	-Dman-pages=disabled \
 	build
 
