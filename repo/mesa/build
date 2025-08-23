@@ -28,12 +28,13 @@ meson setup \
 	-Dglx-read-only-text=true \
 	-Dplatforms=x11 \
 	-Dglx=auto \
-	-Dgallium-drivers=swrast \
 	-Degl=enabled \
+	-Dgallium-drivers=radeonsi \
 	-Dvalgrind=false \
 	-Dzstd=disabled \
 	-Dvulkan-drivers='' \
 	-Dglvnd=false \
+	-Dllvm=disabled \
 	build
 
 samu -C build

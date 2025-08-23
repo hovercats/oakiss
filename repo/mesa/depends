@@ -9,8 +9,8 @@ libdrm
 libelf
 libxcb
 libxshmfence
-meson         make
-python        make
-python-mako   make
+meson       make
+python      make
+python-mako make
 xorgproto
 zlib
