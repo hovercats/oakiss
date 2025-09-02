@@ -326,3 +326,6 @@
 [submodule "pkg/luaposix/src"]
 	path = pkg/luaposix/src
 	url = https://github.com/luaposix/luaposix.git
+[submodule "pkg/ii/src"]
+	path = pkg/ii/src
+	url = https://git.suckless.org/ii

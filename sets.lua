@@ -58,6 +58,7 @@ return {
 	},
 	net={
 		'catgirl',
+		'ii',
 		'iproute2',
 		'sdhcp',
 		'transmission',
