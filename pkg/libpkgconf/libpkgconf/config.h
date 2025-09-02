@@ -2,10 +2,12 @@
 #define SYSTEM_INCLUDEDIR "/include:/usr/include"
 #define PKG_DEFAULT_PATH "/usr/lib/pkgconf"
 #define PERSONALITY_PATH "/etc/pkgconf/personality.d"
+#define HAVE_DECL_PLEDGE 0
 #define HAVE_DECL_REALLOCARRAY 1
 #define HAVE_DECL_STRLCAT 1
 #define HAVE_DECL_STRLCPY 1
 #define HAVE_DECL_STRNDUP 1
+#define HAVE_DECL_UNVEIL 0
 #define HAVE_DLFCN_H 1
 #define HAVE_INTTYPES_H 1
 #define HAVE_STDINT_H 1
@@ -20,12 +22,12 @@
 #define PACKAGE "pkgconf"
 #define PACKAGE_BUGREPORT "https://github.com/pkgconf/pkgconf/issues/new"
 #define PACKAGE_NAME "pkgconf"
-#define PACKAGE_STRING "pkgconf 2.3.0"
+#define PACKAGE_STRING "pkgconf 2.5.1"
 #define PACKAGE_TARNAME "pkgconf"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "2.3.0"
+#define PACKAGE_VERSION "2.5.1"
 #define STDC_HEADERS 1
-#define VERSION "2.3.0"
+#define VERSION "2.5.1"
 /* #undef _FILE_OFFSET_BITS */
 /* #undef _LARGE_FILES */
 /* #undef _TIME_BITS */
