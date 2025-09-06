@@ -5,7 +5,6 @@ cflags{
 }
 
 pkg.hdrs = copy('$outdir/include', '$srcdir', {'xxh3.h', 'xxhash.h'})
-pkg.hdrs.install = true
 
 lib('libxxhash.a', {'xxhash.c'})
 
@@ -18,7 +17,6 @@ exe('xxhsum', [[
 	libxxhash.a
 ]])
 
-file('lib/libxxhash.a', '644', '$outdir/libxxhash.a')
 file('bin/xxhsum', '755', '$outdir/xxhsum')
 man{'cli/xxhsum.1'}
 
