@@ -9,11 +9,11 @@ cmake -G Ninja -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DREDIS_STORAGE_BACKEND=OFF \
     -DENABLE_TESTING=OFF \
-    -DZSTD_LIBRARY=/lib//libzstd.a \
-    -DZSTD_INCLUDE_DIR=/include \
+    -DZSTD_LIBRARY=/src/oakiss/out/pkg/zstd/libzstd.a \
+    -DZSTD_INCLUDE_DIR=/src/oakiss/out/pkg/zstd/include \
     -DZSTD_FROM_INTERNET=OFF \
-    -DXXHASH_INCLUDE_DIR=/include \
-    -DXXHASH_LIBRARY=/lib/libxxhash.a \
+    -DXXHASH_INCLUDE_DIR=/src/oakiss/out/pkg/xxhash/include \
+    -DXXHASH_LIBRARY=/src/oakiss/out/pkg/xxhash/libxxhash.a \
     -Wno-dev
 
 samu -C build
