@@ -329,3 +329,6 @@
 [submodule "pkg/ii/src"]
 	path = pkg/ii/src
 	url = https://git.suckless.org/ii
+[submodule "pkg/webdump/src"]
+	path = pkg/webdump/src
+	url = git://git.codemadness.org/webdump
