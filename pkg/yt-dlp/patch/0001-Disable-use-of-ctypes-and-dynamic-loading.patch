@@ -1,4 +1,4 @@
-From a1fe9a7c9b3781d58f9fd3f3fab1a0eb7d35fa43 Mon Sep 17 00:00:00 2001
+From 5cdd15d8925ef634a4d657a5ee3329b698f7a904 Mon Sep 17 00:00:00 2001
 From: Michael Forney <mforney@mforney.org>
 Date: Mon, 4 Jul 2016 16:14:18 -0700
 Subject: [PATCH] Disable use of ctypes and dynamic loading
@@ -9,10 +9,10 @@ Subject: [PATCH] Disable use of ctypes and dynamic loading
  2 files changed, 2 insertions(+), 189 deletions(-)
 
 diff --git a/yt_dlp/cookies.py b/yt_dlp/cookies.py
-index 459a4b7..9ecb0d9 100644
+index 4fdc0b8..72ee703 100644
 --- a/yt_dlp/cookies.py
 +++ b/yt_dlp/cookies.py
-@@ -416,8 +416,6 @@ class ChromeCookieDecryptor:
+@@ -421,8 +421,6 @@ class ChromeCookieDecryptor:
  def get_cookie_decryptor(browser_root, browser_keyring_name, logger, *, keyring=None, meta_version=None):
      if sys.platform == 'darwin':
          return MacChromeCookieDecryptor(browser_keyring_name, logger, meta_version=meta_version)
@@ -21,7 +21,7 @@ index 459a4b7..9ecb0d9 100644
      return LinuxChromeCookieDecryptor(browser_keyring_name, logger, keyring=keyring, meta_version=meta_version)
  
  
-@@ -510,47 +508,6 @@ class MacChromeCookieDecryptor(ChromeCookieDecryptor):
+@@ -515,47 +513,6 @@ class MacChromeCookieDecryptor(ChromeCookieDecryptor):
              # https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/os_crypt/sync/os_crypt_mac.mm
              return encrypted_value
  
@@ -69,7 +69,7 @@ index 459a4b7..9ecb0d9 100644
  def _extract_safari_cookies(profile, logger):
      if sys.platform != 'darwin':
          raise ValueError(f'unsupported platform: {sys.platform}')
-@@ -996,33 +953,6 @@ def _get_mac_keyring_password(browser_keyring_name, logger):
+@@ -1001,33 +958,6 @@ def _get_mac_keyring_password(browser_keyring_name, logger):
          return None
  
  
@@ -103,7 +103,7 @@ index 459a4b7..9ecb0d9 100644
  def pbkdf2_sha1(password, salt, iterations, key_length):
      return hashlib.pbkdf2_hmac('sha1', password, salt, iterations, key_length)
  
-@@ -1055,42 +985,6 @@ def _decrypt_aes_gcm(ciphertext, key, nonce, authentication_tag, logger, hash_pr
+@@ -1060,42 +990,6 @@ def _decrypt_aes_gcm(ciphertext, key, nonce, authentication_tag, logger, hash_pr
          logger.warning('failed to decrypt cookie (AES-GCM) because UTF-8 decoding failed. Possibly the key is wrong?', only_once=True)
          return None
  
@@ -147,10 +147,10 @@ index 459a4b7..9ecb0d9 100644
      return os.environ.get('XDG_CONFIG_HOME', os.path.expanduser('~/.config'))
  
 diff --git a/yt_dlp/utils/_utils.py b/yt_dlp/utils/_utils.py
-index 3adc1d6..b99be84 100644
+index 50652c1..aacf5e7 100644
 --- a/yt_dlp/utils/_utils.py
 +++ b/yt_dlp/utils/_utils.py
-@@ -1510,64 +1510,7 @@ class LockingUnsupportedError(OSError):
+@@ -1512,64 +1512,7 @@ class LockingUnsupportedError(OSError):
          super().__init__(self.msg)
  
  
@@ -216,7 +216,7 @@ index 3adc1d6..b99be84 100644
      try:
          import fcntl
  
-@@ -1921,31 +1864,7 @@ def fix_xml_ampersands(xml_str):
+@@ -1923,31 +1866,7 @@ def fix_xml_ampersands(xml_str):
  
  
  def setproctitle(title):
