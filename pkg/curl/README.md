@@ -10,8 +10,8 @@ Generated with
 		--with-bearssl \
 		--without-libpsl \
 		--enable-docs \
-		CPPFLAGS='-I/src/oasis/out/pkg/bearssl/include -I/src/oasis/out/pkg/zlib/include' \
-		LDFLAGS='-L/src/oasis/out/pkg/bearssl -L/src/oasis/out/pkg/zlib'
+		CPPFLAGS='-I/src/oakiss/out/pkg/bearssl/include -I/src/oakiss/out/pkg/zlib/include' \
+		LDFLAGS='-L/src/oakiss/out/pkg/bearssl -L/src/oakiss/out/pkg/zlib'
 
 There are a number of non-standard definitions, but they don't seem to be
 architecture-specific except for
