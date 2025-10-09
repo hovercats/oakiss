@@ -185,6 +185,15 @@ for _, cmd in ipairs(cmds) do
 	file('share/man/man1/'..cmd..'.1.gz', '644', out)
 end
 
+exe('smake', {
+	'make/defaults.c',
+	'make/main.c',
+	'make/parser.c',
+	'make/posix.c',
+	'make/rules.c',
+})
+file('bin/smake', '755', '$outdir/smake')
+
 sym('bin/[', 'test')
 
 -- TODO: binutils'  config/lib-ld.m4 should use AC_REQUIRE([AC_PROG_EGREP]) and
