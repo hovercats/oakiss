@@ -140,7 +140,7 @@
 #define HAVE_LOCALE_H 1
 #define HAVE_LONGLONG 1
 /* #undef HAVE_MACH_ABSOLUTE_TIME */
-/* #undef HAVE_MEMRCHR */
+#define HAVE_MEMRCHR 1
 #define HAVE_MSG_NOSIGNAL 1
 /* #undef HAVE_MSH3_H */
 #define HAVE_NETDB_H 1

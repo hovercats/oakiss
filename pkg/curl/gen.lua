@@ -1,6 +1,6 @@
 cflags{
 	'-std=c99', '-Wall', '-Wpedantic', '-Wno-maybe-uninitialized',
-	'-D _DEFAULT_SOURCE',
+	'-D _GNU_SOURCE',
 	'-D HAVE_CONFIG_H',
 	'-D BUILDING_LIBCURL',
 	'-D CURL_STATICLIB',
