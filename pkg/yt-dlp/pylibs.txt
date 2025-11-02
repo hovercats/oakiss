@@ -12,7 +12,6 @@ yt_dlp/compat/_legacy.py
 yt_dlp/compat/compat_utils.py
 yt_dlp/compat/imghdr.py
 yt_dlp/compat/shutil.py
-yt_dlp/compat/types.py
 yt_dlp/compat/urllib/__init__.py
 yt_dlp/compat/urllib/request.py
 yt_dlp/cookies.py
@@ -385,6 +384,7 @@ yt_dlp/extractor/hypergryph.py
 yt_dlp/extractor/hytale.py
 yt_dlp/extractor/icareus.py
 yt_dlp/extractor/ichinanalive.py
+yt_dlp/extractor/idagio.py
 yt_dlp/extractor/idolplus.py
 yt_dlp/extractor/ign.py
 yt_dlp/extractor/iheart.py
