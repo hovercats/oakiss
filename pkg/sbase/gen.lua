@@ -190,7 +190,7 @@ end
 yacc('bc', 'bc.y')
 pkg.deps = {'$outdir/bc.tab.c'}
 exe('bc', [[$outdir/(bc.tab.c libutil.a)]])
-file('bin/bc', '755', '$outdir/bc')
+--file('bin/bc', '755', '$outdir/bc')
 
 exe('smake', {
 	'make/defaults.c',

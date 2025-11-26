@@ -22,10 +22,10 @@ exe('bin/dc', [[
 	$outdir/libbc.a
 ]])
 
---file('bin/bc', '755', '$outdir/bin/bc')
+file('bin/bc', '755', '$outdir/bin/bc')
 file('bin/dc', '755', '$outdir/bin/dc')
 
---man{'doc/bc.1'}
+man{'doc/bc.1'}
 man{'doc/dc.1'}
 
 fetch 'curl'
