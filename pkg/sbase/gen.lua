@@ -188,8 +188,6 @@ for _, cmd in ipairs(cmds) do
 end
 
 yacc('bc', 'bc.y')
---build('copy', '$outdir/arg.h', '$srcdir/arg.h')
---build('copy', '$outdir/util.h', '$srcdir/util.h')
 pkg.deps = {'$outdir/bc.tab.c'}
 exe('bc', [[$outdir/(bc.tab.c libutil.a)]])
 file('bin/bc', '755', '$outdir/bc')
