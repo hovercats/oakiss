@@ -4,6 +4,8 @@ cflags{
 	'-D _BSD_SOURCE',
 	'-D _XOPEN_SOURCE=700',
 	'-I $outdir',
+	'-I $srcdir',
+	([['-D PREFIX="%s"']]):format(config.prefix),
 }
 
 lib('libutil.a', [[libutil/(
@@ -184,6 +186,13 @@ for _, cmd in ipairs(cmds) do
 	build('gzip', out, '$srcdir/'..src..'.1')
 	file('share/man/man1/'..cmd..'.1.gz', '644', out)
 end
+
+yacc('bc', 'bc.y')
+--build('copy', '$outdir/arg.h', '$srcdir/arg.h')
+--build('copy', '$outdir/util.h', '$srcdir/util.h')
+pkg.deps = {'$outdir/bc.tab.c'}
+exe('bc', [[$outdir/(bc.tab.c libutil.a)]])
+file('bin/bc', '755', '$outdir/bc')
 
 exe('smake', {
 	'make/defaults.c',
