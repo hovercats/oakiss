@@ -151,10 +151,6 @@
 [submodule "pkg/libinput/src"]
 	path = pkg/libinput/src
 	url = https://github.com/oasislinux/libinput
-[submodule "pkg/mtdev/src"]
-	path = pkg/mtdev/src
-	url = http://bitmath.org/git/mtdev.git
-	ignore = all
 [submodule "pkg/libevdev/src"]
 	path = pkg/libevdev/src
 	url = https://gitlab.freedesktop.org/libevdev/libevdev.git
