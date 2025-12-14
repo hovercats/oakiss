@@ -51,9 +51,11 @@ yt_dlp/extractor/adultswim.py
 yt_dlp/extractor/aenetworks.py
 yt_dlp/extractor/aeonco.py
 yt_dlp/extractor/afreecatv.py
+yt_dlp/extractor/agalega.py
 yt_dlp/extractor/agora.py
 yt_dlp/extractor/airtv.py
 yt_dlp/extractor/aitube.py
+yt_dlp/extractor/alibaba.py
 yt_dlp/extractor/aliexpress.py
 yt_dlp/extractor/aljazeera.py
 yt_dlp/extractor/allocine.py
@@ -121,6 +123,7 @@ yt_dlp/extractor/bild.py
 yt_dlp/extractor/bilibili.py
 yt_dlp/extractor/biobiochiletv.py
 yt_dlp/extractor/bitchute.py
+yt_dlp/extractor/bitmovin.py
 yt_dlp/extractor/blackboardcollaborate.py
 yt_dlp/extractor/bleacherreport.py
 yt_dlp/extractor/blerp.py
@@ -313,6 +316,7 @@ yt_dlp/extractor/freesound.py
 yt_dlp/extractor/freespeech.py
 yt_dlp/extractor/freetv.py
 yt_dlp/extractor/frontendmasters.py
+yt_dlp/extractor/frontro.py
 yt_dlp/extractor/fujitv.py
 yt_dlp/extractor/funk.py
 yt_dlp/extractor/funker530.py
@@ -539,6 +543,7 @@ yt_dlp/extractor/murrtube.py
 yt_dlp/extractor/museai.py
 yt_dlp/extractor/musescore.py
 yt_dlp/extractor/musicdex.py
+yt_dlp/extractor/mux.py
 yt_dlp/extractor/mx3.py
 yt_dlp/extractor/mxplayer.py
 yt_dlp/extractor/myspace.py
@@ -547,6 +552,7 @@ yt_dlp/extractor/myvideoge.py
 yt_dlp/extractor/myvidster.py
 yt_dlp/extractor/mzaalo.py
 yt_dlp/extractor/n1.py
+yt_dlp/extractor/nascar.py
 yt_dlp/extractor/nate.py
 yt_dlp/extractor/nationalgeographic.py
 yt_dlp/extractor/naver.py
@@ -558,6 +564,7 @@ yt_dlp/extractor/nebula.py
 yt_dlp/extractor/nekohacker.py
 yt_dlp/extractor/nerdcubed.py
 yt_dlp/extractor/nest.py
+yt_dlp/extractor/netapp.py
 yt_dlp/extractor/neteasemusic.py
 yt_dlp/extractor/netverse.py
 yt_dlp/extractor/netzkino.py
@@ -588,6 +595,7 @@ yt_dlp/extractor/noodlemagazine.py
 yt_dlp/extractor/nosnl.py
 yt_dlp/extractor/nova.py
 yt_dlp/extractor/novaplay.py
+yt_dlp/extractor/nowcanal.py
 yt_dlp/extractor/nowness.py
 yt_dlp/extractor/noz.py
 yt_dlp/extractor/npo.py
@@ -1025,6 +1033,7 @@ yt_dlp/extractor/yandexmusic.py
 yt_dlp/extractor/yandexvideo.py
 yt_dlp/extractor/yapfiles.py
 yt_dlp/extractor/yappy.py
+yt_dlp/extractor/yfanefa.py
 yt_dlp/extractor/yle_areena.py
 yt_dlp/extractor/youjizz.py
 yt_dlp/extractor/youku.py
@@ -1039,6 +1048,18 @@ yt_dlp/extractor/youtube/_redirect.py
 yt_dlp/extractor/youtube/_search.py
 yt_dlp/extractor/youtube/_tab.py
 yt_dlp/extractor/youtube/_video.py
+yt_dlp/extractor/youtube/jsc/__init__.py
+yt_dlp/extractor/youtube/jsc/_builtin/__init__.py
+yt_dlp/extractor/youtube/jsc/_builtin/bun.py
+yt_dlp/extractor/youtube/jsc/_builtin/deno.py
+yt_dlp/extractor/youtube/jsc/_builtin/ejs.py
+yt_dlp/extractor/youtube/jsc/_builtin/node.py
+yt_dlp/extractor/youtube/jsc/_builtin/quickjs.py
+yt_dlp/extractor/youtube/jsc/_builtin/vendor/__init__.py
+yt_dlp/extractor/youtube/jsc/_builtin/vendor/_info.py
+yt_dlp/extractor/youtube/jsc/_director.py
+yt_dlp/extractor/youtube/jsc/_registry.py
+yt_dlp/extractor/youtube/jsc/provider.py
 yt_dlp/extractor/youtube/pot/__init__.py
 yt_dlp/extractor/youtube/pot/_builtin/__init__.py
 yt_dlp/extractor/youtube/pot/_builtin/memory_cache.py
@@ -1090,6 +1111,7 @@ yt_dlp/socks.py
 yt_dlp/update.py
 yt_dlp/utils/__init__.py
 yt_dlp/utils/_deprecated.py
+yt_dlp/utils/_jsruntime.py
 yt_dlp/utils/_legacy.py
 yt_dlp/utils/_utils.py
 yt_dlp/utils/jslib/__init__.py
