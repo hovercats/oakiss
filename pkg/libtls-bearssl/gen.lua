@@ -23,6 +23,7 @@ lib('libtls.a', {
 	'tls_util.c',
 	'tls_verify.c',
 	'bearssl.c',
+	'compat/freezero.c',
 	'$builddir/pkg/bearssl/libbearssl.a',
 	'$builddir/pkg/openbsd/libbsd.a',
 })
