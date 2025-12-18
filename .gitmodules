@@ -331,3 +331,6 @@
 [submodule "pkg/sacc/src"]
 	path = pkg/sacc/src
 	url = git://bitreich.org/sacc/
+[submodule "pkg/iomenu/src"]
+	path = pkg/iomenu/src
+	url = git://bitreich.org/iomenu
