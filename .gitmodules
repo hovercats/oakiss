@@ -328,3 +328,6 @@
 [submodule "pkg/webdump/src"]
 	path = pkg/webdump/src
 	url = git://git.codemadness.org/webdump
+[submodule "pkg/sacc/src"]
+	path = pkg/sacc/src
+	url = git://bitreich.org/sacc/
