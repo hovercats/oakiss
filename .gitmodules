@@ -334,3 +334,7 @@
 [submodule "pkg/iomenu/src"]
 	path = pkg/iomenu/src
 	url = git://bitreich.org/iomenu
+[submodule "pkg/hevel/src"]
+	path = pkg/hevel/src
+	url = https://git.sr.ht/~dlm/hevel
+	ignore = all

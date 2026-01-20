@@ -1,0 +1,18 @@
+From 7656f4df62a5763fb098d508977312889b052ea0 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Wed, 21 Jan 2026 04:39:25 +0100
+Subject: [PATCH] rename config.h to config.def.h to avoid conflicts with user
+ configs
+
+---
+ config.h => config.def.h | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename config.h => config.def.h (100%)
+
+diff --git a/config.h b/config.def.h
+similarity index 100%
+rename from config.h
+rename to config.def.h
+-- 
+2.49.0
+
