@@ -11,6 +11,7 @@ muon setup \
 	-Dvalgrind=disabled \
 	-Ddefault_library=both \
 	-Dman-pages=disabled \
+	-Dpkg_config_path=/usr/lib/pkgconfig \
 	build
 
 samu -C build
