@@ -88,6 +88,7 @@ local cmds = {
 	'cp',
 	'cron',
 	'cut',
+	'dc',
 	'date',
 	'dd',
 	'dirname',
