@@ -338,3 +338,7 @@
 	path = pkg/hevel/src
 	url = https://git.sr.ht/~dlm/hevel
 	ignore = all
+[submodule "pkg/sndio/src"]
+	path = pkg/sndio/src
+	url = https://caoua.org/git/sndio
+	ignore =  all
