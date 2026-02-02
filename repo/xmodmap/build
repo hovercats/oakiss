@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+./configure \
+    --prefix=/usr \
+    LDFLAGS="$LDFLAGS -static -L/usr/lib" \
+	LIBS="-lX11 -lpthread -lxcb -lXau"
+
+make
+make DESTDIR="$1" install
+
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
