@@ -1,0 +1,34 @@
+From a7a76e7a10adb4211798dfd135af785f50f276c0 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Mon, 2 Feb 2026 11:55:56 +0100
+Subject: [PATCH] dbe.c: fix number of arguments
+
+---
+ dbe/dbe.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/dbe/dbe.c b/dbe/dbe.c
+index 2e945be..c51efe6 100644
+--- a/dbe/dbe.c
++++ b/dbe/dbe.c
+@@ -52,7 +52,7 @@
+ /* GLOBALS */
+ 
+ /* Per-screen initialization functions [init'ed by DbeRegisterFunction()] */
+-static Bool (*DbeInitFunct[MAXSCREENS]) ();     /* pScreen, pDbeScreenPriv */
++static Bool (*DbeInitFunct[MAXSCREENS]) (ScreenPtr pScreen, DbeScreenPrivPtr pDbeScreenPriv);
+ 
+ /* These are static globals copied to DBE's screen private for use by DDX */
+ static int dbeScreenPrivIndex;
+@@ -116,7 +116,7 @@ DbeValidateBuffer(WindowPtr pWin, XID drawID, Bool dstbuf)
+  *****************************************************************************/
+ 
+ void
+-DbeRegisterFunction(ScreenPtr pScreen, Bool (*funct) ( /* ??? */ ))
++DbeRegisterFunction(ScreenPtr pScreen, void *funct)
+ {
+     int i;
+ 
+-- 
+2.49.0
+

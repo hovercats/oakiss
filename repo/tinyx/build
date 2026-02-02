@@ -4,7 +4,9 @@ export LDFLAGS="$LDFLAGS -static-pie"
 export XSERVERCFLAGS_CFLAGS="-fPIE"
 export XSERVERLIBS_LIBS="/usr/lib/*.a -lz -lfreetype -lpng16"
 
-patch -p1 < 0001-Xext-INITARGS-does-not-specify-a-type.-change-to-int.patch
+for p in *.patch; do
+	patch -p1 < "$p"
+done
 
 ./configure \
   --prefix=/usr \
