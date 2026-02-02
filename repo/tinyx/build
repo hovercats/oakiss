@@ -2,7 +2,7 @@
 
 export LDFLAGS="$LDFLAGS -static-pie"
 export XSERVERCFLAGS_CFLAGS="-fPIE"
-export XSERVERLIBS_LIBS="/usr/lib/*.a -lz -lfreetype -lpng16"
+export XSERVERLIBS_LIBS="-lXdmcp -lXfont -lfreetype -lm -lharfbuzz -pthread -lXtst -lXi -lXext -lXfixes -lX11 -lpthread -lxcb -lXau -lfontenc -lpng16 -lz"
 
 for p in *.patch; do
 	patch -p1 < "$p"
