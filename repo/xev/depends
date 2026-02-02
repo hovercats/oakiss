@@ -1,0 +1,8 @@
+libX11           make
+libXau           make
+libXext          make
+libXrandr        make
+libXrender       make
+libxcb           make
+xorg-util-macros make
+xorgproto        make
