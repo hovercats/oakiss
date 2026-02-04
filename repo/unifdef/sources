@@ -1,1 +1,2 @@
 https://dotat.at/prog/unifdef/unifdef-2.12.tar.xz
+patches/0001-Don-t-use-C23-constexpr-keyword.patch
