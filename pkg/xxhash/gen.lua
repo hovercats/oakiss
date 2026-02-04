@@ -4,8 +4,6 @@ cflags{
 	'-Wall',
 }
 
-pkg.hdrs = copy('$outdir/include', '$srcdir', {'xxh3.h', 'xxhash.h'})
-
 lib('libxxhash.a', {'xxhash.c'})
 
 exe('xxhsum', [[
