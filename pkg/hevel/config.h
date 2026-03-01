@@ -1,12 +1,12 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 static const uint32_t background_color = 0xff777777;
-static const uint32_t outer_border_color_inactive = 0xffffffea;
-static const uint32_t inner_border_color_inactive = 0xffddbd8c;
-static const uint32_t outer_border_color_active = 0xffffffea;
-static const uint32_t inner_border_color_active = 0xffc99043;
-static const uint32_t outer_border_width = 4;
-static const uint32_t inner_border_width = 4;
+static const uint32_t outer_border_color_inactive = 0xffddbd8c;
+static const uint32_t inner_border_color_inactive = 0xffffffea;
+static const uint32_t outer_border_color_active = 0xffc99043;
+static const uint32_t inner_border_color_active = 0xffffffea;
+static const uint32_t outer_border_width = 3;
+static const uint32_t inner_border_width = 3;
 static const uint32_t select_box_color = 0xffffffff;
 static const uint32_t select_box_border = 2;
 static const char *const cursor_theme = "nein";
