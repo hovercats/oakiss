@@ -345,3 +345,18 @@
 	path = pkg/sndio/src
 	url = https://caoua.org/git/sndio
 	ignore =  all
+[submodule "pkg/swall/src"]
+	path = pkg/swall/src
+	url = https://git.sr.ht/~uint/swall
+[submodule "pkg/tohu/src"]
+	path = pkg/tohu/src
+	url = https://git.sr.ht/~shrub900/tohu
+	ignore = all
+[submodule "pkg/swiv/src"]
+	path = pkg/swiv/src
+	url = https://git.sr.ht/~shrub900/swiv
+	ignore = all
+[submodule "pkg/wsxwm/src"]
+	path = pkg/wsxwm/src
+	url = https://github.com/uint23/wsxwm
+	ignore = all
