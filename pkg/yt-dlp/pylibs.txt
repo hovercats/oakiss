@@ -872,6 +872,7 @@ yt_dlp/extractor/tenplay.py
 yt_dlp/extractor/testurl.py
 yt_dlp/extractor/tf1.py
 yt_dlp/extractor/tfo.py
+yt_dlp/extractor/thechosen.py
 yt_dlp/extractor/theguardian.py
 yt_dlp/extractor/thehighwire.py
 yt_dlp/extractor/theholetv.py
