@@ -1,0 +1,25 @@
+From 95a9288116f3ae1ee02e646eb67e8b798c819227 Mon Sep 17 00:00:00 2001
+From: uint <abhinav.prsai@gmail.com>
+Date: Sat, 21 Feb 2026 03:12:57 +0000
+Subject: [PATCH] stop setting default background color
+
+---
+ source/tohu.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/source/tohu.c b/source/tohu.c
+index 179c6be..60f45c2 100644
+--- a/source/tohu.c
++++ b/source/tohu.c
+@@ -153,8 +153,6 @@ static void setup(void)
+ 	if (!swc_initialize(wm.dpy, wm.ev_loop, &manager))
+ 		die(EXIT_FAILURE, "swc_initialize failed\n");
+ 
+-	/* TODO: temp wallpaper and quit binding */
+-	swc_wallpaper_color_set(0xff1e1f21);
+ 	setup_binds();
+ 
+ 	/* display socket */
+-- 
+2.49.0
+

@@ -1,0 +1,25 @@
+From c676ff3798d491ee2eeaa0d955acc47e4ab557e3 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Mon, 9 Mar 2026 12:55:12 +0100
+Subject: [PATCH] use anglebrackets for config.h so we can override it
+
+---
+ source/tohu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/source/tohu.c b/source/tohu.c
+index 602dfad..9dbe146 100644
+--- a/source/tohu.c
++++ b/source/tohu.c
+@@ -8,7 +8,7 @@
+ #include <wayland-util.h>
+ #include <xkbcommon/xkbcommon-keysyms.h>
+ 
+-#include "config.h"
++#include <config.h>
+ #include "types.h"
+ #include "util.h"
+ #include "tohu.h"
+-- 
+2.49.0
+
