@@ -180,6 +180,7 @@
 [submodule "pkg/velox/src"]
 	path = pkg/velox/src
 	url = https://github.com/michaelforney/velox
+	ignore = all
 [submodule "pkg/swc/src"]
 	path = pkg/swc/src
 	url = https://github.com/michaelforney/swc

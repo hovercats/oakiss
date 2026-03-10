@@ -1,0 +1,30 @@
+From baefcef5956c768a3a17ccdd24e56aa1833f9749 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Tue, 10 Mar 2026 07:43:06 +0100
+Subject: [PATCH] window: fix incompatiblity with neuswc's double borders
+ implementation
+
+---
+ window.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/window.c b/window.c
+index c176aae..ec1e23b 100644
+--- a/window.c
++++ b/window.c
+@@ -237,10 +237,10 @@ window_focus(struct window *window)
+ 	static struct window *focused_window;
+ 
+ 	if (focused_window)
+-		swc_window_set_border(focused_window->swc, border_color_inactive, border_width);
++		swc_window_set_border(focused_window->swc, border_color_inactive, border_width, 0, 0);
+ 
+ 	if (window) {
+-		swc_window_set_border(window->swc, border_color_active, border_width);
++		swc_window_set_border(window->swc, border_color_active, border_width, 0, 0);
+ 		swc_window_focus(window->swc);
+ 	} else {
+ 		swc_window_focus(NULL);
+-- 
+2.49.0
+
