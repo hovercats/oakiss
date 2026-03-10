@@ -183,6 +183,7 @@
 [submodule "pkg/swc/src"]
 	path = pkg/swc/src
 	url = https://github.com/michaelforney/swc
+	ignore = all
 [submodule "pkg/utf8proc/src"]
 	path = pkg/utf8proc/src
 	url = https://github.com/JuliaLang/utf8proc

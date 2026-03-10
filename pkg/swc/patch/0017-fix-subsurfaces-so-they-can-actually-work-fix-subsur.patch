@@ -1,0 +1,850 @@
+From 13a2200f15510e837ce2631592856f4f0a0ede2b Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Tue, 10 Feb 2026 21:34:58 +0000
+Subject: [PATCH] fix subsurfaces, so they can actually work fix subsurface
+ buffer rendering and do damage calculations properly, calculate pointer
+ position and translate it properly, and do better subusrfcae comittis and
+ restacking.
+
+---
+ libswc/compositor.c    | 148 ++++++++++++++++---------
+ libswc/compositor.h    |   1 +
+ libswc/pointer.c       |  15 ++-
+ libswc/subcompositor.c |  25 ++++-
+ libswc/subsurface.c    | 243 +++++++++++++++++++++++++++++++++++++----
+ libswc/subsurface.h    |   9 ++
+ libswc/surface.c       |  17 ++-
+ libswc/surface.h       |   5 +
+ 8 files changed, 383 insertions(+), 80 deletions(-)
+
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index d2321b9..4875af8 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -41,6 +41,7 @@
+ #include "seat.h"
+ #include "shm.h"
+ #include "surface.h"
++#include "subsurface.h"
+ #include "util.h"
+ #include "view.h"
+ #include "window.h"
+@@ -217,38 +218,50 @@ error0:
+ static void
+ repaint_view(struct target *target, struct compositor_view *view, pixman_region32_t *damage)
+ {
+-	pixman_region32_t view_region, view_damage, border_damage;
++	pixman_region32_t geom_region, buffer_region, border_region, view_damage, buffer_damage, border_damage;
+ 	const struct swc_rectangle *geom = &view->base.geometry, *target_geom = &target->view->geometry;
+-	bool has_parent = view->parent && view->parent != view;
+-	pixman_region32_t parent_region;
++	int32_t buf_x, buf_y;
++	uint32_t buf_w, buf_h;
++	int64_t total_border;
+ 
+ 	if (!view->base.buffer)
+ 		return;
+ 
+-	pixman_region32_init_rect(&view_region, geom->x, geom->y, geom->width, geom->height);
+-	if (has_parent) {
+-		const struct swc_rectangle *parent_geom = &view->parent->base.geometry;
+-		pixman_region32_init_rect(&parent_region, parent_geom->x, parent_geom->y,
+-					  parent_geom->width, parent_geom->height);
++	buf_w = view->base.buffer->width;
++	buf_h = view->base.buffer->height;
++	buf_x = geom->x - view->buffer_offset_x;
++	buf_y = geom->y - view->buffer_offset_y;
++
++	total_border = (int64_t)view->border.outwidth + (int64_t)view->border.inwidth;
++	pixman_region32_init_rect(&geom_region, geom->x, geom->y, geom->width, geom->height);
++	if (view->window) {
++		pixman_region32_init_rect(&buffer_region, geom->x, geom->y, geom->width, geom->height);
++	} else {
++		pixman_region32_init_rect(&buffer_region, buf_x, buf_y, buf_w, buf_h);
+ 	}
++	pixman_region32_init_rect(&border_region,
++		geom->x - (int32_t)total_border,
++		geom->y - (int32_t)total_border,
++		geom->width + (uint32_t)(2 * total_border),
++		geom->height + (uint32_t)(2 * total_border));
++	pixman_region32_subtract(&border_region, &border_region, &geom_region);
+ 	pixman_region32_init_with_extents(&view_damage, &view->extents);
++	pixman_region32_init(&buffer_damage);
+ 	pixman_region32_init(&border_damage);
+ 
+ 	pixman_region32_intersect(&view_damage, &view_damage, damage);
+ 	pixman_region32_subtract(&view_damage, &view_damage, &view->clip);
+-	pixman_region32_subtract(&border_damage, &view_damage, &view_region);
+-	pixman_region32_intersect(&view_damage, &view_damage, &view_region);
+-	if (has_parent) {
+-		pixman_region32_intersect(&view_damage, &view_damage, &parent_region);
+-		pixman_region32_intersect(&border_damage, &border_damage, &parent_region);
+-	}
++	pixman_region32_intersect(&border_damage, &view_damage, &border_region);
++	pixman_region32_intersect(&buffer_damage, &view_damage, &buffer_region);
+ 
+-	if (pixman_region32_not_empty(&view_damage)) {
+-		pixman_region32_translate(&view_damage, -geom->x + view->buffer_offset_x, -geom->y + view->buffer_offset_y);
+-		wld_copy_region(swc.drm->renderer, view->buffer, geom->x - target_geom->x, geom->y - target_geom->y, &view_damage);
++	if (pixman_region32_not_empty(&buffer_damage)) {
++		pixman_region32_translate(&buffer_damage, -geom->x + view->buffer_offset_x, -geom->y + view->buffer_offset_y);
++		wld_copy_region(swc.drm->renderer, view->buffer,
++			buf_x - target_geom->x, buf_y - target_geom->y, &buffer_damage);
+ 	}
+ 
+ 	pixman_region32_fini(&view_damage);
++	pixman_region32_fini(&buffer_damage);
+ 
+ 	pixman_region32_t in_rect;
+ 	pixman_region32_init_rect(&in_rect, 
+@@ -263,10 +276,12 @@ repaint_view(struct target *target, struct compositor_view *view, pixman_region3
+ 
+ 	pixman_region32_t in_border;
+ 	pixman_region32_init(&in_border);
+-	pixman_region32_subtract(&in_border, &in_rect, &view_region);
++	pixman_region32_subtract(&in_border, &in_rect, &geom_region);
+ 	pixman_region32_intersect(&in_border, &in_border, &border_damage);
+ 		
+-	pixman_region32_fini(&view_region);
++	pixman_region32_fini(&geom_region);
++	pixman_region32_fini(&buffer_region);
++	pixman_region32_fini(&border_region);
+ 
+ 	/* Draw border */
+ 	if (view->border.outwidth > 0 && pixman_region32_not_empty(&out_border)) {
+@@ -283,8 +298,6 @@ repaint_view(struct target *target, struct compositor_view *view, pixman_region3
+ 	pixman_region32_fini(&in_rect);
+ 	pixman_region32_fini(&out_border);
+ 	pixman_region32_fini(&in_border);
+-	if (has_parent)
+-		pixman_region32_fini(&parent_region);
+ 
+ }
+ 
+@@ -409,8 +422,7 @@ renderer_flush_view(struct compositor_view *view)
+ /* Surface Views {{{ */
+ 
+ /**
+- * Adds the region below a view to the compositor's damaged region,
+- * taking into account its clip region.
++ * Adds the region below a view to the compositor's damaged region.
+  */
+ static void
+ damage_below_view(struct compositor_view *view)
+@@ -418,7 +430,6 @@ damage_below_view(struct compositor_view *view)
+ 	pixman_region32_t damage_below;
+ 
+ 	pixman_region32_init_with_extents(&damage_below, &view->extents);
+-	pixman_region32_subtract(&damage_below, &damage_below, &view->clip);
+ 	pixman_region32_union(&compositor.damage, &compositor.damage, &damage_below);
+ 	pixman_region32_fini(&damage_below);
+ }
+@@ -438,15 +449,25 @@ static void
+ update_extents(struct compositor_view *view)
+ {
+ 	int64_t total_border = (int64_t)view->border.outwidth + (int64_t)view->border.inwidth;
+-	int64_t x = view->base.geometry.x;
+-	int64_t y = view->base.geometry.y;
+-	int64_t w = view->base.geometry.width;
+-	int64_t h = view->base.geometry.height;
+-
+-	view->extents.x1 = clamp_i32(x - total_border);
+-	view->extents.y1 = clamp_i32(y - total_border);
+-	view->extents.x2 = clamp_i32(x + w + total_border);
+-	view->extents.y2 = clamp_i32(y + h + total_border);
++	int64_t geom_x = view->base.geometry.x;
++	int64_t geom_y = view->base.geometry.y;
++	int64_t geom_w = view->base.geometry.width;
++	int64_t geom_h = view->base.geometry.height;
++
++	int64_t border_x1 = geom_x - total_border;
++	int64_t border_y1 = geom_y - total_border;
++	int64_t border_x2 = geom_x + geom_w + total_border;
++	int64_t border_y2 = geom_y + geom_h + total_border;
++
++	int64_t buffer_x1 = geom_x - view->buffer_offset_x;
++	int64_t buffer_y1 = geom_y - view->buffer_offset_y;
++	int64_t buffer_x2 = buffer_x1 + (view->base.buffer ? view->base.buffer->width : (uint32_t)geom_w);
++	int64_t buffer_y2 = buffer_y1 + (view->base.buffer ? view->base.buffer->height : (uint32_t)geom_h);
++
++	view->extents.x1 = clamp_i32(MIN(border_x1, buffer_x1));
++	view->extents.y1 = clamp_i32(MIN(border_y1, buffer_y1));
++	view->extents.x2 = clamp_i32(MAX(border_x2, buffer_x2));
++	view->extents.y2 = clamp_i32(MAX(border_y2, buffer_y2));
+ 
+ 	if (view->extents.x2 < view->extents.x1)
+ 		view->extents.x2 = view->extents.x1;
+@@ -775,15 +796,13 @@ attach(struct view *base, struct wld_buffer *buffer)
+ 		update_extents(view);
+ 
+ 		if (view->visible) {
+-			/* Damage the region that was newly uncovered
+-			 * or covered, minus the clip region. */
++			/* Damage the region that was newly uncovered or covered. */
+ 			pixman_region32_init_with_extents(&old, &old_extents);
+ 			pixman_region32_init_with_extents(&new, &view->extents);
+ 			pixman_region32_init(&both);
+ 			pixman_region32_intersect(&both, &old, &new);
+ 			pixman_region32_union(&new, &old, &new);
+ 			pixman_region32_subtract(&new, &new, &both);
+-			pixman_region32_subtract(&new, &new, &view->clip);
+ 			pixman_region32_union(&compositor.damage, &compositor.damage, &new);
+ 			pixman_region32_fini(&old);
+ 			pixman_region32_fini(&new);
+@@ -835,14 +854,26 @@ view_at(int32_t x, int32_t y)
+ {
+ 	struct compositor_view *view;
+ 	struct swc_rectangle *geom;
++	struct swc_rectangle buffer_geom;
+ 
+ 	wl_list_for_each (view, &compositor.views, link) {
+ 		if (!view->visible)
+ 			continue;
+ 
+ 		geom = &view->base.geometry;
+-		if (!rectangle_contains_point(geom, x, y))
++		if (view->window) {
++			if (!rectangle_contains_point(geom, x, y))
++				continue;
++		} else if (view->base.buffer) {
++			buffer_geom.x = geom->x - view->buffer_offset_x;
++			buffer_geom.y = geom->y - view->buffer_offset_y;
++			buffer_geom.width = view->base.buffer->width;
++			buffer_geom.height = view->base.buffer->height;
++			if (!rectangle_contains_point(&buffer_geom, x, y))
++				continue;
++		} else if (!rectangle_contains_point(geom, x, y)) {
+ 			continue;
++		}
+ 
+ 		if (pixman_region32_contains_point(&view->surface->state.input,
+ 		                                   x - geom->x + view->buffer_offset_x,
+@@ -1070,14 +1101,42 @@ compositor_view_set_parent(struct compositor_view *view, struct compositor_view
+ 		compositor_view_hide(view);
+ }
+ 
++void
++compositor_view_restack(struct compositor_view *view, struct compositor_view *sibling, bool above)
++{
++	if (!view || !sibling || view == sibling)
++		return;
++
++	if (above) {
++		if (view->link.next == &sibling->link)
++			return;
++		wl_list_remove(&view->link);
++		wl_list_insert(sibling->link.prev, &view->link);
++	} else {
++		if (view->link.prev == &sibling->link)
++			return;
++		wl_list_remove(&view->link);
++		wl_list_insert(&sibling->link, &view->link);
++	}
++
++	damage_views(view, sibling);
++}
++
+ void
+ compositor_view_show(struct compositor_view *view)
+ {
+ 	struct compositor_view *other;
++	struct subsurface *subsurface;
+ 
+ 	if (view->visible)
+ 		return;
+ 
++	subsurface = view->surface ? view->surface->subsurface : NULL;
++	if (subsurface) {
++		if (!subsurface->added || !view->surface->state.buffer)
++			return;
++	}
++
+ 	view->visible = true;
+ 	view_update_screens(&view->base);
+ 
+@@ -1167,16 +1226,9 @@ calculate_damage(void)
+ 			continue;
+ 
+ 		geom = &view->base.geometry;
+-		bool has_parent = view->parent && view->parent != view;
+ 		pixman_region32_t view_region;
+-		pixman_region32_t parent_region;
+ 
+ 		pixman_region32_init_rect(&view_region, geom->x, geom->y, geom->width, geom->height);
+-		if (has_parent) {
+-			const struct swc_rectangle *parent_geom = &view->parent->base.geometry;
+-			pixman_region32_init_rect(&parent_region, parent_geom->x, parent_geom->y,
+-			                          parent_geom->width, parent_geom->height);
+-		}
+ 
+ 		/* Clip the surface by the opaque region covering it. */
+ 		pixman_region32_copy(&view->clip, &compositor.opaque);
+@@ -1187,8 +1239,6 @@ calculate_damage(void)
+ 		                          geom->x - view->buffer_offset_x,
+ 		                          geom->y - view->buffer_offset_y);
+ 		pixman_region32_intersect(&surface_opaque, &surface_opaque, &view_region);
+-		if (has_parent)
+-			pixman_region32_intersect(&surface_opaque, &surface_opaque, &parent_region);
+ 
+ 		/* Add the surface's opaque region to the accumulated opaque region. */
+ 		pixman_region32_union(&compositor.opaque, &compositor.opaque, &surface_opaque);
+@@ -1202,8 +1252,6 @@ calculate_damage(void)
+ 			pixman_region32_translate(surface_damage,
+ 			                          geom->x - view->buffer_offset_x,
+ 			                          geom->y - view->buffer_offset_y);
+-			if (has_parent)
+-				pixman_region32_intersect(surface_damage, surface_damage, &parent_region);
+ 
+ 			/* Add the surface damage to the compositor damage. */
+ 			pixman_region32_union(&compositor.damage, &compositor.damage, surface_damage);
+@@ -1226,9 +1274,7 @@ calculate_damage(void)
+ 				view->border.damaged_border2 = false;
+ 			}
+ 
+-		pixman_region32_fini(&view_region);
+-		if (has_parent)
+-			pixman_region32_fini(&parent_region);
++			pixman_region32_fini(&view_region);
+ 	}
+ 
+ 	pixman_region32_fini(&surface_opaque);
+diff --git a/libswc/compositor.h b/libswc/compositor.h
+index e079d92..529c360 100644
+--- a/libswc/compositor.h
++++ b/libswc/compositor.h
+@@ -92,6 +92,7 @@ void compositor_view_destroy(struct compositor_view *view);
+ struct compositor_view *compositor_view(struct view *view);
+ 
+ void compositor_view_set_parent(struct compositor_view *view, struct compositor_view *parent);
++void compositor_view_restack(struct compositor_view *view, struct compositor_view *sibling, bool above);
+ 
+ void compositor_view_show(struct compositor_view *view);
+ void compositor_view_hide(struct compositor_view *view);
+diff --git a/libswc/pointer.c b/libswc/pointer.c
+index cff6bb6..8b8896f 100644
+--- a/libswc/pointer.c
++++ b/libswc/pointer.c
+@@ -112,14 +112,18 @@ enter(struct input_focus_handler *handler, struct wl_list *resources, struct com
+ 	struct wl_resource *resource;
+ 	uint32_t serial;
+ 	wl_fixed_t surface_x, surface_y;
++	int32_t origin_x, origin_y;
+ 
+ 	if (wl_list_empty(resources)) {
+ 		pointer_set_cursor(pointer, cursor_left_ptr);
+ 		return;
+ 	}
+ 	serial = wl_display_next_serial(swc.display);
+-	surface_x = pointer->x - wl_fixed_from_int(view->base.geometry.x);
+-	surface_y = pointer->y - wl_fixed_from_int(view->base.geometry.y);
++	/* do based on buffer origin, holy fuck */
++	origin_x = view->base.geometry.x - view->buffer_offset_x;
++	origin_y = view->base.geometry.y - view->buffer_offset_y;
++	surface_x = pointer->x - wl_fixed_from_int(origin_x);
++	surface_y = pointer->y - wl_fixed_from_int(origin_y);
+ 	wl_resource_for_each (resource, resources)
+ 		wl_pointer_send_enter(resource, serial, view->surface->resource, surface_x, surface_y);
+ }
+@@ -349,12 +353,15 @@ client_handle_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t
+ 	struct pointer *pointer = wl_container_of(handler, pointer, client_handler);
+ 	struct wl_resource *resource;
+ 	wl_fixed_t sx, sy;
++	int32_t origin_x, origin_y;
+ 
+ 	if (wl_list_empty(&pointer->focus.active))
+ 		return false;
+ 
+-	sx = x - wl_fixed_from_int(pointer->focus.view->base.geometry.x);
+-	sy = y - wl_fixed_from_int(pointer->focus.view->base.geometry.y);
++	origin_x = pointer->focus.view->base.geometry.x - pointer->focus.view->buffer_offset_x;
++	origin_y = pointer->focus.view->base.geometry.y - pointer->focus.view->buffer_offset_y;
++	sx = x - wl_fixed_from_int(origin_x);
++	sy = y - wl_fixed_from_int(origin_y);
+ 	wl_resource_for_each (resource, &pointer->focus.active)
+ 		wl_pointer_send_motion(resource, time, sx, sy);
+ 	return true;
+diff --git a/libswc/subcompositor.c b/libswc/subcompositor.c
+index 1211f83..2dad2bc 100644
+--- a/libswc/subcompositor.c
++++ b/libswc/subcompositor.c
+@@ -28,6 +28,18 @@
+ #include "surface.h"
+ #include "util.h"
+ 
++static bool
++is_descendant_of(struct surface *ancestor, struct surface *surface)
++{
++	while (surface && surface->subsurface) {
++		surface = surface->subsurface->parent;
++		if (surface == ancestor)
++			return true;
++	}
++
++	return false;
++}
++
+ static void
+ get_subsurface(struct wl_client *client, struct wl_resource *resource,
+                uint32_t id, struct wl_resource *surface_resource, struct wl_resource *parent_resource)
+@@ -36,11 +48,20 @@ get_subsurface(struct wl_client *client, struct wl_resource *resource,
+ 	struct surface *surface = wl_resource_get_user_data(surface_resource);
+ 	struct surface *parent = wl_resource_get_user_data(parent_resource);
+ 
+-	if (!surface || !parent || surface == parent)
++	if (!surface || !parent) {
++		wl_resource_post_error(resource, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "invalid surface");
+ 		return;
++	}
+ 
+-	if (surface->subsurface)
++	if (surface == parent || is_descendant_of(surface, parent)) {
++		wl_resource_post_error(resource, WL_SUBCOMPOSITOR_ERROR_BAD_PARENT, "invalid parent surface");
+ 		return;
++	}
++
++	if (surface->subsurface) {
++		wl_resource_post_error(resource, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "surface already has a subsurface role");
++		return;
++	}
+ 
+ 	subsurface = subsurface_new(client, wl_resource_get_version(resource), id, surface, parent);
+ 
+diff --git a/libswc/subsurface.c b/libswc/subsurface.c
+index e9b7d7c..f8aa66c 100644
+--- a/libswc/subsurface.c
++++ b/libswc/subsurface.c
+@@ -30,6 +30,20 @@
+ #include <stdlib.h>
+ #include <wayland-server.h>
+ 
++bool
++subsurface_is_synchronized(const struct subsurface *subsurface)
++{
++	while (subsurface) {
++		if (subsurface->sync)
++			return true;
++		if (!subsurface->parent)
++			return false;
++		subsurface = subsurface->parent->subsurface;
++	}
++
++	return false;
++}
++
+ static void
+ subsurface_update_position(struct subsurface *subsurface)
+ {
+@@ -50,16 +64,99 @@ subsurface_update_position(struct subsurface *subsurface)
+ }
+ 
+ static void
+-handle_parent_view_move(struct view_handler *handler)
++list_remove_if_linked(struct wl_list *link)
++{
++	if (!wl_list_empty(link)) {
++		wl_list_remove(link);
++		wl_list_init(link);
++	}
++}
++
++void
++subsurface_update_visibility(struct subsurface *subsurface)
++{
++	struct compositor_view *view;
++	struct compositor_view *parent_view;
++
++	if (!subsurface || !subsurface->surface || !subsurface->parent)
++		return;
++
++	view = compositor_view(subsurface->surface->view);
++	parent_view = compositor_view(subsurface->parent->view);
++	if (!view || !parent_view)
++		return;
++
++	if (subsurface->added && parent_view->visible && subsurface->surface->state.buffer)
++		compositor_view_show(view);
++	else
++		compositor_view_hide(view);
++}
++
++static void
++handle_parent_view_change(struct view_handler *handler)
+ {
+ 	struct subsurface *subsurface = wl_container_of(handler, subsurface, parent_view_handler);
+ 	subsurface_update_position(subsurface);
+ }
+ 
++static void
++handle_parent_view_resize(struct view_handler *handler, uint32_t old_width, uint32_t old_height)
++{
++	(void)old_width;
++	(void)old_height;
++	handle_parent_view_change(handler);
++}
++
+ static const struct view_handler_impl parent_view_handler_impl = {
+-	.move = handle_parent_view_move,
++	.attach = handle_parent_view_change,
++	.move = handle_parent_view_change,
++	.resize = handle_parent_view_resize,
+ };
+ 
++static struct subsurface *
++subsurface_find_sibling(struct subsurface *subsurface, struct surface *surface)
++{
++	struct surface *parent = subsurface->parent;
++	struct subsurface *sibling;
++
++	if (!parent)
++		return NULL;
++
++	wl_list_for_each (sibling, &parent->pending.state.subsurfaces_below, pending_link) {
++		if (sibling->surface == surface && sibling != subsurface)
++			return sibling;
++	}
++
++	wl_list_for_each (sibling, &parent->pending.state.subsurfaces_above, pending_link) {
++		if (sibling->surface == surface && sibling != subsurface)
++			return sibling;
++	}
++
++	return NULL;
++}
++
++static bool
++is_valid_sibling(struct subsurface *subsurface, struct surface *sibling_surface,
++                 struct subsurface **sibling_subsurface)
++{
++	struct subsurface *sibling;
++
++	if (!subsurface->parent || !sibling_surface || sibling_surface == subsurface->surface)
++		return false;
++
++	if (sibling_surface == subsurface->parent) {
++		*sibling_subsurface = NULL;
++		return true;
++	}
++
++	sibling = subsurface_find_sibling(subsurface, sibling_surface);
++	if (!sibling)
++		return false;
++
++	*sibling_subsurface = sibling;
++	return true;
++}
++
+ static void
+ handle_surface_destroy(struct wl_listener *listener, void *data)
+ {
+@@ -94,6 +191,9 @@ handle_parent_destroy(struct wl_listener *listener, void *data)
+ 		wl_list_init(&subsurface->link);
+ 	}
+ 
++	list_remove_if_linked(&subsurface->pending_link);
++	list_remove_if_linked(&subsurface->current_link);
++
+ 	subsurface->parent = NULL;
+ }
+ 
+@@ -103,9 +203,9 @@ set_position(struct wl_client *client, struct wl_resource *resource, int32_t x,
+ 	(void)client;
+ 	struct subsurface *subsurface = wl_resource_get_user_data(resource);
+ 
+-	subsurface->x = x;
+-	subsurface->y = y;
+-	subsurface_update_position(subsurface);
++	subsurface->pending_x = x;
++	subsurface->pending_y = y;
++	subsurface->pending_position = true;
+ }
+ 
+ static void
+@@ -114,17 +214,20 @@ place_above(struct wl_client *client, struct wl_resource *resource, struct wl_re
+ 	(void)client;
+ 	struct subsurface *subsurface = wl_resource_get_user_data(resource);
+ 	struct surface *sibling_surface = wl_resource_get_user_data(sibling_resource);
+-	struct compositor_view *view = compositor_view(subsurface->surface->view);
+-	struct compositor_view *sibling_view = compositor_view(sibling_surface->view);
++	struct subsurface *sibling_subsurface;
+ 
+-	if (!view || !sibling_view || view == sibling_view)
+-		return;
+-
+-	if (view->parent != sibling_view->parent)
++	if (!is_valid_sibling(subsurface, sibling_surface, &sibling_subsurface)) {
++		wl_resource_post_error(resource, WL_SUBSURFACE_ERROR_BAD_SURFACE, "invalid sibling surface");
+ 		return;
++	}
+ 
+-	wl_list_remove(&view->link);
+-	wl_list_insert(sibling_view->link.prev, &view->link);
++	if (!sibling_subsurface) {
++		wl_list_remove(&subsurface->pending_link);
++		wl_list_insert(&subsurface->parent->pending.state.subsurfaces_above, &subsurface->pending_link);
++	} else {
++		wl_list_remove(&subsurface->pending_link);
++		wl_list_insert(&sibling_subsurface->pending_link, &subsurface->pending_link);
++	}
+ }
+ 
+ static void
+@@ -133,17 +236,20 @@ place_below(struct wl_client *client, struct wl_resource *resource, struct wl_re
+ 	(void)client;
+ 	struct subsurface *subsurface = wl_resource_get_user_data(resource);
+ 	struct surface *sibling_surface = wl_resource_get_user_data(sibling_resource);
+-	struct compositor_view *view = compositor_view(subsurface->surface->view);
+-	struct compositor_view *sibling_view = compositor_view(sibling_surface->view);
++	struct subsurface *sibling_subsurface;
+ 
+-	if (!view || !sibling_view || view == sibling_view)
+-		return;
+-
+-	if (view->parent != sibling_view->parent)
++	if (!is_valid_sibling(subsurface, sibling_surface, &sibling_subsurface)) {
++		wl_resource_post_error(resource, WL_SUBSURFACE_ERROR_BAD_SURFACE, "invalid sibling surface");
+ 		return;
++	}
+ 
+-	wl_list_remove(&view->link);
+-	wl_list_insert(&sibling_view->link, &view->link);
++	if (!sibling_subsurface) {
++		wl_list_remove(&subsurface->pending_link);
++		wl_list_insert(subsurface->parent->pending.state.subsurfaces_below.prev, &subsurface->pending_link);
++	} else {
++		wl_list_remove(&subsurface->pending_link);
++		wl_list_insert(sibling_subsurface->pending_link.prev, &subsurface->pending_link);
++	}
+ }
+ 
+ static void
+@@ -159,7 +265,91 @@ set_desync(struct wl_client *client, struct wl_resource *resource)
+ {
+ 	(void)client;
+ 	struct subsurface *subsurface = wl_resource_get_user_data(resource);
++	bool synchronized = subsurface_is_synchronized(subsurface);
++
+ 	subsurface->sync = false;
++
++	if (synchronized
++	 && !subsurface_is_synchronized(subsurface)
++	 && subsurface->pending
++	 && subsurface->surface)
++	{
++		surface_commit_pending(subsurface->surface);
++	}
++}
++
++void
++subsurface_parent_commit(struct surface *parent)
++{
++	struct subsurface *child;
++	struct compositor_view *parent_view;
++	struct compositor_view *reference;
++	struct compositor_view *child_view;
++
++	if (!parent)
++		return;
++
++	wl_list_for_each (child, &parent->subsurfaces, link)
++		list_remove_if_linked(&child->current_link);
++
++	wl_list_init(&parent->state.subsurfaces_below);
++	wl_list_init(&parent->state.subsurfaces_above);
++
++	wl_list_for_each (child, &parent->pending.state.subsurfaces_below, pending_link)
++		wl_list_insert(parent->state.subsurfaces_below.prev, &child->current_link);
++
++	wl_list_for_each (child, &parent->pending.state.subsurfaces_above, pending_link)
++		wl_list_insert(parent->state.subsurfaces_above.prev, &child->current_link);
++
++	parent_view = parent->view ? compositor_view(parent->view) : NULL;
++	if (parent_view) {
++		reference = parent_view;
++		wl_list_for_each_reverse (child, &parent->state.subsurfaces_below, current_link) {
++			if (!child->surface || !child->surface->view)
++				continue;
++
++			child_view = compositor_view(child->surface->view);
++			if (!child_view)
++				continue;
++
++			compositor_view_restack(child_view, reference, false);
++			reference = child_view;
++		}
++
++		reference = parent_view;
++		wl_list_for_each (child, &parent->state.subsurfaces_above, current_link) {
++			if (!child->surface || !child->surface->view)
++				continue;
++
++			child_view = compositor_view(child->surface->view);
++			if (!child_view)
++				continue;
++
++			compositor_view_restack(child_view, reference, true);
++			reference = child_view;
++		}
++	}
++
++	wl_list_for_each (child, &parent->subsurfaces, link) {
++		if (!child->pending_position)
++			continue;
++
++		child->x = child->pending_x;
++		child->y = child->pending_y;
++		child->pending_position = false;
++		subsurface_update_position(child);
++	}
++
++	wl_list_for_each (child, &parent->state.subsurfaces_below, current_link) {
++		if (!child->added)
++			child->added = true;
++		subsurface_update_visibility(child);
++	}
++	wl_list_for_each (child, &parent->state.subsurfaces_above, current_link) {
++		if (!child->added)
++			child->added = true;
++		subsurface_update_visibility(child);
++	}
+ }
+ 
+ static const struct wl_subsurface_interface subsurface_impl = {
+@@ -200,6 +390,9 @@ subsurface_destroy(struct wl_resource *resource)
+ 		wl_list_init(&subsurface->link);
+ 	}
+ 
++	list_remove_if_linked(&subsurface->pending_link);
++	list_remove_if_linked(&subsurface->current_link);
++
+ 	if (subsurface->surface && subsurface->surface->view) {
+ 		struct compositor_view *view = compositor_view(subsurface->surface->view);
+ 		if (view && !view->window)
+@@ -231,14 +424,20 @@ subsurface_new(struct wl_client *client, uint32_t version, uint32_t id,
+ 	subsurface->parent = parent;
+ 	subsurface->x = 0;
+ 	subsurface->y = 0;
++	subsurface->pending_x = 0;
++	subsurface->pending_y = 0;
++	subsurface->pending_position = false;
+ 	subsurface->sync = true;
+ 	subsurface->pending = false;
++	subsurface->added = false;
+ 
+ 	subsurface->parent_view_handler.impl = &parent_view_handler_impl;
+ 	wl_list_init(&subsurface->parent_view_handler.link);
+ 	wl_list_init(&subsurface->surface_destroy_listener.link);
+ 	wl_list_init(&subsurface->parent_destroy_listener.link);
+ 	wl_list_init(&subsurface->link);
++	wl_list_init(&subsurface->pending_link);
++	wl_list_init(&subsurface->current_link);
+ 
+ 	if (!surface->view)
+ 		compositor_create_view(surface);
+@@ -257,6 +456,8 @@ subsurface_new(struct wl_client *client, uint32_t version, uint32_t id,
+ 	wl_list_insert(&parent_view->base.handlers, &subsurface->parent_view_handler.link);
+ 	subsurface_update_position(subsurface);
+ 	wl_list_insert(&parent->subsurfaces, &subsurface->link);
++	wl_list_insert(parent->pending.state.subsurfaces_above.prev, &subsurface->pending_link);
++	subsurface_update_visibility(subsurface);
+ 
+ 	subsurface->surface_destroy_listener.notify = handle_surface_destroy;
+ 	wl_resource_add_destroy_listener(surface->resource, &subsurface->surface_destroy_listener);
+diff --git a/libswc/subsurface.h b/libswc/subsurface.h
+index c747530..a4eafdf 100644
+--- a/libswc/subsurface.h
++++ b/libswc/subsurface.h
+@@ -41,11 +41,20 @@ struct subsurface {
+ 	struct wl_listener surface_destroy_listener;
+ 	struct wl_listener parent_destroy_listener;
+ 	struct wl_list link;
++	struct wl_list pending_link;
++	struct wl_list current_link;
+ 	int32_t x, y;
++	int32_t pending_x, pending_y;
++	bool pending_position;
+ 	bool sync;
+ 	bool pending;
++	bool added;
+ };
+ 
++bool subsurface_is_synchronized(const struct subsurface *subsurface);
++void subsurface_update_visibility(struct subsurface *subsurface);
++void subsurface_parent_commit(struct surface *parent);
++
+ struct subsurface *subsurface_new(struct wl_client *client, uint32_t version, uint32_t id,
+                                   struct surface *surface, struct surface *parent);
+ 
+diff --git a/libswc/surface.c b/libswc/surface.c
+index 9332054..0e84f00 100644
+--- a/libswc/surface.c
++++ b/libswc/surface.c
+@@ -59,6 +59,8 @@ state_initialize(struct surface_state *state)
+ 	pixman_region32_init_with_extents(&state->input, &infinite_extents);
+ 
+ 	wl_list_init(&state->frame_callbacks);
++	wl_list_init(&state->subsurfaces_below);
++	wl_list_init(&state->subsurfaces_above);
+ }
+ 
+ static void
+@@ -267,10 +269,15 @@ surface_apply_pending(struct surface *surface, bool flush_children)
+ 	if (surface->subsurface)
+ 		surface->subsurface->pending = false;
+ 
++	if (surface->subsurface)
++		subsurface_update_visibility(surface->subsurface);
++
++	subsurface_parent_commit(surface);
++
+ 	if (flush_children) {
+ 		struct subsurface *child;
+ 		wl_list_for_each (child, &surface->subsurfaces, link) {
+-			if (!child->sync || !child->pending)
++			if (!child->pending || !subsurface_is_synchronized(child))
+ 				continue;
+ 			if (child->surface)
+ 				surface_apply_pending(child->surface, true);
+@@ -283,7 +290,7 @@ commit(struct wl_client *client, struct wl_resource *resource)
+ {
+ 	struct surface *surface = wl_resource_get_user_data(resource);
+ 
+-	if (surface->subsurface && surface->subsurface->sync) {
++	if (surface->subsurface && subsurface_is_synchronized(surface->subsurface)) {
+ 		surface->subsurface->pending = true;
+ 		return;
+ 	}
+@@ -402,3 +409,9 @@ surface_set_view(struct surface *surface, struct view *view)
+ 		view_update(view);
+ 	}
+ }
++
++void
++surface_commit_pending(struct surface *surface)
++{
++	surface_apply_pending(surface, true);
++}
+diff --git a/libswc/surface.h b/libswc/surface.h
+index 5eb751c..0e8c4e5 100644
+--- a/libswc/surface.h
++++ b/libswc/surface.h
+@@ -54,6 +54,10 @@ struct surface_state {
+ 	pixman_region32_t input;
+ 
+ 	struct wl_list frame_callbacks;
++
++	/* subsurface order; double-buffered with surface state. */
++	struct wl_list subsurfaces_below;
++	struct wl_list subsurfaces_above;
+ };
+ 
+ struct surface {
+@@ -80,5 +84,6 @@ struct surface {
+ 
+ struct surface *surface_new(struct wl_client *client, uint32_t version, uint32_t id);
+ void surface_set_view(struct surface *surface, struct view *view);
++void surface_commit_pending(struct surface *surface);
+ 
+ #endif
+-- 
+2.49.0
+

@@ -1,0 +1,68 @@
+From 5be9ee4cbc06aefed8fe11360df8cc9d045c3587 Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Sat, 20 Dec 2025 20:40:26 +0000
+Subject: [PATCH] this adds wallpaper scaling to the initial wallpaper
+ implementation, so the wallpaper scales to screen size.
+
+---
+ libswc/wallpaper.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
+
+diff --git a/libswc/wallpaper.c b/libswc/wallpaper.c
+index 53f8a0c..ad6e21f 100644
+--- a/libswc/wallpaper.c
++++ b/libswc/wallpaper.c
+@@ -5,11 +5,15 @@
+ #define STBI_NO_HDR
+ #include "../stb/stb_image.h"
+ 
++#define STB_IMAGE_RESIZE_IMPLEMENTATION
++#include "../stb/stb_image_resize2.h"
++
+ #include "swc.h"
+ #include "internal.h"
+ #include "drm.h"
+ #include "util.h"
+ #include "shm.h"
++#include "screen.h"
+ 
+ unsigned char *wallpaper = NULL;
+ struct wld_buffer *wallbuf = NULL;
+@@ -20,8 +24,33 @@ EXPORT void
+ swc_wallpaper_init(char* path)
+ {
+ 	int width, height, chan;
++	unsigned char *loaded;
++	struct screen *screen;
++	int target_width = 0, target_height = 0;
++
++	loaded = stbi_load(path, &width, &height, &chan, 4);
++	if (!loaded)
++		return;
+ 
+-	wallpaper = stbi_load(path, &width, &height, &chan, 4);
++	/* get screen dimensions */
++	wl_list_for_each(screen, &swc.screens, link) {
++		target_width = screen->base.geometry.width;
++		target_height = screen->base.geometry.height;
++		break;
++	}
++
++	/* If we have a screen and dimensions wrong  scale  */
++	if (target_width > 0 && target_height > 0 &&
++	    (width != target_width || height != target_height)) {
++		wallpaper = stbir_resize_uint8_srgb(loaded, width, height, 0,
++		                                     NULL, target_width, target_height, 0,
++		                                     STBIR_RGBA);
++		stbi_image_free(loaded);
++		width = target_width;
++		height = target_height;
++	} else {
++		wallpaper = loaded;
++	}
+ 
+ 	/* swap color channels to be compatible */
+ 	for(int i = 0; i < width * height; i++) {
+-- 
+2.49.0
+

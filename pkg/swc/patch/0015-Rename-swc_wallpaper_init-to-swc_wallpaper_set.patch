@@ -1,0 +1,44 @@
+From 108719f480ad292252721ac3c90b75081e1152e5 Mon Sep 17 00:00:00 2001
+From: dalem <lain@dalem.foo>
+Date: Sun, 8 Feb 2026 03:33:43 +0100
+Subject: [PATCH] Rename swc_wallpaper_init to swc_wallpaper_set
+
+this change makes it appear as more consistent
+---
+ libswc/swc.h       | 4 ++--
+ libswc/wallpaper.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/libswc/swc.h b/libswc/swc.h
+index a23e556..033bdd4 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -443,10 +443,10 @@ extern struct wld_buffer *wallbuf;
+ 
+ /**
+  * Set wallpaper to image from fs path.
+- * TODO: scaling, tiling, maybe diff image for each screen
++ * TODO: tiling, maybe diff image for each screen
+  */
+ 
+-void swc_wallpaper_init(char* path);
++void swc_wallpaper_set(char* path);
+ 
+ /**
+  * Set wallpaper to a single color
+diff --git a/libswc/wallpaper.c b/libswc/wallpaper.c
+index ad6e21f..7618bf0 100644
+--- a/libswc/wallpaper.c
++++ b/libswc/wallpaper.c
+@@ -21,7 +21,7 @@ struct wld_buffer *wallbuf = NULL;
+ uint32_t bgcolor = 0xff000000;
+ 
+ EXPORT void
+-swc_wallpaper_init(char* path)
++swc_wallpaper_set(char* path)
+ {
+ 	int width, height, chan;
+ 	unsigned char *loaded;
+-- 
+2.49.0
+

@@ -1,0 +1,215 @@
+From e2aa9440d9db7422d3e671a2dec839936c424a0b Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Tue, 16 Dec 2025 02:28:16 +0000
+Subject: [PATCH] fix how border damage is calculated | ignore null axis
+ handlers
+
+---
+ libswc/bindings.c   |  8 ++--
+ libswc/compositor.c | 93 ++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 71 insertions(+), 30 deletions(-)
+
+diff --git a/libswc/bindings.c b/libswc/bindings.c
+index 2894632..21e2cf7 100644
+--- a/libswc/bindings.c
++++ b/libswc/bindings.c
+@@ -134,9 +134,10 @@ static bool
+ handle_binding(uint32_t time, struct press *press, uint32_t state, struct binding *(*find_binding)(uint32_t, uint32_t))
+ {
+ 	struct binding *binding;
++	uint32_t modifiers = swc.seat && swc.seat->keyboard ? swc.seat->keyboard->modifiers : 0;
+ 
+ 	if (state) {
+-		binding = find_binding(swc.seat->keyboard->modifiers, press->value);
++		binding = find_binding(modifiers, press->value);
+ 
+ 		if (!binding)
+ 			return false;
+@@ -170,10 +171,11 @@ handle_axis(struct pointer_handler *handler, uint32_t time, enum wl_pointer_axis
+ 	(void)handler;
+ 	(void)source;
+ 
+-	struct axis_binding *binding = find_axis_binding(swc.seat->keyboard->modifiers, axis);
++	uint32_t modifiers = swc.seat && swc.seat->keyboard ? swc.seat->keyboard->modifiers : 0;
++	struct axis_binding *binding = find_axis_binding(modifiers, axis);
+ 	int32_t delta120 = value120;
+ 
+-	if (!binding)
++	if (!binding || !binding->handler)
+ 		return false;
+ 
+ 	if (!delta120 && value) {
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index ed56b7f..263da39 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -49,10 +49,33 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <assert.h>
++#include <limits.h>
+ #include <wld/wld.h>
+ #include <wld/drm.h>
+ #include <xkbcommon/xkbcommon-keysyms.h>
+ 
++static inline int32_t
++clamp_i32(int64_t v)
++{
++	if (v > INT32_MAX)
++		return INT32_MAX;
++	if (v < INT32_MIN)
++		return INT32_MIN;
++	return (int32_t)v;
++}
++
++static inline uint32_t
++span_u32(int32_t a, int32_t b)
++{
++	int64_t d = (int64_t)b - (int64_t)a;
++
++	if (d <= 0)
++		return 0;
++	if (d > UINT32_MAX)
++		return UINT32_MAX;
++	return (uint32_t)d;
++}
++
+ struct target {
+ 	struct wld_surface *surface;
+ 	struct wld_buffer *next_buffer, *current_buffer;
+@@ -205,13 +228,13 @@ repaint_view(struct target *target, struct compositor_view *view, pixman_region3
+ 	pixman_region32_subtract(&border_damage, &view_damage, &view_region);
+ 	pixman_region32_intersect(&view_damage, &view_damage, &view_region);
+ 
+-	pixman_region32_fini(&view_region);
+-
+ 	if (pixman_region32_not_empty(&view_damage)) {
+ 		pixman_region32_translate(&view_damage, -geom->x, -geom->y);
+ 		wld_copy_region(swc.drm->renderer, view->buffer, geom->x - target_geom->x, geom->y - target_geom->y, &view_damage);
+ 	}
+ 
++	pixman_region32_fini(&view_damage);
++
+ 	pixman_region32_t in_rect;
+ 	pixman_region32_init_rect(&in_rect, 
+ 			geom->x - view->border.inwidth, 
+@@ -226,7 +249,9 @@ repaint_view(struct target *target, struct compositor_view *view, pixman_region3
+ 	pixman_region32_t in_border;
+ 	pixman_region32_init(&in_border);
+ 	pixman_region32_subtract(&in_border, &in_rect, &view_region);
++	pixman_region32_intersect(&in_border, &in_border, &border_damage);
+ 		
++	pixman_region32_fini(&view_region);
+ 
+ 	/* Draw border */
+ 	if (view->border.outwidth > 0 && pixman_region32_not_empty(&out_border)) {
+@@ -386,17 +411,26 @@ damage_view(struct compositor_view *view)
+ 	damage_below_view(view);
+ 	view->border.damaged_border1 = true;
+ 	view->border.damaged_border2 = true;
+-
+ }
++
+ static void
+ update_extents(struct compositor_view *view)
+ {
+-	uint32_t total_border = view->border.outwidth + view->border.inwidth;
+-
+-	view->extents.x1 = view->base.geometry.x - total_border;
+-	view->extents.y1 = view->base.geometry.y - total_border;
+-	view->extents.x2 = view->base.geometry.x + view->base.geometry.width + total_border;
+-	view->extents.y2 = view->base.geometry.y + view->base.geometry.height + total_border;
++	int64_t total_border = (int64_t)view->border.outwidth + (int64_t)view->border.inwidth;
++	int64_t x = view->base.geometry.x;
++	int64_t y = view->base.geometry.y;
++	int64_t w = view->base.geometry.width;
++	int64_t h = view->base.geometry.height;
++
++	view->extents.x1 = clamp_i32(x - total_border);
++	view->extents.y1 = clamp_i32(y - total_border);
++	view->extents.x2 = clamp_i32(x + w + total_border);
++	view->extents.y2 = clamp_i32(y + h + total_border);
++
++	if (view->extents.x2 < view->extents.x1)
++		view->extents.x2 = view->extents.x1;
++	if (view->extents.y2 < view->extents.y1)
++		view->extents.y2 = view->extents.y1;
+ 
+ 	/* Damage border. */
+ 	view->border.damaged_border1 = true;
+@@ -621,8 +655,8 @@ raise_window(struct compositor_view *view)
+ 	view->border.damaged_border1 = true;
+ 	pixman_region32_union_rect(&compositor.damage, &compositor.damage,
+ 	                           view->extents.x1, view->extents.y1,
+-	                           (uint32_t)(view->extents.x2 - view->extents.x1),
+-	                           (uint32_t)(view->extents.y2 - view->extents.y1));
++	                           span_u32(view->extents.x1, view->extents.x2),
++	                           span_u32(view->extents.y1, view->extents.y2));
+ 	schedule_updates(screens);
+ }
+ 
+@@ -683,18 +717,20 @@ damage_views(struct compositor_view *a, struct compositor_view *b)
+ {
+ 	uint32_t screens = a->base.screens | (b ? b->base.screens : 0);
+ 
+-	a->border.damaged = true;
++	a->border.damaged_border1 = true;
++	a->border.damaged_border2 = true;
+ 	pixman_region32_union_rect(&compositor.damage, &compositor.damage,
+ 	                           a->extents.x1, a->extents.y1,
+-	                           (uint32_t)(a->extents.x2 - a->extents.x1),
+-	                           (uint32_t)(a->extents.y2 - a->extents.y1));
++	                           span_u32(a->extents.x1, a->extents.x2),
++	                           span_u32(a->extents.y1, a->extents.y2));
+ 
+ 	if (b) {
+-		b->border.damaged = true;
++		b->border.damaged_border1 = true;
++		b->border.damaged_border2 = true;
+ 		pixman_region32_union_rect(&compositor.damage, &compositor.damage,
+ 		                           b->extents.x1, b->extents.y1,
+-		                           (uint32_t)(b->extents.x2 - b->extents.x1),
+-		                           (uint32_t)(b->extents.y2 - b->extents.y1));
++		                           span_u32(b->extents.x1, b->extents.x2),
++		                           span_u32(b->extents.y1, b->extents.y2));
+ 	}
+ 
+ 	schedule_updates(screens);
+@@ -910,21 +946,24 @@ calculate_damage(void)
+ 			pixman_region32_clear(surface_damage);
+ 		}
+ 
+-                /* redraw entire thingy if either */
+-		if (view->border.damaged_border1 || view->border.damaged_border2) {
+-			pixman_region32_t border_region, view_region;
++	                /* redraw entire thingy if either */
++			if (view->border.damaged_border1 || view->border.damaged_border2) {
++				pixman_region32_t border_region, view_region;
++
++				pixman_region32_init_with_extents(&border_region, &view->extents);
++				pixman_region32_init_rect(&view_region, geom->x, geom->y, geom->width, geom->height);
+ 
+-			pixman_region32_init_with_extents(&border_region, &view->extents);
+-			pixman_region32_init_rect(&view_region, geom->x, geom->y, geom->width, geom->height);
++				pixman_region32_subtract(&border_region, &border_region, &view_region);
+ 
+-			pixman_region32_subtract(&border_region, &border_region, &view_region);
++				pixman_region32_union(&compositor.damage, &compositor.damage, &border_region);
+ 
+-			pixman_region32_union(&compositor.damage, &compositor.damage, &border_region);
++				pixman_region32_fini(&border_region);
++				pixman_region32_fini(&view_region);
+ 
+-			pixman_region32_fini(&border_region);
+-			pixman_region32_fini(&view_region);
++				view->border.damaged_border1 = false;
++				view->border.damaged_border2 = false;
++			}
+ 		}
+-	}
+ 
+ 	pixman_region32_fini(&surface_opaque);
+ }
+-- 
+2.49.0
+

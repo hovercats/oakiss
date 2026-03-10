@@ -1,0 +1,59 @@
+From b6c18cfa63ea8cef39e1bfb728cfdac4fd858c68 Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Mon, 15 Dec 2025 22:06:23 +0000
+Subject: [PATCH] swc_window_at new public api, returns the topmost window at
+ some compositor global pair of coordinates
+
+---
+ libswc/compositor.c | 9 +++++++++
+ libswc/swc.h        | 7 +++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index 2808426..24554ee 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -43,6 +43,7 @@
+ #include "surface.h"
+ #include "util.h"
+ #include "view.h"
++#include "window.h"
+ 
+ #include <errno.h>
+ #include <stdlib.h>
+@@ -597,6 +598,14 @@ raise_window(struct compositor_view *view)
+ 	schedule_updates(screens);
+ }
+ 
++EXPORT struct swc_window *
++swc_window_at(int32_t x, int32_t y)
++{
++	struct compositor_view *view = window_view(view_at(x, y));
++
++	return view ? &view->window->base : NULL;
++}
++
+ struct compositor_view *
+ compositor_create_view(struct surface *surface)
+ {
+diff --git a/libswc/swc.h b/libswc/swc.h
+index d199e3c..caf966c 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -298,6 +298,13 @@ void swc_window_begin_resize(struct swc_window *window, uint32_t edges);
+  */
+ void swc_window_end_resize(struct swc_window *window);
+ 
++/**
++ * returns the topmost window at any given compositor global coordinates
++ *
++ * returns null if there is no window at that point
++ */
++struct swc_window *swc_window_at(int32_t x, int32_t y);
++
+ /* }}} */
+ 
+ /* Bindings {{{ */
+-- 
+2.49.0
+

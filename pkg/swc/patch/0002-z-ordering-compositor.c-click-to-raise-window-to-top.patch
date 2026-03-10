@@ -1,0 +1,170 @@
+From ab5eb634b9e10346b5c184ae3422eeda1c67b91a Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Mon, 15 Dec 2025 21:55:21 +0000
+Subject: [PATCH] z-ordering compositor.c : click to raise window to top. uses
+ internal helpers to find the window under the pointer and raise it on button
+ press.
+
+---
+ libswc/compositor.c | 113 +++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 97 insertions(+), 16 deletions(-)
+
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index 66f962a..2808426 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -63,10 +63,12 @@ struct target {
+ };
+ 
+ static bool handle_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t x, wl_fixed_t y);
++static bool handle_button(struct pointer_handler *handler, uint32_t time, struct button *button, uint32_t state);
+ static void perform_update(void *data);
+ 
+ static struct pointer_handler pointer_handler = {
+ 	.motion = handle_motion,
++	.button = handle_button,
+ };
+ 
+ static struct {
+@@ -523,6 +525,78 @@ static const struct view_impl view_impl = {
+ 	.move = move,
+ };
+ 
++static struct compositor_view *
++view_at(int32_t x, int32_t y)
++{
++	struct compositor_view *view;
++	struct swc_rectangle *geom;
++
++	wl_list_for_each (view, &compositor.views, link) {
++		if (!view->visible)
++			continue;
++
++		geom = &view->base.geometry;
++		if (!rectangle_contains_point(geom, x, y))
++			continue;
++
++		if (pixman_region32_contains_point(&view->surface->state.input,
++		                                   x - geom->x, y - geom->y, NULL))
++		{
++			return view;
++		}
++	}
++
++	return NULL;
++}
++
++static struct compositor_view *
++window_view(struct compositor_view *view)
++{
++	while (view && !view->window && view->parent && view->parent != view)
++		view = view->parent;
++	return (view && view->window) ? view : NULL;
++}
++
++static void
++raise_window(struct compositor_view *view)
++{
++	struct compositor_view *other, *top_window;
++	struct wl_list *insert_after;
++	uint32_t screens;
++
++	view = window_view(view);
++	if (!view || !view->visible)
++		return;
++
++	top_window = NULL;
++	insert_after = &compositor.views;
++	wl_list_for_each (other, &compositor.views, link) {
++		if (!other->visible)
++			continue;
++
++		if (other->window) {
++			top_window = other;
++			break;
++		}
++		insert_after = &other->link;
++	}
++
++	if (view == top_window)
++		return;
++
++	screens = view->base.screens;
++
++	wl_list_remove(&view->link);
++	wl_list_insert(insert_after, &view->link);
++
++	view->border.damaged = true;
++	pixman_region32_union_rect(&compositor.damage, &compositor.damage,
++	                           view->extents.x1, view->extents.y1,
++	                           (uint32_t)(view->extents.x2 - view->extents.x1),
++	                           (uint32_t)(view->extents.y2 - view->extents.y1));
++	schedule_updates(screens);
++}
++
+ struct compositor_view *
+ compositor_create_view(struct surface *surface)
+ {
+@@ -575,7 +649,7 @@ compositor_view(struct view *view)
+ void
+ compositor_view_set_parent(struct compositor_view *view, struct compositor_view *parent)
+ {
+-	view->parent = view;
++	view->parent = parent;
+ 
+ 	if (parent->visible)
+ 		compositor_view_show(view);
+@@ -789,28 +863,35 @@ perform_update(void *data)
+ bool
+ handle_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t fx, wl_fixed_t fy)
+ {
+-	struct compositor_view *view;
+-	bool found = false;
+ 	int32_t x = wl_fixed_to_int(fx), y = wl_fixed_to_int(fy);
+-	struct swc_rectangle *geom;
+ 
+ 	/* If buttons are pressed, don't change pointer focus. */
+ 	if (swc.seat->pointer->buttons.size > 0)
+ 		return false;
+ 
+-	wl_list_for_each (view, &compositor.views, link) {
+-		if (!view->visible)
+-			continue;
+-		geom = &view->base.geometry;
+-		if (rectangle_contains_point(geom, x, y)) {
+-			if (pixman_region32_contains_point(&view->surface->state.input, x - geom->x, y - geom->y, NULL)) {
+-				found = true;
+-				break;
+-			}
+-		}
+-	}
++	struct compositor_view *view = view_at(x, y);
++
++	pointer_set_focus(swc.seat->pointer, view);
++
++	return false;
++}
++
++static bool
++handle_button(struct pointer_handler *handler, uint32_t time, struct button *button, uint32_t state)
++{
++	(void)handler;
++	(void)time;
++	(void)button;
++
++	if (state != WL_POINTER_BUTTON_STATE_PRESSED)
++		return false;
++
++	int32_t x = wl_fixed_to_int(swc.seat->pointer->x);
++	int32_t y = wl_fixed_to_int(swc.seat->pointer->y);
++	struct compositor_view *view = view_at(x, y);
+ 
+-	pointer_set_focus(swc.seat->pointer, found ? view : NULL);
++	pointer_set_focus(swc.seat->pointer, view);
++	raise_window(view);
+ 
+ 	return false;
+ }
+-- 
+2.49.0
+

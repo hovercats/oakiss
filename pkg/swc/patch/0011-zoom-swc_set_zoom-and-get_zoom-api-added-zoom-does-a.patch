@@ -1,0 +1,333 @@
+From 6d3e048dfc11209f32891ef9fc39586b83eff974 Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Tue, 20 Jan 2026 22:31:55 +0000
+Subject: [PATCH] zoom! swc_set_zoom and get_zoom api added zoom does a
+ fullscreen damage and renders a zoomed scene into a shm buffer, with pixman
+
+---
+ libswc/compositor.c | 249 ++++++++++++++++++++++++++++++++++++++++++--
+ libswc/swc.h        |  13 +++
+ 2 files changed, 254 insertions(+), 8 deletions(-)
+
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index 263da39..0f978d9 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -108,6 +108,10 @@ static struct {
+ 
+ 	bool updating;
+ 	struct wl_global *global;
++
++	/* zoom level (1.0 = normal, >1 = zoomed in, <1 = zoomed out) */
++	float zoom;
++	struct wld_buffer *zoom_buffer;
+ } compositor;
+ 
+ static struct {
+@@ -452,6 +456,17 @@ schedule_updates(uint32_t screens)
+ 			screens |= screen_mask(screen);
+ 	}
+ 
++	/* when zoomed, force full screen damage since actual area differs from world coords */
++	if (compositor.zoom != 1.0f) {
++		struct screen *screen;
++		wl_list_for_each (screen, &swc.screens, link) {
++			pixman_region32_union_rect(&compositor.damage, &compositor.damage,
++				screen->base.geometry.x, screen->base.geometry.y,
++				screen->base.geometry.width, screen->base.geometry.height);
++			screens |= screen_mask(screen);
++		}
++	}
++
+ 	compositor.scheduled_updates |= screens;
+ }
+ 
+@@ -499,6 +514,202 @@ swc_overlay_clear(void)
+ 	schedule_updates(-1);
+ }
+ 
++EXPORT void
++swc_set_zoom(float level)
++{
++	if (level < 0.1f)
++		level = 0.1f;
++	if (level > 10.0f)
++		level = 10.0f;
++
++	if (compositor.zoom != level) {
++		compositor.zoom = level;
++		/* damage entire screen to force full repaint */
++		schedule_updates(-1);
++	}
++}
++
++EXPORT float
++swc_get_zoom(void)
++{
++	return compositor.zoom;
++}
++
++static pixman_format_code_t
++wld_to_pixman_format(enum wld_format format)
++{
++	switch (format) {
++	case WLD_FORMAT_XRGB8888:
++		return PIXMAN_x8r8g8b8;
++	case WLD_FORMAT_ARGB8888:
++		return PIXMAN_a8r8g8b8;
++	default:
++		return PIXMAN_x8r8g8b8;
++	}
++}
++
++/* render zoomed view to shm      wallpaper unscaled, windows scaled */
++static struct wld_buffer *
++render_zoomed_to_shm(struct screen *screen, float zoom)
++{
++	uint32_t width = screen->base.geometry.width;
++	uint32_t height = screen->base.geometry.height;
++	int32_t screen_x = screen->base.geometry.x;
++	int32_t screen_y = screen->base.geometry.y;
++	int32_t cx = screen_x + width / 2;
++	int32_t cy = screen_y + height / 2;
++	struct compositor_view *view;
++
++	struct wld_buffer *buffer = wld_create_buffer(swc.shm->context,
++		width, height, WLD_FORMAT_XRGB8888, WLD_FLAG_MAP);
++	if (!buffer)
++		return NULL;
++
++	if (!wld_set_target_buffer(swc.shm->renderer, buffer)) {
++		wld_buffer_unreference(buffer);
++		return NULL;
++	}
++
++	pixman_region32_t full;
++	pixman_region32_init_rect(&full, 0, 0, width, height);
++	if (wallbuf)
++		wld_copy_region(swc.shm->renderer, wallbuf, 0, 0, &full);
++	else
++		wld_fill_region(swc.shm->renderer, bgcolor, &full);
++	pixman_region32_fini(&full);
++	wld_flush(swc.shm->renderer);
++
++	if (!wld_map(buffer)) {
++		wld_buffer_unreference(buffer);
++		return NULL;
++	}
++
++	pixman_image_t *dst_img = pixman_image_create_bits(
++		wld_to_pixman_format(buffer->format),
++		buffer->width, buffer->height,
++		buffer->map, buffer->pitch);
++
++	if (!dst_img) {
++		wld_unmap(buffer);
++		wld_buffer_unreference(buffer);
++		return NULL;
++	}
++
++	/* render each view with scaling */
++	wl_list_for_each_reverse(view, &compositor.views, link) {
++		struct wld_buffer *src = view->buffer;
++		const struct swc_rectangle *geom = &view->base.geometry;
++
++		if (!src)
++			continue;
++
++		if (!(wld_capabilities(swc.shm->renderer, src) & WLD_CAPABILITY_READ))
++			src = view->base.buffer;
++		if (!src)
++			continue;
++
++		/* maths     zoom position and size */
++		float zoomed_x = (geom->x - cx) * zoom + width / 2.0f;
++		float zoomed_y = (geom->y - cy) * zoom + height / 2.0f;
++		float zoomed_w = geom->width * zoom;
++		float zoomed_h = geom->height * zoom;
++
++		float border_out = view->border.outwidth * zoom;
++		float border_in = view->border.inwidth * zoom;
++		float total_border = border_out + border_in;
++
++		if (zoomed_x + zoomed_w + total_border < 0 || zoomed_x - total_border >= (int32_t)width ||
++		    zoomed_y + zoomed_h + total_border < 0 || zoomed_y - total_border >= (int32_t)height)
++			continue;
++
++		if (view->border.outwidth > 0 && border_out >= 1) {
++			int32_t bx = (int32_t)(zoomed_x - total_border);
++			int32_t by = (int32_t)(zoomed_y - total_border);
++			int32_t bw = (int32_t)(zoomed_w + 2 * total_border);
++			int32_t bh = (int32_t)(zoomed_h + 2 * total_border);
++			int32_t bo = (int32_t)border_out;
++
++			pixman_color_t color = {
++				.red = ((view->border.outcolor >> 16) & 0xff) * 257,
++				.green = ((view->border.outcolor >> 8) & 0xff) * 257,
++				.blue = (view->border.outcolor & 0xff) * 257,
++				.alpha = 0xffff
++			};
++			pixman_image_t *fill = pixman_image_create_solid_fill(&color);
++			if (fill) {
++				pixman_image_composite32(PIXMAN_OP_OVER, fill, NULL, dst_img,
++					0, 0, 0, 0, bx, by, bw, bo);
++				pixman_image_composite32(PIXMAN_OP_OVER, fill, NULL, dst_img,
++					0, 0, 0, 0, bx, by + bh - bo, bw, bo);
++				pixman_image_composite32(PIXMAN_OP_OVER, fill, NULL, dst_img,
++					0, 0, 0, 0, bx, by + bo, bo, bh - 2 * bo);
++				pixman_image_composite32(PIXMAN_OP_OVER, fill, NULL, dst_img,
++					0, 0, 0, 0, bx + bw - bo, by + bo, bo, bh - 2 * bo);
++				pixman_image_unref(fill);
++			}
++		}
++
++		if (view->border.inwidth > 0 && border_in >= 1) {
++			int32_t bx = (int32_t)(zoomed_x - border_in);
++			int32_t by = (int32_t)(zoomed_y - border_in);
++			int32_t bw = (int32_t)(zoomed_w + 2 * border_in);
++			int32_t bh = (int32_t)(zoomed_h + 2 * border_in);
++			int32_t bi = (int32_t)border_in;
++
++			pixman_color_t color = {
++				.red = ((view->border.incolor >> 16) & 0xff) * 257,
++				.green = ((view->border.incolor >> 8) & 0xff) * 257,
++				.blue = (view->border.incolor & 0xff) * 257,
++				.alpha = 0xffff
++			};
++			pixman_image_t *fill = pixman_image_create_solid_fill(&color);
++			if (fill) {
++				pixman_image_composite32(PIXMAN_OP_OVER, fill, NULL, dst_img,
++					0, 0, 0, 0, bx, by, bw, bi);
++				pixman_image_composite32(PIXMAN_OP_OVER, fill, NULL, dst_img,
++					0, 0, 0, 0, bx, by + bh - bi, bw, bi);
++				pixman_image_composite32(PIXMAN_OP_OVER, fill, NULL, dst_img,
++					0, 0, 0, 0, bx, by + bi, bi, bh - 2 * bi);
++				pixman_image_composite32(PIXMAN_OP_OVER, fill, NULL, dst_img,
++					0, 0, 0, 0, bx + bw - bi, by + bi, bi, bh - 2 * bi);
++				pixman_image_unref(fill);
++			}
++		}
++
++		if (!wld_map(src))
++			continue;
++
++		pixman_image_t *src_img = pixman_image_create_bits(
++			wld_to_pixman_format(src->format),
++			src->width, src->height,
++			src->map, src->pitch);
++
++		if (src_img) {
++			pixman_transform_t transform;
++			pixman_transform_init_identity(&transform);
++			pixman_fixed_t scale = pixman_double_to_fixed(1.0 / zoom);
++			pixman_transform_scale(&transform, NULL, scale, scale);
++			pixman_image_set_transform(src_img, &transform);
++			pixman_image_set_filter(src_img, PIXMAN_FILTER_BILINEAR, NULL, 0);
++
++			pixman_image_composite32(PIXMAN_OP_OVER,
++				src_img, NULL, dst_img,
++				0, 0, 0, 0,
++				(int32_t)zoomed_x, (int32_t)zoomed_y,
++				(int32_t)(zoomed_w + 1), (int32_t)(zoomed_h + 1));
++
++			pixman_image_unref(src_img);
++		}
++
++		wld_unmap(src);
++	}
++
++	pixman_image_unref(dst_img);
++	wld_unmap(buffer);
++
++	return buffer;
++}
++
+ static bool
+ update(struct view *base)
+ {
+@@ -992,14 +1203,32 @@ update_screen(struct screen *screen)
+ 		return;
+ 	}
+ 
+-	pixman_region32_t base_damage;
+-	pixman_region32_copy(&damage, total_damage);
+-	pixman_region32_translate(&damage, geom->x, geom->y);
+-	pixman_region32_init(&base_damage);
+-	pixman_region32_subtract(&base_damage, &damage, &compositor.opaque);
+-	renderer_repaint(target, &damage, &base_damage, &compositor.views);
+-	pixman_region32_fini(&damage);
+-	pixman_region32_fini(&base_damage);
++	/* check if zoom */
++	if (compositor.zoom != 1.0f) {
++		pixman_region32_fini(&damage);
++
++		struct wld_buffer *zoomed = render_zoomed_to_shm(screen, compositor.zoom);
++		if (!zoomed)
++			return;
++
++		pixman_region32_t full;
++		pixman_region32_init_rect(&full, 0, 0, geom->width, geom->height);
++		wld_set_target_surface(swc.drm->renderer, target->surface);
++		wld_copy_region(swc.drm->renderer, zoomed, 0, 0, &full);
++		wld_flush(swc.drm->renderer);
++		pixman_region32_fini(&full);
++
++		wld_buffer_unreference(zoomed);
++	} else {
++		pixman_region32_t base_damage;
++		pixman_region32_copy(&damage, total_damage);
++		pixman_region32_translate(&damage, geom->x, geom->y);
++		pixman_region32_init(&base_damage);
++		pixman_region32_subtract(&base_damage, &damage, &compositor.opaque);
++		renderer_repaint(target, &damage, &base_damage, &compositor.views);
++		pixman_region32_fini(&damage);
++		pixman_region32_fini(&base_damage);
++	}
+ 
+ 	switch (target_swap_buffers(target)) {
+ 	case -EACCES:
+@@ -1158,6 +1387,8 @@ compositor_initialize(void)
+ 	compositor.scheduled_updates = 0;
+ 	compositor.pending_flips = 0;
+ 	compositor.updating = false;
++	compositor.zoom = 1.0f;
++	compositor.zoom_buffer = NULL;
+ 	pixman_region32_init(&compositor.damage);
+ 	pixman_region32_init(&compositor.opaque);
+ 	wl_list_init(&compositor.views);
+@@ -1181,6 +1412,8 @@ compositor_initialize(void)
+ void
+ compositor_finalize(void)
+ {
++	if (compositor.zoom_buffer)
++		wld_buffer_unreference(compositor.zoom_buffer);
+ 	pixman_region32_fini(&compositor.damage);
+ 	pixman_region32_fini(&compositor.opaque);
+ 	wl_global_destroy(compositor.global);
+diff --git a/libswc/swc.h b/libswc/swc.h
+index f3bd453..505391d 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -121,6 +121,19 @@ void swc_overlay_set_box(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_
+  */
+ void swc_overlay_clear(void);
+ 
++/**
++ * Set the compositor zoom level.
++ *
++ * 1.0 = normal, >1.0 = zoomed in, <1.0 = zoomed out
++ * Uses software (pixman) scaling.
++ */
++void swc_set_zoom(float level);
++
++/**
++ * Get the current zoom level.
++ */
++float swc_get_zoom(void);
++
+ /* Rectangles {{{ */
+ 
+ struct swc_rectangle {
+-- 
+2.49.0
+

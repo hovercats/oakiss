@@ -1,0 +1,85 @@
+From d7cc5eb216965f3a9ed14542d25f557aab6042d1 Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Sat, 10 Jan 2026 00:20:19 +0000
+Subject: [PATCH] swc_window_get_pid add api to query a window's client pid
+
+---
+ libswc/swc.h    |  8 ++++++++
+ libswc/window.c | 25 +++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
+
+diff --git a/libswc/swc.h b/libswc/swc.h
+index 29638d9..f3bd453 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -26,6 +26,7 @@
+ 
+ #include <stdbool.h>
+ #include <stdint.h>
++#include <sys/types.h>
+ 
+ #ifdef __cplusplus
+ extern "C" {
+@@ -325,6 +326,13 @@ void swc_window_set_geometry(struct swc_window *window, const struct swc_rectang
+  */
+ bool swc_window_get_geometry(const struct swc_window *window, struct swc_rectangle *geometry);
+ 
++/**
++ * Get the pid of the client that owns this window
++ *
++ * returns pid, or 0 if unavailable
++ */
++pid_t swc_window_get_pid(struct swc_window *window);
++
+ /**
+  * Set the window's border color and width.
+  *
+diff --git a/libswc/window.c b/libswc/window.c
+index 60432ae..3e3a714 100644
+--- a/libswc/window.c
++++ b/libswc/window.c
+@@ -27,12 +27,14 @@
+ #include "internal.h"
+ #include "keyboard.h"
+ #include "seat.h"
++#include "surface.h"
+ #include "swc.h"
+ #include "util.h"
+ #include "view.h"
+ 
+ #include <stdlib.h>
+ #include <string.h>
++#include <sys/types.h>
+ 
+ #define INTERNAL(w) ((struct window *)(w))
+ 
+@@ -583,3 +585,26 @@ window_begin_resize(struct window *window, uint32_t edges, struct button *button
+ 	window->resize.offset.y = geometry->y - py + ((edges & SWC_WINDOW_EDGE_BOTTOM) ? geometry->height : 0);
+ 	window->resize.edges = edges;
+ }
++
++EXPORT pid_t
++swc_window_get_pid(struct swc_window *base)
++{
++	struct window *window = INTERNAL(base);
++	struct surface *surface;
++	struct wl_client *client;
++	pid_t pid;
++	uid_t uid;
++	gid_t gid;
++
++	if (!window || !window->view || !window->view->surface)
++		return 0;
++
++	surface = window->view->surface;
++	if (!surface->resource)
++		return 0;
++
++	client = wl_resource_get_client(surface->resource);
++	wl_client_get_credentials(client, &pid, &uid, &gid);
++
++	return pid;
++}
+-- 
+2.49.0
+

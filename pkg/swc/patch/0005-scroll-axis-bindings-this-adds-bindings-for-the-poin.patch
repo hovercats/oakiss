@@ -1,0 +1,383 @@
+From c527d1aeb3199c92dccd973b97c388f44035e929 Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Tue, 16 Dec 2025 01:03:48 +0000
+Subject: [PATCH] scroll/axis bindings this adds bindings for the pointer axis.
+ it also adds a swc_pointer_send-axis helper for compositors that want to
+ sometimes intercept axis events. various window stacking helpers were also
+ added
+
+---
+ libswc/bindings.c   | 66 +++++++++++++++++++++++++++++++-
+ libswc/compositor.c | 92 +++++++++++++++++++++++++++++++++++++++++++++
+ libswc/pointer.c    | 37 ++++++++++++++++++
+ libswc/swc.h        | 32 ++++++++++++++++
+ libswc/window.c     | 12 ++++++
+ 5 files changed, 238 insertions(+), 1 deletion(-)
+
+diff --git a/libswc/bindings.c b/libswc/bindings.c
+index 32c2aa1..2894632 100644
+--- a/libswc/bindings.c
++++ b/libswc/bindings.c
+@@ -40,6 +40,13 @@ struct binding {
+ 	void *data;
+ };
+ 
++struct axis_binding {
++	uint32_t axis;
++	uint32_t modifiers;
++	swc_axis_binding_handler handler;
++	void *data;
++};
++
+ static bool handle_key(struct keyboard *keyboard, uint32_t time, struct key *key, uint32_t state);
+ 
+ static struct keyboard_handler key_binding_handler = {
+@@ -47,12 +54,15 @@ static struct keyboard_handler key_binding_handler = {
+ };
+ 
+ static bool handle_button(struct pointer_handler *handler, uint32_t time, struct button *button, uint32_t state);
++static bool handle_axis(struct pointer_handler *handler, uint32_t time, enum wl_pointer_axis axis,
++                        enum wl_pointer_axis_source source, wl_fixed_t value, int value120);
+ 
+ static struct pointer_handler button_binding_handler = {
+ 	.button = handle_button,
++	.axis = handle_axis,
+ };
+ 
+-static struct wl_array key_bindings, button_bindings;
++static struct wl_array key_bindings, button_bindings, axis_bindings;
+ 
+ const struct swc_bindings swc_bindings = {
+ 	.keyboard_handler = &key_binding_handler,
+@@ -107,6 +117,19 @@ find_button_binding(uint32_t modifiers, uint32_t value)
+ 	return find_binding(&button_bindings, modifiers, value);
+ }
+ 
++static struct axis_binding *
++find_axis_binding(uint32_t modifiers, uint32_t axis)
++{
++	struct axis_binding *binding;
++
++	wl_array_for_each (binding, &axis_bindings) {
++		if (binding->axis == axis && (binding->modifiers == modifiers || binding->modifiers == SWC_MOD_ANY))
++			return binding;
++	}
++
++	return NULL;
++}
++
+ static bool
+ handle_binding(uint32_t time, struct press *press, uint32_t state, struct binding *(*find_binding)(uint32_t, uint32_t))
+ {
+@@ -140,11 +163,35 @@ handle_button(struct pointer_handler *handler, uint32_t time, struct button *but
+ 	return handle_binding(time, &button->press, state, &find_button_binding);
+ }
+ 
++bool
++handle_axis(struct pointer_handler *handler, uint32_t time, enum wl_pointer_axis axis,
++            enum wl_pointer_axis_source source, wl_fixed_t value, int value120)
++{
++	(void)handler;
++	(void)source;
++
++	struct axis_binding *binding = find_axis_binding(swc.seat->keyboard->modifiers, axis);
++	int32_t delta120 = value120;
++
++	if (!binding)
++		return false;
++
++	if (!delta120 && value) {
++		delta120 = (int32_t)(wl_fixed_to_double(value) * 120.0);
++		if (!delta120)
++			delta120 = value > 0 ? 1 : -1;
++	}
++
++	binding->handler(binding->data, time, axis, delta120);
++	return true;
++}
++
+ bool
+ bindings_initialize(void)
+ {
+ 	wl_array_init(&key_bindings);
+ 	wl_array_init(&button_bindings);
++	wl_array_init(&axis_bindings);
+ 
+ 	return true;
+ }
+@@ -154,6 +201,7 @@ bindings_finalize(void)
+ {
+ 	wl_array_release(&key_bindings);
+ 	wl_array_release(&button_bindings);
++	wl_array_release(&axis_bindings);
+ }
+ 
+ EXPORT int
+@@ -183,3 +231,19 @@ swc_add_binding(enum swc_binding_type type, uint32_t modifiers, uint32_t value,
+ 
+ 	return 0;
+ }
++
++EXPORT int
++swc_add_axis_binding(uint32_t modifiers, uint32_t axis, swc_axis_binding_handler handler, void *data)
++{
++	struct axis_binding *binding;
++
++	if (!(binding = wl_array_add(&axis_bindings, sizeof(*binding))))
++		return -ENOMEM;
++
++	binding->axis = axis;
++	binding->modifiers = modifiers;
++	binding->handler = handler;
++	binding->data = data;
++
++	return 0;
++}
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index 5f45a16..ed56b7f 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -634,6 +634,98 @@ swc_window_at(int32_t x, int32_t y)
+ 	return view ? &view->window->base : NULL;
+ }
+ 
++static struct compositor_view *
++view_for_window(struct swc_window *base)
++{
++	struct window *window;
++
++	if (!base)
++		return NULL;
++
++	window = (struct window *)base;
++	return window->view;
++}
++
++static struct compositor_view *
++prev_window_view(struct compositor_view *view)
++{
++	struct wl_list *link;
++	struct compositor_view *other;
++
++	for (link = view->link.prev; link != &compositor.views; link = link->prev) {
++		other = wl_container_of(link, other, link);
++
++		if (other->visible && other->window)
++			return other;
++	}
++
++	return NULL;
++}
++
++static struct compositor_view *
++next_window_view(struct compositor_view *view)
++{
++	struct wl_list *link;
++	struct compositor_view *other;
++
++	for (link = view->link.next; link != &compositor.views; link = link->next) {
++		other = wl_container_of(link, other, link);
++
++		if (other->visible && other->window)
++			return other;
++	}
++
++	return NULL;
++}
++
++static void
++damage_views(struct compositor_view *a, struct compositor_view *b)
++{
++	uint32_t screens = a->base.screens | (b ? b->base.screens : 0);
++
++	a->border.damaged = true;
++	pixman_region32_union_rect(&compositor.damage, &compositor.damage,
++	                           a->extents.x1, a->extents.y1,
++	                           (uint32_t)(a->extents.x2 - a->extents.x1),
++	                           (uint32_t)(a->extents.y2 - a->extents.y1));
++
++	if (b) {
++		b->border.damaged = true;
++		pixman_region32_union_rect(&compositor.damage, &compositor.damage,
++		                           b->extents.x1, b->extents.y1,
++		                           (uint32_t)(b->extents.x2 - b->extents.x1),
++		                           (uint32_t)(b->extents.y2 - b->extents.y1));
++	}
++
++	schedule_updates(screens);
++}
++
++EXPORT void
++swc_window_stack(struct swc_window *window, int32_t direction)
++{
++	struct compositor_view *view = view_for_window(window);
++	struct compositor_view *other = NULL;
++
++	if (!view || !view->visible || direction == 0)
++		return;
++
++	if (direction < 0) {
++		other = prev_window_view(view);
++		if (!other)
++			return;
++		wl_list_remove(&view->link);
++		wl_list_insert(other->link.prev, &view->link);
++	} else {
++		other = next_window_view(view);
++		if (!other)
++			return;
++		wl_list_remove(&view->link);
++		wl_list_insert(&other->link, &view->link);
++	}
++
++	damage_views(view, other);
++}
++
+ struct compositor_view *
+ compositor_create_view(struct surface *surface)
+ {
+diff --git a/libswc/pointer.c b/libswc/pointer.c
+index 184186f..cb2582c 100644
+--- a/libswc/pointer.c
++++ b/libswc/pointer.c
+@@ -57,6 +57,43 @@ swc_pointer_send_button(uint32_t time, uint32_t button, uint32_t state)
+ 	pointer->client_axis_source = -1;
+ }
+ 
++EXPORT void
++swc_pointer_send_axis(uint32_t time, uint32_t axis, int32_t value120)
++{
++	struct pointer *pointer = swc.seat ? swc.seat->pointer : NULL;
++	struct wl_resource *resource;
++	wl_fixed_t value;
++
++	if (!pointer || wl_list_empty(&pointer->focus.active))
++		return;
++
++	value = wl_fixed_from_double((double)value120 / 120.0);
++
++	wl_resource_for_each (resource, &pointer->focus.active) {
++		int ver = wl_resource_get_version(resource);
++
++		if (ver >= WL_POINTER_AXIS_SOURCE_SINCE_VERSION)
++			wl_pointer_send_axis_source(resource, WL_POINTER_AXIS_SOURCE_WHEEL);
++		if (value120) {
++			if (ver >= WL_POINTER_AXIS_VALUE120_SINCE_VERSION)
++				wl_pointer_send_axis_value120(resource, axis, value120);
++			else if (ver >= WL_POINTER_AXIS_DISCRETE_SINCE_VERSION)
++				wl_pointer_send_axis_discrete(resource, axis, value120 / 120);
++		}
++
++		if (value)
++			wl_pointer_send_axis(resource, time, axis, value);
++		else if (ver >= WL_POINTER_AXIS_STOP_SINCE_VERSION)
++			wl_pointer_send_axis_stop(resource, time, axis);
++	}
++
++	wl_resource_for_each (resource, &pointer->focus.active) {
++		if (wl_resource_get_version(resource) >= WL_POINTER_FRAME_SINCE_VERSION)
++			wl_pointer_send_frame(resource);
++	}
++	pointer->client_axis_source = -1;
++}
++
+ static void
+ enter(struct input_focus_handler *handler, struct wl_list *resources, struct compositor_view *view)
+ {
+diff --git a/libswc/swc.h b/libswc/swc.h
+index 24c8c3b..2aa06c8 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -53,6 +53,16 @@ bool swc_cursor_position(int32_t *x, int32_t *y);
+  */
+ void swc_pointer_send_button(uint32_t time, uint32_t button, uint32_t state);
+ 
++/**
++ * Send a pointer axis event to the currently focused client.
++ *
++ * This is intended for window managers which intercept axis events (for
++ * example for mouse chords) but want normal scrolling to still reach clients.
++ *
++ * value120 uses the wl_pointer "120 units" convention.
++ */
++void swc_pointer_send_axis(uint32_t time, uint32_t axis, int32_t value120);
++
+ /**
+  * draw [or update] a simple box overlay
+  *
+@@ -262,6 +272,11 @@ void swc_window_set_size(struct swc_window *window, uint32_t width, uint32_t hei
+  */
+ void swc_window_set_geometry(struct swc_window *window, const struct swc_rectangle *geometry);
+ 
++/**
++ * Get the window's current geometry in compositor-global coordinates.
++ */
++bool swc_window_get_geometry(const struct swc_window *window, struct swc_rectangle *geometry);
++
+ /**
+  * Set the window's border color and width.
+  *
+@@ -307,6 +322,14 @@ void swc_window_end_resize(struct swc_window *window);
+  */
+ struct swc_window *swc_window_at(int32_t x, int32_t y);
+ 
++/**
++ * move a window in the stacking order by one step
++ *
++ * direction < 0 moves the window towards the front (higher)
++ * direction > 0 moves the window towards the back (lower)
++ */
++void swc_window_stack(struct swc_window *window, int32_t direction);
++
+ /* }}} */
+ 
+ /* Bindings {{{ */
+@@ -325,6 +348,7 @@ enum swc_binding_type {
+ };
+ 
+ typedef void (*swc_binding_handler)(void *data, uint32_t time, uint32_t value, uint32_t state);
++typedef void (*swc_axis_binding_handler)(void *data, uint32_t time, uint32_t axis, int32_t value120);
+ 
+ /**
+  * Register a new input binding.
+@@ -333,6 +357,14 @@ typedef void (*swc_binding_handler)(void *data, uint32_t time, uint32_t value, u
+  */
+ int swc_add_binding(enum swc_binding_type type, uint32_t modifiers, uint32_t value, swc_binding_handler handler, void *data);
+ 
++/**
++ * register a new pointer axis binding
++ *
++ * this will intercept axis events from clients; use swc_pointer_send_axis()
++ * from the handler to forward events when appropriate
++ */
++int swc_add_axis_binding(uint32_t modifiers, uint32_t axis, swc_axis_binding_handler handler, void *data);
++
+ /* }}} */
+ 
+ /**
+diff --git a/libswc/window.c b/libswc/window.c
+index 6e5a235..b1fdeb9 100644
+--- a/libswc/window.c
++++ b/libswc/window.c
+@@ -248,6 +248,18 @@ swc_window_set_geometry(struct swc_window *window, const struct swc_rectangle *g
+ 	swc_window_set_position(window, geometry->x, geometry->y);
+ }
+ 
++EXPORT bool
++swc_window_get_geometry(const struct swc_window *base, struct swc_rectangle *geometry)
++{
++	struct window *window = INTERNAL((struct swc_window *)base);
++
++	if (!window || !geometry)
++		return false;
++
++	*geometry = window->view->base.geometry;
++	return true;
++}
++
+ EXPORT void
+ swc_window_set_border(struct swc_window *window, uint32_t inner_border_color, uint32_t inner_border_width, 
+ 		uint32_t outer_border_color, uint32_t outer_border_width)
+-- 
+2.49.0
+

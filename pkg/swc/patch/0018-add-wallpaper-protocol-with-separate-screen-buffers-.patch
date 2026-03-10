@@ -1,0 +1,430 @@
+From 40e72dcbb90be5d92615aea647810a56dd0c878a Mon Sep 17 00:00:00 2001
+From: uint <abhinav.prsai@gmail.com>
+Date: Wed, 18 Feb 2026 06:07:03 +0000
+Subject: [PATCH] add wallpaper protocol with separate screen buffers support
+
+---
+ libswc/compositor.c        |  39 ++++++++--
+ libswc/compositor.h        |   1 +
+ libswc/internal.h          |   1 +
+ libswc/swc.c               |   1 +
+ libswc/swc.h               |  17 +++--
+ libswc/wallpaper.c         | 147 +++++++++++++++++++++++--------------
+ libswc/wallpaper.h         |  12 +++
+ protocol/swc_wallpaper.xml |  19 +++++
+ 8 files changed, 170 insertions(+), 67 deletions(-)
+ create mode 100644 libswc/wallpaper.h
+ create mode 100644 protocol/swc_wallpaper.xml
+
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index 4875af8..cb7863b 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -44,6 +44,7 @@
+ #include "subsurface.h"
+ #include "util.h"
+ #include "view.h"
++#include "wallpaper.h"
+ #include "window.h"
+ 
+ #include <errno.h>
+@@ -109,6 +110,7 @@ static struct {
+ 
+ 	bool updating;
+ 	struct wl_global *global;
++	bool initialized;
+ 
+ 	/* zoom level (1.0 = normal, >1 = zoomed in, <1 = zoomed out) */
+ 	float zoom;
+@@ -302,7 +304,7 @@ repaint_view(struct target *target, struct compositor_view *view, pixman_region3
+ }
+ 
+ static void
+-renderer_repaint(struct target *target, pixman_region32_t *damage, pixman_region32_t *base_damage, struct wl_list *views)
++renderer_repaint(struct target *target, pixman_region32_t *damage, pixman_region32_t *base_damage, struct wl_list *views, struct screen *screen)
+ {
+ 	struct compositor_view *view;
+ 	const struct swc_rectangle *target_geom = &target->view->geometry;
+@@ -314,10 +316,12 @@ renderer_repaint(struct target *target, pixman_region32_t *damage, pixman_region
+ 	wld_set_target_surface(swc.drm->renderer, target->surface);
+ 
+ 	if (pixman_region32_not_empty(base_damage)) {
++		struct wld_buffer *background = swc_wallpaper_buffer_for_screen(screen);
++
+ 		pixman_region32_translate(base_damage, -target->view->geometry.x, -target->view->geometry.y);
+ 		
+-		if(wallbuf)
+-			wld_copy_region(swc.drm->renderer, wallbuf, 0, 0, base_damage);
++		if (background)
++			wld_copy_region(swc.drm->renderer, background, 0, 0, base_damage);
+ 
+ 		else
+ 			wld_fill_region(swc.drm->renderer, bgcolor, base_damage);
+@@ -508,6 +512,23 @@ schedule_updates(uint32_t screens)
+ 	compositor.scheduled_updates |= screens;
+ }
+ 
++void
++compositor_damage_all(void)
++{
++	struct screen *screen;
++
++	if (!compositor.initialized)
++		return;
++
++	wl_list_for_each (screen, &swc.screens, link) {
++		pixman_region32_union_rect(&compositor.damage, &compositor.damage,
++			screen->base.geometry.x, screen->base.geometry.y,
++			screen->base.geometry.width, screen->base.geometry.height);
++	}
++
++	schedule_updates(-1);
++}
++
+ static void
+ overlay_damage_region(int32_t x, int32_t y, uint32_t width, uint32_t height, uint32_t border_width)
+ {
+@@ -597,6 +618,7 @@ render_zoomed_to_shm(struct screen *screen, float zoom)
+ 	int32_t cx = screen_x + width / 2;
+ 	int32_t cy = screen_y + height / 2;
+ 	struct compositor_view *view;
++	struct wld_buffer *background;
+ 
+ 	struct wld_buffer *buffer = wld_create_buffer(swc.shm->context,
+ 		width, height, WLD_FORMAT_XRGB8888, WLD_FLAG_MAP);
+@@ -610,8 +632,9 @@ render_zoomed_to_shm(struct screen *screen, float zoom)
+ 
+ 	pixman_region32_t full;
+ 	pixman_region32_init_rect(&full, 0, 0, width, height);
+-	if (wallbuf)
+-		wld_copy_region(swc.shm->renderer, wallbuf, 0, 0, &full);
++	background = swc_wallpaper_buffer_for_screen(screen);
++	if (background)
++		wld_copy_region(swc.shm->renderer, background, 0, 0, &full);
+ 	else
+ 		wld_fill_region(swc.shm->renderer, bgcolor, &full);
+ 	pixman_region32_fini(&full);
+@@ -1326,7 +1349,7 @@ update_screen(struct screen *screen)
+ 		pixman_region32_translate(&damage, geom->x, geom->y);
+ 		pixman_region32_init(&base_damage);
+ 		pixman_region32_subtract(&base_damage, &damage, &compositor.opaque);
+-		renderer_repaint(target, &damage, &base_damage, &compositor.views);
++		renderer_repaint(target, &damage, &base_damage, &compositor.views, screen);
+ 		pixman_region32_fini(&damage);
+ 		pixman_region32_fini(&base_damage);
+ 	}
+@@ -1507,12 +1530,16 @@ compositor_initialize(void)
+ 	for (keysym = XKB_KEY_XF86Switch_VT_1; keysym <= XKB_KEY_XF86Switch_VT_12; ++keysym)
+ 		swc_add_binding(SWC_BINDING_KEY, SWC_MOD_ANY, keysym, &handle_switch_vt, NULL);
+ 
++	compositor.initialized = true;
++
+ 	return true;
+ }
+ 
+ void
+ compositor_finalize(void)
+ {
++	compositor.initialized = false;
++
+ 	if (compositor.zoom_buffer)
+ 		wld_buffer_unreference(compositor.zoom_buffer);
+ 	pixman_region32_fini(&compositor.damage);
+diff --git a/libswc/compositor.h b/libswc/compositor.h
+index 529c360..6c938ac 100644
+--- a/libswc/compositor.h
++++ b/libswc/compositor.h
+@@ -45,6 +45,7 @@ struct swc_compositor {
+ 
+ bool compositor_initialize(void);
+ void compositor_finalize(void);
++void compositor_damage_all(void);
+ 
+ struct compositor_view {
+ 	struct view base;
+diff --git a/libswc/internal.h b/libswc/internal.h
+index 8efba6d..6d2b0a1 100644
+--- a/libswc/internal.h
++++ b/libswc/internal.h
+@@ -50,6 +50,7 @@ struct swc {
+ 	struct wl_global *panel_manager;
+ 	struct wl_global *shell;
+ 	struct wl_global *subcompositor;
++	struct wl_global *wallpaper_manager;
+ 	struct wl_global *xdg_decoration_manager;
+ 	struct wl_global *xdg_shell;
+ 
+diff --git a/libswc/swc.c b/libswc/swc.c
+index 8814c13..1035ef3 100644
+--- a/libswc/swc.c
++++ b/libswc/swc.c
+@@ -39,6 +39,7 @@
+ #include "shm.h"
+ #include "subcompositor.h"
+ #include "util.h"
++#include "wallpaper.h"
+ #include "window.h"
+ #include "xdg_decoration.h"
+ #include "xdg_shell.h"
+diff --git a/libswc/swc.h b/libswc/swc.h
+index 033bdd4..f2a8ae1 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -35,6 +35,7 @@ extern "C" {
+ struct libinput_device;
+ struct wl_display;
+ struct wl_event_loop;
++struct wld_buffer;
+ 
+ /**
+  * gett the current cursor position
+@@ -438,19 +439,21 @@ int swc_add_axis_binding(uint32_t modifiers, uint32_t axis, swc_axis_binding_han
+ 
+ /* Wallpaper {{{ */
+ 
+-extern unsigned char *wallpaper;
+-extern struct wld_buffer *wallbuf;
+-
+ /**
+- * Set wallpaper to image from fs path.
+- * TODO: tiling, maybe diff image for each screen
++ * Set fallback wallpaper buffer for all screens that dom't have an override.
+  */
++void swc_wallpaper_set_buffer(struct wld_buffer *buffer);
+ 
+-void swc_wallpaper_set(char* path);
++/**
++ * Set wallpaper buffer for specified screen id.
++ *
++ * Passing NULL clears the override for that screen.
++ */
++void swc_wallpaper_set_buffer_for_screen(uint8_t screen_id, struct wld_buffer *buffer);
+ 
+ /**
+  * Set wallpaper to a single color
+- * pretty much ignored if wallpaper is set to image
++ * used when no wallpaper buffer is set
+  * defaults to black
+  */
+ 
+diff --git a/libswc/wallpaper.c b/libswc/wallpaper.c
+index 7618bf0..deeb5fd 100644
+--- a/libswc/wallpaper.c
++++ b/libswc/wallpaper.c
+@@ -1,77 +1,116 @@
+-#include <pixman.h>
+ #include <wld/wld.h>
+ 
+-#define STB_IMAGE_IMPLEMENTATION
+-#define STBI_NO_HDR
+-#include "../stb/stb_image.h"
+-
+-#define STB_IMAGE_RESIZE_IMPLEMENTATION
+-#include "../stb/stb_image_resize2.h"
+-
+ #include "swc.h"
+-#include "internal.h"
+-#include "drm.h"
+-#include "util.h"
+-#include "shm.h"
++#include "compositor.h"
+ #include "screen.h"
++#include "util.h"
++#include "wayland_buffer.h"
++#include "wallpaper.h"
++#include "swc_wallpaper-server-protocol.h"
+ 
+-unsigned char *wallpaper = NULL;
+-struct wld_buffer *wallbuf = NULL;
++#define MAX_WALLPAPER_SCREENS 32
+ 
++static struct wld_buffer *wallbuf = NULL;
++static struct wld_buffer *screen_wallbuf[MAX_WALLPAPER_SCREENS];
+ uint32_t bgcolor = 0xff000000;
+ 
++static void
++set_buffer_slot(struct wld_buffer **slot, struct wld_buffer *buffer)
++{
++	if (buffer)
++		wld_buffer_reference(buffer);
++	if (*slot)
++		wld_buffer_unreference(*slot);
++
++	*slot = buffer;
++}
++
++struct wld_buffer *
++swc_wallpaper_buffer_for_screen(struct screen *screen)
++{
++	if (screen
++	 && screen->id < ARRAY_LENGTH(screen_wallbuf)
++	 && screen_wallbuf[screen->id])
++		return screen_wallbuf[screen->id];
++
++	return wallbuf;
++}
++
+ EXPORT void
+-swc_wallpaper_set(char* path)
++swc_wallpaper_set_buffer(struct wld_buffer *buffer)
+ {
+-	int width, height, chan;
+-	unsigned char *loaded;
+-	struct screen *screen;
+-	int target_width = 0, target_height = 0;
++	set_buffer_slot(&wallbuf, buffer);
++	compositor_damage_all();
++}
+ 
+-	loaded = stbi_load(path, &width, &height, &chan, 4);
+-	if (!loaded)
++EXPORT void
++swc_wallpaper_set_buffer_for_screen(uint8_t screen_id, struct wld_buffer *buffer)
++{
++	if (screen_id >= ARRAY_LENGTH(screen_wallbuf))
+ 		return;
+ 
+-	/* get screen dimensions */
+-	wl_list_for_each(screen, &swc.screens, link) {
+-		target_width = screen->base.geometry.width;
+-		target_height = screen->base.geometry.height;
+-		break;
+-	}
++	set_buffer_slot(&screen_wallbuf[screen_id], buffer);
++	compositor_damage_all();
++}
++
++EXPORT void
++swc_wallpaper_color_set(uint32_t color)
++{
++	bgcolor = color;
++	compositor_damage_all();
++}
++
++static void
++set_buffer(struct wl_client *client, struct wl_resource *resource,
++           int32_t screen_id, struct wl_resource *buffer_resource)
++{
++	struct wld_buffer *buffer = NULL;
+ 
+-	/* If we have a screen and dimensions wrong  scale  */
+-	if (target_width > 0 && target_height > 0 &&
+-	    (width != target_width || height != target_height)) {
+-		wallpaper = stbir_resize_uint8_srgb(loaded, width, height, 0,
+-		                                     NULL, target_width, target_height, 0,
+-		                                     STBIR_RGBA);
+-		stbi_image_free(loaded);
+-		width = target_width;
+-		height = target_height;
+-	} else {
+-		wallpaper = loaded;
++	(void)client;
++
++	if (buffer_resource) {
++		buffer = wayland_buffer_get(buffer_resource);
++		if (!buffer) {
++			wl_resource_post_error(resource, WL_DISPLAY_ERROR_INVALID_OBJECT,
++			                       "buffer is not a wl_buffer");
++			return;
++		}
+ 	}
+ 
+-	/* swap color channels to be compatible */
+-	for(int i = 0; i < width * height; i++) {
+-		unsigned char r = wallpaper[i*4];
+-		wallpaper[i*4] = wallpaper[(i*4)+2];
+-		wallpaper[(i*4)+2] = r;
++	if (screen_id == -1) {
++		swc_wallpaper_set_buffer(buffer);
++		return;
+ 	}
+ 
+-	union wld_object obj;
+-	obj.ptr = (uint32_t*)wallpaper;
++	if (screen_id < 0 || screen_id >= ARRAY_LENGTH(screen_wallbuf))
++		return;
+ 
+-	wallbuf = wld_import_buffer(swc.shm->context,
+-			WLD_OBJECT_DATA,
+-			obj,
+-			width, height,
+-			WLD_FORMAT_ARGB8888,
+-			width * 4);
++	swc_wallpaper_set_buffer_for_screen((uint8_t)screen_id, buffer);
+ }
+ 
+-EXPORT void
+-swc_wallpaper_color_set(uint32_t color)
++static const struct swc_wallpaper_interface wallpaper_impl = {
++	.destroy = destroy_resource,
++	.set_buffer = set_buffer,
++};
++
++static void
++bind_wallpaper(struct wl_client *client, void *data, uint32_t version, uint32_t id)
+ {
+-	bgcolor = color;
++	(void)data;
++
++	struct wl_resource *resource;
++
++	resource = wl_resource_create(client, &swc_wallpaper_interface, version, id);
++	if (!resource) {
++		wl_client_post_no_memory(client);
++		return;
++	}
++
++	wl_resource_set_implementation(resource, &wallpaper_impl, NULL, NULL);
++}
++
++struct wl_global *
++swc_wallpaper_manager_create(struct wl_display *display)
++{
++	return wl_global_create(display, &swc_wallpaper_interface, 1, NULL, bind_wallpaper);
+ }
+diff --git a/libswc/wallpaper.h b/libswc/wallpaper.h
+new file mode 100644
+index 0000000..8c4d834
+--- /dev/null
++++ b/libswc/wallpaper.h
+@@ -0,0 +1,12 @@
++#ifndef SWC_WALLPAPER_H
++#define SWC_WALLPAPER_H
++
++struct wl_display;
++struct wl_global;
++struct wld_buffer;
++struct screen;
++
++struct wl_global *swc_wallpaper_manager_create(struct wl_display *display);
++struct wld_buffer *swc_wallpaper_buffer_for_screen(struct screen *screen);
++
++#endif
+diff --git a/protocol/swc_wallpaper.xml b/protocol/swc_wallpaper.xml
+new file mode 100644
+index 0000000..dd7479a
+--- /dev/null
++++ b/protocol/swc_wallpaper.xml
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<protocol name="swc_wallpaper">
++    <interface name="swc_wallpaper" version="1">
++        <description summary="set compositor wallpaper">
++            Allows clients to set wallpaper buffers.
++        </description>
++
++        <request name="destroy" type="destructor" />
++
++        <request name="set_buffer">
++            <description summary="set or clear wallpaper buffer">
++                screen_id=-1 targets global fallback wallpaper.
++                Any other screen_id targets that id.
++            </description>
++            <arg name="screen_id" type="int" />
++            <arg name="buffer" type="object" interface="wl_buffer" allow-null="true" />
++        </request>
++    </interface>
++</protocol>
+-- 
+2.49.0
+

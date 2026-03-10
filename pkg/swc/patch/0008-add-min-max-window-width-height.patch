@@ -1,0 +1,99 @@
+From af4e4ebba3d7fd5840c200c26e339246242bbee7 Mon Sep 17 00:00:00 2001
+From: uint <abhinav.prsai@gmail.com>
+Date: Sun, 15 Feb 2026 14:24:18 +0000
+Subject: [PATCH] add min/max window width/height
+
+fixes swc wm dying if resize value is too large
+(unsigned wrapping back)
+---
+ libswc/swc.h    |  4 ++++
+ libswc/window.c | 37 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 41 insertions(+)
+
+diff --git a/libswc/swc.h b/libswc/swc.h
+index 3776929..dde7ef0 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -193,6 +193,10 @@ struct swc_window {
+ 
+ 	struct swc_window *parent;
+ 	uint32_t motion_throttle_ms;
++	uint32_t min_width;
++	uint32_t min_height;
++	uint32_t max_width;
++	uint32_t max_height;
+ };
+ 
+ /**
+diff --git a/libswc/window.c b/libswc/window.c
+index bfbbbbd..60432ae 100644
+--- a/libswc/window.c
++++ b/libswc/window.c
+@@ -53,6 +53,36 @@ should_throttle_motion(uint32_t throttle_ms, uint32_t *last_time, uint32_t time)
+ 	return false;
+ }
+ 
++static uint32_t
++clamp_dimension(int32_t value, uint32_t min, uint32_t max)
++{
++	if (value < 0)
++		value = 0;
++
++	if (min && value < min)
++		value = min;
++
++	if (max) {
++		if (min && max < min)
++			max = min;
++
++		if (value > max)
++			value = max;
++	}
++
++	if (value > UINT32_MAX)
++		value = UINT32_MAX;
++
++	return value;
++}
++
++static void
++clamp_window_size(const struct window *window, uint32_t *width, uint32_t *height)
++{
++	*width = clamp_dimension(*width, window->base.min_width, window->base.max_width);
++	*height = clamp_dimension(*height, window->base.min_height, window->base.max_height);
++}
++
+ static void
+ handle_window_enter(struct wl_listener *listener, void *data)
+ {
+@@ -241,6 +271,8 @@ swc_window_set_size(struct swc_window *base, uint32_t width, uint32_t height)
+ 	struct window *window = INTERNAL(base);
+ 	struct swc_rectangle *geom = &window->view->base.geometry;
+ 
++	clamp_window_size(window, &width, &height);
++
+ 	if ((window->configure.pending && width == window->configure.width && height == window->configure.height)
+ 	 || (!window->configure.pending && width == geom->width && height == geom->height))
+ 	{
+@@ -345,6 +377,7 @@ resize_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t fx, wl_
+ 	else if (window->resize.edges & SWC_WINDOW_EDGE_BOTTOM)
+ 		height = wl_fixed_to_int(fy) + window->resize.offset.y - geometry->y;
+ 
++	clamp_window_size(window, &width, &height);
+ 	window->impl->configure(window, width, height);
+ 
+ 	return true;
+@@ -412,6 +445,10 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
+ 	window->view_handler.impl = &view_handler_impl;
+ 	window->view->window = window;
+ 	window->base.motion_throttle_ms = def_motion_throttle_ms;
++	window->base.min_width = 0;
++	window->base.min_height = 0;
++	window->base.max_width = 0;
++	window->base.max_height = 0;
+ 	window->managed = false;
+ 	window->mode = WINDOW_MODE_STACKED;
+ 	window->move.pending = false;
+-- 
+2.49.0
+

@@ -1,0 +1,124 @@
+From 73322f31c68b0ef38e16534b80aae31a75ef712c Mon Sep 17 00:00:00 2001
+From: dalem <lain@dalem.foo>
+Date: Sat, 20 Dec 2025 21:09:41 +0100
+Subject: [PATCH] add wallpaper support.
+
+---
+ libswc/compositor.c |  8 ++++++--
+ libswc/swc.h        | 23 ++++++++++++++++++++++
+ libswc/wallpaper.c  | 48 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 77 insertions(+), 2 deletions(-)
+ create mode 100644 libswc/wallpaper.c
+
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index 0f978d9..d70377d 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -287,10 +287,14 @@ renderer_repaint(struct target *target, pixman_region32_t *damage, pixman_region
+ 
+ 	wld_set_target_surface(swc.drm->renderer, target->surface);
+ 
+-	/* Paint base damage black. */
+ 	if (pixman_region32_not_empty(base_damage)) {
+ 		pixman_region32_translate(base_damage, -target->view->geometry.x, -target->view->geometry.y);
+-		wld_fill_region(swc.drm->renderer, 0xff000000, base_damage);
++		
++		if(wallbuf)
++			wld_copy_region(swc.drm->renderer, wallbuf, 0, 0, base_damage);
++
++		else
++			wld_fill_region(swc.drm->renderer, bgcolor, base_damage);
+ 	}
+ 
+ 	wl_list_for_each_reverse (view, views, link) {
+diff --git a/libswc/swc.h b/libswc/swc.h
+index 505391d..a23e556 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -436,6 +436,29 @@ int swc_add_axis_binding(uint32_t modifiers, uint32_t axis, swc_axis_binding_han
+ 
+ /* }}} */
+ 
++/* Wallpaper {{{ */
++
++extern unsigned char *wallpaper;
++extern struct wld_buffer *wallbuf;
++
++/**
++ * Set wallpaper to image from fs path.
++ * TODO: scaling, tiling, maybe diff image for each screen
++ */
++
++void swc_wallpaper_init(char* path);
++
++/**
++ * Set wallpaper to a single color
++ * pretty much ignored if wallpaper is set to image
++ * defaults to black
++ */
++
++extern uint32_t bgcolor;
++void swc_wallpaper_color_set(uint32_t color);
++
++/* }}} */
++
+ /**
+  * This is a user-provided structure that swc will use to notify the display
+  * server of new windows, screens and input devices.
+diff --git a/libswc/wallpaper.c b/libswc/wallpaper.c
+new file mode 100644
+index 0000000..53f8a0c
+--- /dev/null
++++ b/libswc/wallpaper.c
+@@ -0,0 +1,48 @@
++#include <pixman.h>
++#include <wld/wld.h>
++
++#define STB_IMAGE_IMPLEMENTATION
++#define STBI_NO_HDR
++#include "../stb/stb_image.h"
++
++#include "swc.h"
++#include "internal.h"
++#include "drm.h"
++#include "util.h"
++#include "shm.h"
++
++unsigned char *wallpaper = NULL;
++struct wld_buffer *wallbuf = NULL;
++
++uint32_t bgcolor = 0xff000000;
++
++EXPORT void
++swc_wallpaper_init(char* path)
++{
++	int width, height, chan;
++
++	wallpaper = stbi_load(path, &width, &height, &chan, 4);
++
++	/* swap color channels to be compatible */
++	for(int i = 0; i < width * height; i++) {
++		unsigned char r = wallpaper[i*4];
++		wallpaper[i*4] = wallpaper[(i*4)+2];
++		wallpaper[(i*4)+2] = r;
++	}
++
++	union wld_object obj;
++	obj.ptr = (uint32_t*)wallpaper;
++
++	wallbuf = wld_import_buffer(swc.shm->context,
++			WLD_OBJECT_DATA,
++			obj,
++			width, height,
++			WLD_FORMAT_ARGB8888,
++			width * 4);
++}
++
++EXPORT void
++swc_wallpaper_color_set(uint32_t color)
++{
++	bgcolor = color;
++}
+-- 
+2.49.0
+

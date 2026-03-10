@@ -1,0 +1,678 @@
+From c04d6b835bc440cb56babfc63e45c705c1723820 Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Sat, 31 Jan 2026 21:34:22 +0000
+Subject: [PATCH] initial subsurface implementation add basic wl_subsurface
+ support with naive patrent child tracking, subsurface positioning, parent
+ clipping, synchronized subsurface commits, stacking, and so on. TLDR, it gets
+ firefox rendering, but it's not very good and crashed often.
+
+---
+ libswc/compositor.c    |  69 +++++++++++++--
+ libswc/compositor.h    |   2 +
+ libswc/subcompositor.c |  13 ++-
+ libswc/subsurface.c    | 190 +++++++++++++++++++++++++++++++++++++++--
+ libswc/subsurface.h    |  17 +++-
+ libswc/surface.c       |  38 ++++++++-
+ libswc/surface.h       |   9 ++
+ libswc/window.c        |  10 ++-
+ libswc/xdg_shell.c     |  19 +++++
+ 9 files changed, 346 insertions(+), 21 deletions(-)
+
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index d70377d..d2321b9 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -219,11 +219,18 @@ repaint_view(struct target *target, struct compositor_view *view, pixman_region3
+ {
+ 	pixman_region32_t view_region, view_damage, border_damage;
+ 	const struct swc_rectangle *geom = &view->base.geometry, *target_geom = &target->view->geometry;
++	bool has_parent = view->parent && view->parent != view;
++	pixman_region32_t parent_region;
+ 
+ 	if (!view->base.buffer)
+ 		return;
+ 
+ 	pixman_region32_init_rect(&view_region, geom->x, geom->y, geom->width, geom->height);
++	if (has_parent) {
++		const struct swc_rectangle *parent_geom = &view->parent->base.geometry;
++		pixman_region32_init_rect(&parent_region, parent_geom->x, parent_geom->y,
++					  parent_geom->width, parent_geom->height);
++	}
+ 	pixman_region32_init_with_extents(&view_damage, &view->extents);
+ 	pixman_region32_init(&border_damage);
+ 
+@@ -231,9 +238,13 @@ repaint_view(struct target *target, struct compositor_view *view, pixman_region3
+ 	pixman_region32_subtract(&view_damage, &view_damage, &view->clip);
+ 	pixman_region32_subtract(&border_damage, &view_damage, &view_region);
+ 	pixman_region32_intersect(&view_damage, &view_damage, &view_region);
++	if (has_parent) {
++		pixman_region32_intersect(&view_damage, &view_damage, &parent_region);
++		pixman_region32_intersect(&border_damage, &border_damage, &parent_region);
++	}
+ 
+ 	if (pixman_region32_not_empty(&view_damage)) {
+-		pixman_region32_translate(&view_damage, -geom->x, -geom->y);
++		pixman_region32_translate(&view_damage, -geom->x + view->buffer_offset_x, -geom->y + view->buffer_offset_y);
+ 		wld_copy_region(swc.drm->renderer, view->buffer, geom->x - target_geom->x, geom->y - target_geom->y, &view_damage);
+ 	}
+ 
+@@ -272,6 +283,8 @@ repaint_view(struct target *target, struct compositor_view *view, pixman_region3
+ 	pixman_region32_fini(&in_rect);
+ 	pixman_region32_fini(&out_border);
+ 	pixman_region32_fini(&in_border);
++	if (has_parent)
++		pixman_region32_fini(&parent_region);
+ 
+ }
+ 
+@@ -731,8 +744,11 @@ static int
+ attach(struct view *base, struct wld_buffer *buffer)
+ {
+ 	struct compositor_view *view = (void *)base;
++	struct surface *surface = view->surface;
+ 	pixman_box32_t old_extents;
+ 	pixman_region32_t old, new, both;
++	uint32_t new_width = buffer ? buffer->width : 0;
++	uint32_t new_height = buffer ? buffer->height : 0;
+ 	int ret;
+ 
+ 	if ((ret = renderer_attach(view, buffer)) < 0)
+@@ -742,7 +758,18 @@ attach(struct view *base, struct wld_buffer *buffer)
+ 	 * visible on. */
+ 	update(&view->base);
+ 
+-	if (view_set_size_from_buffer(&view->base, buffer)) {
++	view->buffer_offset_x = 0;
++	view->buffer_offset_y = 0;
++	if (surface && surface->has_window_geometry && buffer) {
++		if (surface->window_width > 0 && surface->window_height > 0) {
++			new_width = (uint32_t)surface->window_width;
++			new_height = (uint32_t)surface->window_height;
++			view->buffer_offset_x = surface->window_x;
++			view->buffer_offset_y = surface->window_y;
++		}
++	}
++
++	if (view_set_size(&view->base, new_width, new_height)) {
+ 		/* The view was resized. */
+ 		old_extents = view->extents;
+ 		update_extents(view);
+@@ -818,7 +845,8 @@ view_at(int32_t x, int32_t y)
+ 			continue;
+ 
+ 		if (pixman_region32_contains_point(&view->surface->state.input,
+-		                                   x - geom->x, y - geom->y, NULL))
++		                                   x - geom->x + view->buffer_offset_x,
++		                                   y - geom->y + view->buffer_offset_y, NULL))
+ 		{
+ 			return view;
+ 		}
+@@ -992,6 +1020,8 @@ compositor_create_view(struct surface *surface)
+ 	view->buffer = NULL;
+ 	view->window = NULL;
+ 	view->parent = NULL;
++	view->buffer_offset_x = 0;
++	view->buffer_offset_y = 0;
+ 	view->visible = false;
+ 	view->extents.x1 = 0;
+ 	view->extents.y1 = 0;
+@@ -1137,13 +1167,28 @@ calculate_damage(void)
+ 			continue;
+ 
+ 		geom = &view->base.geometry;
++		bool has_parent = view->parent && view->parent != view;
++		pixman_region32_t view_region;
++		pixman_region32_t parent_region;
++
++		pixman_region32_init_rect(&view_region, geom->x, geom->y, geom->width, geom->height);
++		if (has_parent) {
++			const struct swc_rectangle *parent_geom = &view->parent->base.geometry;
++			pixman_region32_init_rect(&parent_region, parent_geom->x, parent_geom->y,
++			                          parent_geom->width, parent_geom->height);
++		}
+ 
+ 		/* Clip the surface by the opaque region covering it. */
+ 		pixman_region32_copy(&view->clip, &compositor.opaque);
+ 
+ 		/* Translate the opaque region to global coordinates. */
+ 		pixman_region32_copy(&surface_opaque, &view->surface->state.opaque);
+-		pixman_region32_translate(&surface_opaque, geom->x, geom->y);
++		pixman_region32_translate(&surface_opaque,
++		                          geom->x - view->buffer_offset_x,
++		                          geom->y - view->buffer_offset_y);
++		pixman_region32_intersect(&surface_opaque, &surface_opaque, &view_region);
++		if (has_parent)
++			pixman_region32_intersect(&surface_opaque, &surface_opaque, &parent_region);
+ 
+ 		/* Add the surface's opaque region to the accumulated opaque region. */
+ 		pixman_region32_union(&compositor.opaque, &compositor.opaque, &surface_opaque);
+@@ -1154,7 +1199,11 @@ calculate_damage(void)
+ 			renderer_flush_view(view);
+ 
+ 			/* Translate surface damage to global coordinates. */
+-			pixman_region32_translate(surface_damage, geom->x, geom->y);
++			pixman_region32_translate(surface_damage,
++			                          geom->x - view->buffer_offset_x,
++			                          geom->y - view->buffer_offset_y);
++			if (has_parent)
++				pixman_region32_intersect(surface_damage, surface_damage, &parent_region);
+ 
+ 			/* Add the surface damage to the compositor damage. */
+ 			pixman_region32_union(&compositor.damage, &compositor.damage, surface_damage);
+@@ -1163,22 +1212,24 @@ calculate_damage(void)
+ 
+ 	                /* redraw entire thingy if either */
+ 			if (view->border.damaged_border1 || view->border.damaged_border2) {
+-				pixman_region32_t border_region, view_region;
++				pixman_region32_t border_region;
+ 
+ 				pixman_region32_init_with_extents(&border_region, &view->extents);
+-				pixman_region32_init_rect(&view_region, geom->x, geom->y, geom->width, geom->height);
+ 
+ 				pixman_region32_subtract(&border_region, &border_region, &view_region);
+ 
+ 				pixman_region32_union(&compositor.damage, &compositor.damage, &border_region);
+ 
+ 				pixman_region32_fini(&border_region);
+-				pixman_region32_fini(&view_region);
+ 
+ 				view->border.damaged_border1 = false;
+ 				view->border.damaged_border2 = false;
+ 			}
+-		}
++
++		pixman_region32_fini(&view_region);
++		if (has_parent)
++			pixman_region32_fini(&parent_region);
++	}
+ 
+ 	pixman_region32_fini(&surface_opaque);
+ }
+diff --git a/libswc/compositor.h b/libswc/compositor.h
+index 9046f0b..e079d92 100644
+--- a/libswc/compositor.h
++++ b/libswc/compositor.h
+@@ -52,6 +52,8 @@ struct compositor_view {
+ 	struct wld_buffer *buffer;
+ 	struct window *window;
+ 	struct compositor_view *parent;
++	int32_t buffer_offset_x;
++	int32_t buffer_offset_y;
+ 
+ 	/* Whether or not the view is visible (mapped). */
+ 	bool visible;
+diff --git a/libswc/subcompositor.c b/libswc/subcompositor.c
+index 5d1da45..1211f83 100644
+--- a/libswc/subcompositor.c
++++ b/libswc/subcompositor.c
+@@ -25,6 +25,7 @@
+ #include "internal.h"
+ #include "subcompositor.h"
+ #include "subsurface.h"
++#include "surface.h"
+ #include "util.h"
+ 
+ static void
+@@ -32,13 +33,23 @@ get_subsurface(struct wl_client *client, struct wl_resource *resource,
+                uint32_t id, struct wl_resource *surface_resource, struct wl_resource *parent_resource)
+ {
+ 	struct subsurface *subsurface;
++	struct surface *surface = wl_resource_get_user_data(surface_resource);
++	struct surface *parent = wl_resource_get_user_data(parent_resource);
+ 
+-	subsurface = subsurface_new(client, wl_resource_get_version(resource), id);
++	if (!surface || !parent || surface == parent)
++		return;
++
++	if (surface->subsurface)
++		return;
++
++	subsurface = subsurface_new(client, wl_resource_get_version(resource), id, surface, parent);
+ 
+ 	if (!subsurface) {
+ 		wl_resource_post_no_memory(resource);
+ 		return;
+ 	}
++
++	surface->subsurface = subsurface;
+ }
+ 
+ static const struct wl_subcompositor_interface subcompositor_impl = {
+diff --git a/libswc/subsurface.c b/libswc/subsurface.c
+index 6f68b2c..e9b7d7c 100644
+--- a/libswc/subsurface.c
++++ b/libswc/subsurface.c
+@@ -22,39 +22,144 @@
+  */
+ 
+ #include "subsurface.h"
++#include "compositor.h"
++#include "surface.h"
+ #include "util.h"
++#include "view.h"
+ 
+ #include <stdlib.h>
+ #include <wayland-server.h>
+ 
++static void
++subsurface_update_position(struct subsurface *subsurface)
++{
++	struct compositor_view *parent_view;
++	struct compositor_view *view;
++
++	if (!subsurface->surface || !subsurface->parent)
++		return;
++
++	view = compositor_view(subsurface->surface->view);
++	parent_view = compositor_view(subsurface->parent->view);
++	if (!view || !parent_view)
++		return;
++
++	view_move(&view->base,
++	          parent_view->base.geometry.x + subsurface->x - parent_view->buffer_offset_x,
++	          parent_view->base.geometry.y + subsurface->y - parent_view->buffer_offset_y);
++}
++
++static void
++handle_parent_view_move(struct view_handler *handler)
++{
++	struct subsurface *subsurface = wl_container_of(handler, subsurface, parent_view_handler);
++	subsurface_update_position(subsurface);
++}
++
++static const struct view_handler_impl parent_view_handler_impl = {
++	.move = handle_parent_view_move,
++};
++
++static void
++handle_surface_destroy(struct wl_listener *listener, void *data)
++{
++	(void)data;
++	struct subsurface *subsurface = wl_container_of(listener, subsurface, surface_destroy_listener);
++	if (subsurface->resource)
++		wl_resource_destroy(subsurface->resource);
++}
++
++static void
++handle_parent_destroy(struct wl_listener *listener, void *data)
++{
++	(void)data;
++	struct subsurface *subsurface = wl_container_of(listener, subsurface, parent_destroy_listener);
++	struct compositor_view *view = NULL;
++
++	if (subsurface->surface && subsurface->surface->view)
++		view = compositor_view(subsurface->surface->view);
++
++	if (view) {
++		view->parent = NULL;
++		compositor_view_hide(view);
++	}
++
++	if (!wl_list_empty(&subsurface->parent_view_handler.link)) {
++		wl_list_remove(&subsurface->parent_view_handler.link);
++		wl_list_init(&subsurface->parent_view_handler.link);
++	}
++
++	if (!wl_list_empty(&subsurface->link)) {
++		wl_list_remove(&subsurface->link);
++		wl_list_init(&subsurface->link);
++	}
++
++	subsurface->parent = NULL;
++}
++
+ static void
+ set_position(struct wl_client *client, struct wl_resource *resource, int32_t x, int32_t y)
+ {
+-	/* TODO: Implement. */
++	(void)client;
++	struct subsurface *subsurface = wl_resource_get_user_data(resource);
++
++	subsurface->x = x;
++	subsurface->y = y;
++	subsurface_update_position(subsurface);
+ }
+ 
+ static void
+ place_above(struct wl_client *client, struct wl_resource *resource, struct wl_resource *sibling_resource)
+ {
+-	/* TODO: Implement. */
++	(void)client;
++	struct subsurface *subsurface = wl_resource_get_user_data(resource);
++	struct surface *sibling_surface = wl_resource_get_user_data(sibling_resource);
++	struct compositor_view *view = compositor_view(subsurface->surface->view);
++	struct compositor_view *sibling_view = compositor_view(sibling_surface->view);
++
++	if (!view || !sibling_view || view == sibling_view)
++		return;
++
++	if (view->parent != sibling_view->parent)
++		return;
++
++	wl_list_remove(&view->link);
++	wl_list_insert(sibling_view->link.prev, &view->link);
+ }
+ 
+ static void
+ place_below(struct wl_client *client, struct wl_resource *resource, struct wl_resource *sibling_resource)
+ {
+-	/* TODO: Implement. */
++	(void)client;
++	struct subsurface *subsurface = wl_resource_get_user_data(resource);
++	struct surface *sibling_surface = wl_resource_get_user_data(sibling_resource);
++	struct compositor_view *view = compositor_view(subsurface->surface->view);
++	struct compositor_view *sibling_view = compositor_view(sibling_surface->view);
++
++	if (!view || !sibling_view || view == sibling_view)
++		return;
++
++	if (view->parent != sibling_view->parent)
++		return;
++
++	wl_list_remove(&view->link);
++	wl_list_insert(&sibling_view->link, &view->link);
+ }
+ 
+ static void
+ set_sync(struct wl_client *client, struct wl_resource *resource)
+ {
+-	/* TODO: Implement. */
++	(void)client;
++	struct subsurface *subsurface = wl_resource_get_user_data(resource);
++	subsurface->sync = true;
+ }
+ 
+ static void
+ set_desync(struct wl_client *client, struct wl_resource *resource)
+ {
+-	/* TODO: Implement. */
++	(void)client;
++	struct subsurface *subsurface = wl_resource_get_user_data(resource);
++	subsurface->sync = false;
+ }
+ 
+ static const struct wl_subsurface_interface subsurface_impl = {
+@@ -70,13 +175,47 @@ static void
+ subsurface_destroy(struct wl_resource *resource)
+ {
+ 	struct subsurface *subsurface = wl_resource_get_user_data(resource);
++
++	if (subsurface->surface) {
++		if (subsurface->surface->subsurface == subsurface)
++			subsurface->surface->subsurface = NULL;
++	}
++
++	if (!wl_list_empty(&subsurface->parent_destroy_listener.link)) {
++		wl_list_remove(&subsurface->parent_destroy_listener.link);
++		wl_list_init(&subsurface->parent_destroy_listener.link);
++	}
++	if (!wl_list_empty(&subsurface->surface_destroy_listener.link)) {
++		wl_list_remove(&subsurface->surface_destroy_listener.link);
++		wl_list_init(&subsurface->surface_destroy_listener.link);
++	}
++
++	if (!wl_list_empty(&subsurface->parent_view_handler.link)) {
++		wl_list_remove(&subsurface->parent_view_handler.link);
++		wl_list_init(&subsurface->parent_view_handler.link);
++	}
++
++	if (!wl_list_empty(&subsurface->link)) {
++		wl_list_remove(&subsurface->link);
++		wl_list_init(&subsurface->link);
++	}
++
++	if (subsurface->surface && subsurface->surface->view) {
++		struct compositor_view *view = compositor_view(subsurface->surface->view);
++		if (view && !view->window)
++			compositor_view_destroy(view);
++	}
++
+ 	free(subsurface);
+ }
+ 
+ struct subsurface *
+-subsurface_new(struct wl_client *client, uint32_t version, uint32_t id)
++subsurface_new(struct wl_client *client, uint32_t version, uint32_t id,
++               struct surface *surface, struct surface *parent)
+ {
+ 	struct subsurface *subsurface;
++	struct compositor_view *parent_view;
++	struct compositor_view *view;
+ 
+ 	if (!(subsurface = malloc(sizeof(*subsurface))))
+ 		goto error0;
+@@ -88,8 +227,47 @@ subsurface_new(struct wl_client *client, uint32_t version, uint32_t id)
+ 
+ 	wl_resource_set_implementation(subsurface->resource, &subsurface_impl, subsurface, &subsurface_destroy);
+ 
++	subsurface->surface = surface;
++	subsurface->parent = parent;
++	subsurface->x = 0;
++	subsurface->y = 0;
++	subsurface->sync = true;
++	subsurface->pending = false;
++
++	subsurface->parent_view_handler.impl = &parent_view_handler_impl;
++	wl_list_init(&subsurface->parent_view_handler.link);
++	wl_list_init(&subsurface->surface_destroy_listener.link);
++	wl_list_init(&subsurface->parent_destroy_listener.link);
++	wl_list_init(&subsurface->link);
++
++	if (!surface->view)
++		compositor_create_view(surface);
++	if (!parent->view)
++		compositor_create_view(parent);
++
++	parent_view = compositor_view(parent->view);
++	view = compositor_view(surface->view);
++	if (!parent_view || !view)
++		goto error2;
++
++	compositor_view_set_parent(view, parent_view);
++	wl_list_remove(&view->link);
++	wl_list_insert(parent_view->link.prev, &view->link);
++
++	wl_list_insert(&parent_view->base.handlers, &subsurface->parent_view_handler.link);
++	subsurface_update_position(subsurface);
++	wl_list_insert(&parent->subsurfaces, &subsurface->link);
++
++	subsurface->surface_destroy_listener.notify = handle_surface_destroy;
++	wl_resource_add_destroy_listener(surface->resource, &subsurface->surface_destroy_listener);
++	subsurface->parent_destroy_listener.notify = handle_parent_destroy;
++	wl_resource_add_destroy_listener(parent->resource, &subsurface->parent_destroy_listener);
++
+ 	return subsurface;
+ 
++error2:
++	wl_resource_destroy(subsurface->resource);
++	return NULL;
+ error1:
+ 	free(subsurface);
+ error0:
+diff --git a/libswc/subsurface.h b/libswc/subsurface.h
+index a78ed69..c747530 100644
+--- a/libswc/subsurface.h
++++ b/libswc/subsurface.h
+@@ -24,14 +24,29 @@
+ #ifndef SWC_SUBSURFACE_H
+ #define SWC_SUBSURFACE_H
+ 
++#include "view.h"
++
++#include <stdbool.h>
+ #include <stdint.h>
++#include <wayland-server.h>
+ 
+ struct wl_client;
++struct surface;
+ 
+ struct subsurface {
+ 	struct wl_resource *resource;
++	struct surface *surface;
++	struct surface *parent;
++	struct view_handler parent_view_handler;
++	struct wl_listener surface_destroy_listener;
++	struct wl_listener parent_destroy_listener;
++	struct wl_list link;
++	int32_t x, y;
++	bool sync;
++	bool pending;
+ };
+ 
+-struct subsurface *subsurface_new(struct wl_client *client, uint32_t version, uint32_t id);
++struct subsurface *subsurface_new(struct wl_client *client, uint32_t version, uint32_t id,
++                                  struct surface *surface, struct surface *parent);
+ 
+ #endif
+diff --git a/libswc/surface.c b/libswc/surface.c
+index 19a36ec..9332054 100644
+--- a/libswc/surface.c
++++ b/libswc/surface.c
+@@ -27,6 +27,7 @@
+ #include "output.h"
+ #include "region.h"
+ #include "screen.h"
++#include "subsurface.h"
+ #include "util.h"
+ #include "view.h"
+ #include "wayland_buffer.h"
+@@ -218,9 +219,8 @@ trim_region(pixman_region32_t *region, struct wld_buffer *buffer)
+ }
+ 
+ static void
+-commit(struct wl_client *client, struct wl_resource *resource)
++surface_apply_pending(struct surface *surface, bool flush_children)
+ {
+-	struct surface *surface = wl_resource_get_user_data(resource);
+ 	struct wld_buffer *buffer;
+ 
+ 	/* Attach */
+@@ -263,6 +263,32 @@ commit(struct wl_client *client, struct wl_resource *resource)
+ 	}
+ 
+ 	surface->pending.commit = 0;
++
++	if (surface->subsurface)
++		surface->subsurface->pending = false;
++
++	if (flush_children) {
++		struct subsurface *child;
++		wl_list_for_each (child, &surface->subsurfaces, link) {
++			if (!child->sync || !child->pending)
++				continue;
++			if (child->surface)
++				surface_apply_pending(child->surface, true);
++		}
++	}
++}
++
++static void
++commit(struct wl_client *client, struct wl_resource *resource)
++{
++	struct surface *surface = wl_resource_get_user_data(resource);
++
++	if (surface->subsurface && surface->subsurface->sync) {
++		surface->subsurface->pending = true;
++		return;
++	}
++
++	surface_apply_pending(surface, true);
+ }
+ 
+ static void
+@@ -339,6 +365,14 @@ surface_new(struct wl_client *client, uint32_t version, uint32_t id)
+ 	surface->pending.commit = 0;
+ 	surface->view = NULL;
+ 	surface->view_handler.impl = &view_handler_impl;
++	surface->subsurface = NULL;
++	wl_list_init(&surface->subsurfaces);
++	surface->has_window_geometry = false;
++	surface->window_x = 0;
++	surface->window_y = 0;
++	surface->window_width = 0;
++	surface->window_height = 0;
++	surface->window_geometry_applied = false;
+ 
+ 	state_initialize(&surface->state);
+ 	state_initialize(&surface->pending.state);
+diff --git a/libswc/surface.h b/libswc/surface.h
+index 039ed4c..5eb751c 100644
+--- a/libswc/surface.h
++++ b/libswc/surface.h
+@@ -29,6 +29,8 @@
+ #include <pixman.h>
+ #include <wayland-server.h>
+ 
++struct subsurface;
++
+ enum {
+ 	SURFACE_COMMIT_ATTACH = (1 << 0),
+ 	SURFACE_COMMIT_DAMAGE = (1 << 1),
+@@ -67,6 +69,13 @@ struct surface {
+ 
+ 	struct view *view;
+ 	struct view_handler view_handler;
++
++	struct subsurface *subsurface;
++	struct wl_list subsurfaces;
++	bool has_window_geometry;
++	int32_t window_x, window_y;
++	int32_t window_width, window_height;
++	bool window_geometry_applied;
+ };
+ 
+ struct surface *surface_new(struct wl_client *client, uint32_t version, uint32_t id);
+diff --git a/libswc/window.c b/libswc/window.c
+index 6322502..728243d 100644
+--- a/libswc/window.c
++++ b/libswc/window.c
+@@ -450,8 +450,14 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
+ 	window->base.app_id = NULL;
+ 	window->base.parent = NULL;
+ 
+-	if (!(window->view = compositor_create_view(surface)))
+-		return false;
++	if (surface->view) {
++		window->view = compositor_view(surface->view);
++		if (!window->view || window->view->window)
++			return false;
++	} else {
++		if (!(window->view = compositor_create_view(surface)))
++			return false;
++	}
+ 
+ 	window->impl = impl;
+ 	window->handler = &null_handler;
+diff --git a/libswc/xdg_shell.c b/libswc/xdg_shell.c
+index 33a7f9c..d1cf081 100644
+--- a/libswc/xdg_shell.c
++++ b/libswc/xdg_shell.c
+@@ -591,6 +591,25 @@ ack_configure(struct wl_client *client, struct wl_resource *resource, uint32_t s
+ static void
+ set_window_geometry(struct wl_client *client, struct wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
+ {
++	(void)client;
++	struct xdg_surface *xdg_surface = wl_resource_get_user_data(resource);
++	struct surface *surface = xdg_surface->surface;
++
++	if (width <= 0 || height <= 0) {
++		surface->has_window_geometry = false;
++		return;
++	}
++
++	surface->has_window_geometry = true;
++	surface->window_x = x;
++	surface->window_y = y;
++	surface->window_width = width;
++	surface->window_height = height;
++	if (!surface->window_geometry_applied && surface->view && (x != 0 || y != 0)) {
++		struct swc_rectangle *geom = &surface->view->geometry;
++		view_move(surface->view, geom->x - x, geom->y - y);
++		surface->window_geometry_applied = true;
++	}
+ }
+ 
+ static const struct xdg_surface_interface xdg_surface_impl = {
+-- 
+2.49.0
+

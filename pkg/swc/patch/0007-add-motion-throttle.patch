@@ -1,0 +1,134 @@
+From 6c4cfa23f28c67ae588423bdb2f3842848972ac7 Mon Sep 17 00:00:00 2001
+From: uint <abhinav.prsai@gmail.com>
+Date: Sun, 15 Feb 2026 12:40:13 +0000
+Subject: [PATCH] add motion throttle
+
+fixes random crashes from overloading the server with
+events. window managers are unaffected as there is a
+def_motion_throttle_ms=60 and should even fix some
+---
+ libswc/swc.h    |  1 +
+ libswc/window.c | 27 +++++++++++++++++++++++++++
+ libswc/window.h |  2 ++
+ 3 files changed, 30 insertions(+)
+
+diff --git a/libswc/swc.h b/libswc/swc.h
+index 2aa06c8..3776929 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -192,6 +192,7 @@ struct swc_window {
+ 	char *app_id;
+ 
+ 	struct swc_window *parent;
++	uint32_t motion_throttle_ms;
+ };
+ 
+ /**
+diff --git a/libswc/window.c b/libswc/window.c
+index b1fdeb9..bfbbbbd 100644
+--- a/libswc/window.c
++++ b/libswc/window.c
+@@ -36,8 +36,23 @@
+ 
+ #define INTERNAL(w) ((struct window *)(w))
+ 
++static const uint32_t def_motion_throttle_ms = 16;
++
+ static const struct swc_window_handler null_handler;
+ 
++static bool
++should_throttle_motion(uint32_t throttle_ms, uint32_t *last_time, uint32_t time)
++{
++	if (!throttle_ms)
++		return false;
++
++	if (*last_time && time - *last_time < throttle_ms)
++		return true;
++
++	*last_time = time;
++	return false;
++}
++
+ static void
+ handle_window_enter(struct wl_listener *listener, void *data)
+ {
+@@ -299,6 +314,10 @@ static bool
+ move_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t fx, wl_fixed_t fy)
+ {
+ 	struct window *window = wl_container_of(handler, window, move.interaction.handler);
++
++	if (should_throttle_motion(window->base.motion_throttle_ms, &window->move.last_time, time))
++		return true;
++
+ 	int32_t x = wl_fixed_to_int(fx) + window->move.offset.x,
+ 	        y = wl_fixed_to_int(fy) + window->move.offset.y;
+ 
+@@ -313,6 +332,9 @@ resize_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t fx, wl_
+ 	const struct swc_rectangle *geometry = &window->view->base.geometry;
+ 	uint32_t width = geometry->width, height = geometry->height;
+ 
++	if (should_throttle_motion(window->base.motion_throttle_ms, &window->resize.last_time, time))
++		return true;
++
+ 	if (window->resize.edges & SWC_WINDOW_EDGE_LEFT)
+ 		width -= wl_fixed_to_int(fx) + window->resize.offset.x - geometry->x;
+ 	else if (window->resize.edges & SWC_WINDOW_EDGE_RIGHT)
+@@ -389,9 +411,11 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
+ 	window->handler = &null_handler;
+ 	window->view_handler.impl = &view_handler_impl;
+ 	window->view->window = window;
++	window->base.motion_throttle_ms = def_motion_throttle_ms;
+ 	window->managed = false;
+ 	window->mode = WINDOW_MODE_STACKED;
+ 	window->move.pending = false;
++	window->move.last_time = 0;
+ 	window->move.interaction.active = false;
+ 	window->move.interaction.handler = (struct pointer_handler){
+ 		.motion = move_motion,
+@@ -405,6 +429,7 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
+ 		.motion = resize_motion,
+ 		.button = handle_button,
+ 	};
++	window->resize.last_time = 0;
+ 
+ 	wl_list_insert(&window->view->base.handlers, &window->view_handler.link);
+ 
+@@ -491,6 +516,7 @@ window_begin_move(struct window *window, struct button *button)
+ 	        py = wl_fixed_to_int(swc.seat->pointer->y);
+ 
+ 	begin_interaction(&window->move.interaction, button);
++	window->move.last_time = 0;
+ 	window->move.offset.x = geometry->x - px;
+ 	window->move.offset.y = geometry->y - py;
+ }
+@@ -509,6 +535,7 @@ window_begin_resize(struct window *window, uint32_t edges, struct button *button
+ 	        py = wl_fixed_to_int(swc.seat->pointer->y);
+ 
+ 	begin_interaction(&window->resize.interaction, button);
++	window->resize.last_time = 0;
+ 
+ 	if (!edges) {
+ 		edges |= (px < geometry->x + geometry->width / 2) ? SWC_WINDOW_EDGE_LEFT : SWC_WINDOW_EDGE_RIGHT;
+diff --git a/libswc/window.h b/libswc/window.h
+index 08c9d36..d6684a8 100644
+--- a/libswc/window.h
++++ b/libswc/window.h
+@@ -61,6 +61,7 @@ struct window {
+ 
+ 		bool pending;
+ 		int32_t x, y;
++		uint32_t last_time;
+ 	} move;
+ 
+ 	struct {
+@@ -69,6 +70,7 @@ struct window {
+ 			int32_t x, y;
+ 		} offset;
+ 		uint32_t edges;
++		uint32_t last_time;
+ 	} resize;
+ 
+ 	struct {
+-- 
+2.49.0
+

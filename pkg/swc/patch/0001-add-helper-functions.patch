@@ -1,0 +1,283 @@
+From ca2cd556f5832eb1d10785a77c564dc4ef65e931 Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Mon, 15 Dec 2025 19:06:24 +0000
+Subject: [PATCH] add helper functions
+
+- a overlay helper so compositor's can draw arbitrary boxes
+- swc_pointer_send_button helper, for compositor's that intercept button
+  events
+- swc_cursor_position helper, for tracking cursor position
+---
+ libswc/compositor.c | 89 +++++++++++++++++++++++++++++++++++++++++++++
+ libswc/pointer.c    | 21 +++++++++++
+ libswc/swc.c        | 19 ++++++++++
+ libswc/swc.h        | 32 ++++++++++++++++
+ libswc/xdg_shell.c  |  9 ++++-
+ 5 files changed, 168 insertions(+), 2 deletions(-)
+
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index 543615c..66f962a 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -84,6 +84,14 @@ static struct {
+ 	struct wl_global *global;
+ } compositor;
+ 
++static struct {
++	bool active;
++	int32_t x, y;
++	uint32_t width, height;
++	uint32_t color;
++	uint32_t border_width;
++} overlay;
++
+ struct swc_compositor swc_compositor = {
+ 	.pointer_handler = &pointer_handler,
+ };
+@@ -216,6 +224,7 @@ static void
+ renderer_repaint(struct target *target, pixman_region32_t *damage, pixman_region32_t *base_damage, struct wl_list *views)
+ {
+ 	struct compositor_view *view;
++	const struct swc_rectangle *target_geom = &target->view->geometry;
+ 
+ 	DEBUG("Rendering to target { x: %d, y: %d, w: %u, h: %u }\n",
+ 	      target->view->geometry.x, target->view->geometry.y,
+@@ -234,6 +243,42 @@ renderer_repaint(struct target *target, pixman_region32_t *damage, pixman_region
+ 			repaint_view(target, view, damage);
+ 	}
+ 
++	if (overlay.active && overlay.border_width > 0) {
++		int32_t x = overlay.x - target_geom->x;
++		int32_t y = overlay.y - target_geom->y;
++		uint32_t w = overlay.width, h = overlay.height, bw = overlay.border_width;
++		int32_t tx = (int32_t)target_geom->width;
++		int32_t ty = (int32_t)target_geom->height;
++
++		/* draw box as 4 rectangles with wld */
++		#define CLAMP_LOW(v, lo) ((v) < (lo) ? (lo) : (v))
++		#define CLAMP_HIGH(v, hi) ((v) > (hi) ? (hi) : (v))
++		#define DRAW_CLIPPED(rx, ry, rw, rh) do { \
++			int32_t _x1 = CLAMP_LOW((rx), 0); \
++			int32_t _y1 = CLAMP_LOW((ry), 0); \
++			int32_t _x2 = CLAMP_HIGH((rx) + (int32_t)(rw), tx); \
++			int32_t _y2 = CLAMP_HIGH((ry) + (int32_t)(rh), ty); \
++			if (_x2 > _x1 && _y2 > _y1) \
++				wld_fill_rectangle(swc.drm->renderer, overlay.color, _x1, _y1, (uint32_t)(_x2 - _x1), (uint32_t)(_y2 - _y1)); \
++		} while (0)
++
++		if (w > 0 && h > 0) {
++			if (bw > w)
++				bw = w;
++			if (bw > h)
++				bw = h;
++
++			DRAW_CLIPPED(x, y, (int32_t)w, (int32_t)bw);                              /* top */
++			DRAW_CLIPPED(x, y + (int32_t)h - (int32_t)bw, (int32_t)w, (int32_t)bw);   /* bottom */
++			DRAW_CLIPPED(x, y, (int32_t)bw, (int32_t)h);                              /* left */
++			DRAW_CLIPPED(x + (int32_t)w - (int32_t)bw, y, (int32_t)bw, (int32_t)h);   /* right */
++		}
++
++		#undef DRAW_CLIPPED
++		#undef CLAMP_HIGH
++		#undef CLAMP_LOW
++	}
++
+ 	wld_flush(swc.drm->renderer);
+ }
+ 
+@@ -345,6 +390,50 @@ schedule_updates(uint32_t screens)
+ 	compositor.scheduled_updates |= screens;
+ }
+ 
++static void
++overlay_damage_region(int32_t x, int32_t y, uint32_t width, uint32_t height, uint32_t border_width)
++{
++	(void)border_width;
++	pixman_region32_union_rect(&compositor.damage, &compositor.damage, x, y, width, height);
++}
++
++EXPORT void
++swc_overlay_set_box(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t color, uint32_t border_width)
++{
++	int32_t x = x1 < x2 ? x1 : x2;
++	int32_t y = y1 < y2 ? y1 : y2;
++	uint32_t width = (uint32_t)abs(x2 - x1);
++	uint32_t height = (uint32_t)abs(y2 - y1);
++
++	if (border_width == 0)
++		border_width = 1;
++
++	if (overlay.active)
++		overlay_damage_region(overlay.x, overlay.y, overlay.width, overlay.height, overlay.border_width);
++
++	overlay.active = true;
++	overlay.x = x;
++	overlay.y = y;
++	overlay.width = width;
++	overlay.height = height;
++	overlay.color = color;
++	overlay.border_width = border_width;
++
++	overlay_damage_region(overlay.x, overlay.y, overlay.width, overlay.height, overlay.border_width);
++	schedule_updates(-1);
++}
++
++EXPORT void
++swc_overlay_clear(void)
++{
++	if (!overlay.active)
++		return;
++
++	overlay_damage_region(overlay.x, overlay.y, overlay.width, overlay.height, overlay.border_width);
++	overlay.active = false;
++	schedule_updates(-1);
++}
++
+ static bool
+ update(struct view *base)
+ {
+diff --git a/libswc/pointer.c b/libswc/pointer.c
+index 7e4d24d..184186f 100644
+--- a/libswc/pointer.c
++++ b/libswc/pointer.c
+@@ -27,6 +27,7 @@
+ #include "internal.h"
+ #include "plane.h"
+ #include "screen.h"
++#include "seat.h"
+ #include "shm.h"
+ #include "surface.h"
+ #include "util.h"
+@@ -36,6 +37,26 @@
+ #include <stdio.h>
+ #include <wld/wld.h>
+ 
++EXPORT void
++swc_pointer_send_button(uint32_t time, uint32_t button, uint32_t state)
++{
++	struct pointer *pointer = swc.seat ? swc.seat->pointer : NULL;
++	struct wl_resource *resource;
++	uint32_t serial;
++
++	if (!pointer || wl_list_empty(&pointer->focus.active))
++		return;
++
++	serial = wl_display_next_serial(swc.display);
++	wl_resource_for_each (resource, &pointer->focus.active)
++		wl_pointer_send_button(resource, serial, time, button, state);
++	wl_resource_for_each (resource, &pointer->focus.active) {
++		if (wl_resource_get_version(resource) >= WL_POINTER_FRAME_SINCE_VERSION)
++			wl_pointer_send_frame(resource);
++	}
++	pointer->client_axis_source = -1;
++}
++
+ static void
+ enter(struct input_focus_handler *handler, struct wl_list *resources, struct compositor_view *view)
+ {
+diff --git a/libswc/swc.c b/libswc/swc.c
+index 0fca9f9..8814c13 100644
+--- a/libswc/swc.c
++++ b/libswc/swc.c
+@@ -108,6 +108,25 @@ swc_deactivate(void)
+ 		swc.manager->deactivate();
+ }
+ 
++EXPORT bool
++swc_cursor_position(int32_t *x, int32_t *y)
++{
++	if (x)
++		*x = 0;
++	if (y)
++		*y = 0;
++
++	if (!swc.seat || !swc.seat->pointer)
++		return false;
++
++	if (x)
++		*x = swc.seat->pointer->x;
++	if (y)
++		*y = swc.seat->pointer->y;
++
++	return true;
++}
++
+ EXPORT bool
+ swc_initialize(struct wl_display *display, struct wl_event_loop *event_loop, const struct swc_manager *manager)
+ {
+diff --git a/libswc/swc.h b/libswc/swc.h
+index cb0f7eb..d199e3c 100644
+--- a/libswc/swc.h
++++ b/libswc/swc.h
+@@ -35,6 +35,38 @@ struct libinput_device;
+ struct wl_display;
+ struct wl_event_loop;
+ 
++/**
++ * gett the current cursor position
++ *
++ * The returned coordinates are in compositor-global space, in wl_fixed_t
++ * (24.8) fixed-point units, but exposed as raw int32_t to avoid needing
++ * wayland headers
++ *
++ */
++bool swc_cursor_position(int32_t *x, int32_t *y);
++
++/**
++ * Send a pointer button event to the currently focused client.
++ *
++ * This is intended for window managers which intercept button events (for
++ * example for mouse chords) but want normal clicks to still reach clients.
++ */
++void swc_pointer_send_button(uint32_t time, uint32_t button, uint32_t state);
++
++/**
++ * draw [or update] a simple box overlay
++ *
++ * box is defined by two diagonally opposite corners in compositor-global
++ * coordinates. this draws only the border. Call swc_overlay_clear() to remove
++ * it
++ */
++void swc_overlay_set_box(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_t color, uint32_t border_width);
++
++/**
++ * Clear the current overlay, if any.
++ */
++void swc_overlay_clear(void);
++
+ /* Rectangles {{{ */
+ 
+ struct swc_rectangle {
+diff --git a/libswc/xdg_shell.c b/libswc/xdg_shell.c
+index 97ad5fe..33a7f9c 100644
+--- a/libswc/xdg_shell.c
++++ b/libswc/xdg_shell.c
+@@ -286,18 +286,23 @@ static void
+ focus(struct window *window)
+ {
+ 	struct xdg_toplevel *toplevel = wl_container_of(window, toplevel, window);
++	uint32_t width = window->view->base.geometry.width;
++	uint32_t height = window->view->base.geometry.height;
+ 
+ 	add_state(toplevel, XDG_TOPLEVEL_STATE_ACTIVATED);
+-	send_configure(toplevel, -1, -1);
++	/* dont send  0x0 on focus change */
++	send_configure(toplevel, width ? (int32_t)width : -1, height ? (int32_t)height : -1);
+ }
+ 
+ static void
+ unfocus(struct window *window)
+ {
+ 	struct xdg_toplevel *toplevel = wl_container_of(window, toplevel, window);
++	uint32_t width = window->view->base.geometry.width;
++	uint32_t height = window->view->base.geometry.height;
+ 
+ 	remove_state(toplevel, XDG_TOPLEVEL_STATE_ACTIVATED);
+-	send_configure(toplevel, -1, -1);
++	send_configure(toplevel, width ? (int32_t)width : -1, height ? (int32_t)height : -1);
+ }
+ 
+ static void
+-- 
+2.49.0
+
