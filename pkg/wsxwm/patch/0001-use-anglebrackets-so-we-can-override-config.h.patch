@@ -1,0 +1,25 @@
+From ed2c429674082e2b6a28cf6f675383c937fd1228 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Tue, 10 Mar 2026 13:50:04 +0100
+Subject: [PATCH] use anglebrackets so we can override config.h
+
+---
+ source/wsxwm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/source/wsxwm.c b/source/wsxwm.c
+index 60f45c2..4fac116 100644
+--- a/source/wsxwm.c
++++ b/source/wsxwm.c
+@@ -8,7 +8,7 @@
+ #include <wayland-util.h>
+ #include <xkbcommon/xkbcommon-keysyms.h>
+ 
+-#include "config.h"
++#include <config.h>
+ #include "types.h"
+ #include "util.h"
+ #include "wsxwm.h"
+-- 
+2.49.0
+
