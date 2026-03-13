@@ -1,4 +1,4 @@
-From 108719f480ad292252721ac3c90b75081e1152e5 Mon Sep 17 00:00:00 2001
+From d783f4c858eb415946abc02fbacf5632d2eb2aab Mon Sep 17 00:00:00 2001
 From: dalem <lain@dalem.foo>
 Date: Sun, 8 Feb 2026 03:33:43 +0100
 Subject: [PATCH] Rename swc_wallpaper_init to swc_wallpaper_set
@@ -10,10 +10,10 @@ this change makes it appear as more consistent
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/libswc/swc.h b/libswc/swc.h
-index a23e556..033bdd4 100644
+index b95fc4c..1f4ada4 100644
 --- a/libswc/swc.h
 +++ b/libswc/swc.h
-@@ -443,10 +443,10 @@ extern struct wld_buffer *wallbuf;
+@@ -438,10 +438,10 @@ extern struct wld_buffer *wallbuf;
  
  /**
   * Set wallpaper to image from fs path.

@@ -1,4 +1,4 @@
-From b89f8f1c30e8d92e33d977ebd8a014281aa4d340 Mon Sep 17 00:00:00 2001
+From ac353c5601b7e774ae4465e432ce1d6de1a755de Mon Sep 17 00:00:00 2001
 From: shrub <maybeshrub@gmail.com>
 Date: Wed, 17 Dec 2025 02:04:55 +0000
 Subject: [PATCH] custom cursors add support for custom cursor images from
@@ -174,7 +174,7 @@ index cb2582c..cff6bb6 100644
  		surface_set_view(pointer->cursor.surface, NULL);
  		wl_list_remove(&pointer->cursor.destroy_listener.link);
 diff --git a/libswc/swc.h b/libswc/swc.h
-index dde7ef0..29638d9 100644
+index 2aa06c8..03c3cbc 100644
 --- a/libswc/swc.h
 +++ b/libswc/swc.h
 @@ -63,6 +63,49 @@ void swc_pointer_send_button(uint32_t time, uint32_t button, uint32_t state);

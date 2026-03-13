@@ -1,4 +1,4 @@
-From d7cc5eb216965f3a9ed14542d25f557aab6042d1 Mon Sep 17 00:00:00 2001
+From ebae7966352bca2ad16f0ca6a1df988b61b1a198 Mon Sep 17 00:00:00 2001
 From: shrub <maybeshrub@gmail.com>
 Date: Sat, 10 Jan 2026 00:20:19 +0000
 Subject: [PATCH] swc_window_get_pid add api to query a window's client pid
@@ -9,7 +9,7 @@ Subject: [PATCH] swc_window_get_pid add api to query a window's client pid
  2 files changed, 33 insertions(+)
 
 diff --git a/libswc/swc.h b/libswc/swc.h
-index 29638d9..f3bd453 100644
+index bbade8f..5d0d9a0 100644
 --- a/libswc/swc.h
 +++ b/libswc/swc.h
 @@ -26,6 +26,7 @@
@@ -20,7 +20,7 @@ index 29638d9..f3bd453 100644
  
  #ifdef __cplusplus
  extern "C" {
-@@ -325,6 +326,13 @@ void swc_window_set_geometry(struct swc_window *window, const struct swc_rectang
+@@ -320,6 +321,13 @@ void swc_window_set_geometry(struct swc_window *window, const struct swc_rectang
   */
  bool swc_window_get_geometry(const struct swc_window *window, struct swc_rectangle *geometry);
  
@@ -35,7 +35,7 @@ index 29638d9..f3bd453 100644
   * Set the window's border color and width.
   *
 diff --git a/libswc/window.c b/libswc/window.c
-index 60432ae..3e3a714 100644
+index b1fdeb9..f46793d 100644
 --- a/libswc/window.c
 +++ b/libswc/window.c
 @@ -27,12 +27,14 @@
@@ -53,7 +53,7 @@ index 60432ae..3e3a714 100644
  
  #define INTERNAL(w) ((struct window *)(w))
  
-@@ -583,3 +585,26 @@ window_begin_resize(struct window *window, uint32_t edges, struct button *button
+@@ -519,3 +521,26 @@ window_begin_resize(struct window *window, uint32_t edges, struct button *button
  	window->resize.offset.y = geometry->y - py + ((edges & SWC_WINDOW_EDGE_BOTTOM) ? geometry->height : 0);
  	window->resize.edges = edges;
  }

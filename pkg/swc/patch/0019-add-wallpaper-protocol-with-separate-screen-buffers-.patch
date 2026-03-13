@@ -1,23 +1,26 @@
-From 40e72dcbb90be5d92615aea647810a56dd0c878a Mon Sep 17 00:00:00 2001
+From f9d37ac047966356dbe1bde645e6729c7d8c3d48 Mon Sep 17 00:00:00 2001
 From: uint <abhinav.prsai@gmail.com>
 Date: Wed, 18 Feb 2026 06:07:03 +0000
 Subject: [PATCH] add wallpaper protocol with separate screen buffers support
 
+add wallpaper protocol
+> swc just uses a buffer, processing is done on client
+removed STB
 ---
- libswc/compositor.c        |  39 ++++++++--
+ libswc/compositor.c        |  45 ++++++++++--
  libswc/compositor.h        |   1 +
  libswc/internal.h          |   1 +
- libswc/swc.c               |   1 +
+ libswc/swc.c               |  14 +++-
  libswc/swc.h               |  17 +++--
  libswc/wallpaper.c         | 147 +++++++++++++++++++++++--------------
  libswc/wallpaper.h         |  12 +++
  protocol/swc_wallpaper.xml |  19 +++++
- 8 files changed, 170 insertions(+), 67 deletions(-)
+ 8 files changed, 185 insertions(+), 71 deletions(-)
  create mode 100644 libswc/wallpaper.h
  create mode 100644 protocol/swc_wallpaper.xml
 
 diff --git a/libswc/compositor.c b/libswc/compositor.c
-index 4875af8..cb7863b 100644
+index 4333d99..fd52973 100644
 --- a/libswc/compositor.c
 +++ b/libswc/compositor.c
 @@ -44,6 +44,7 @@
@@ -130,11 +133,31 @@ index 4875af8..cb7863b 100644
  	if (compositor.zoom_buffer)
  		wld_buffer_unreference(compositor.zoom_buffer);
  	pixman_region32_fini(&compositor.damage);
+@@ -1539,6 +1566,7 @@ compositor_render_to_shm(struct screen *screen)
+ 	pixman_region32_t region;
+ 	pixman_region32_t damage;
+ 	uint32_t caps;
++	struct wld_buffer *background;
+ 
+ 	/* create shm buf */
+ 	buffer = wld_create_buffer(swc.shm->context, width, height,
+@@ -1558,8 +1586,9 @@ compositor_render_to_shm(struct screen *screen)
+ 	pixman_region32_init_rect(&damage, screen->base.geometry.x, screen->base.geometry.y, width, height);
+ 
+ 	/* background */
+-	if (wallbuf)
+-		wld_copy_region(swc.shm->renderer, wallbuf, 0, 0, &region);
++	background = swc_wallpaper_buffer_for_screen(screen);
++	if (background)
++		wld_copy_region(swc.shm->renderer, background, 0, 0, &region);
+ 	else
+ 		wld_fill_region(swc.shm->renderer, bgcolor, &region);
+ 
 diff --git a/libswc/compositor.h b/libswc/compositor.h
-index 529c360..6c938ac 100644
+index 94de9e3..a404534 100644
 --- a/libswc/compositor.h
 +++ b/libswc/compositor.h
-@@ -45,6 +45,7 @@ struct swc_compositor {
+@@ -48,6 +48,7 @@ struct swc_compositor {
  
  bool compositor_initialize(void);
  void compositor_finalize(void);
@@ -143,29 +166,68 @@ index 529c360..6c938ac 100644
  struct compositor_view {
  	struct view base;
 diff --git a/libswc/internal.h b/libswc/internal.h
-index 8efba6d..6d2b0a1 100644
+index 243b75f..a238a3d 100644
 --- a/libswc/internal.h
 +++ b/libswc/internal.h
-@@ -50,6 +50,7 @@ struct swc {
- 	struct wl_global *panel_manager;
+@@ -51,6 +51,7 @@ struct swc {
  	struct wl_global *shell;
+ 	struct wl_global *snap_manager;
  	struct wl_global *subcompositor;
 +	struct wl_global *wallpaper_manager;
  	struct wl_global *xdg_decoration_manager;
  	struct wl_global *xdg_shell;
  
 diff --git a/libswc/swc.c b/libswc/swc.c
-index 8814c13..1035ef3 100644
+index 6d3f871..6647c65 100644
 --- a/libswc/swc.c
 +++ b/libswc/swc.c
-@@ -39,6 +39,7 @@
- #include "shm.h"
+@@ -40,6 +40,7 @@
+ #include "snap.h"
  #include "subcompositor.h"
  #include "util.h"
 +#include "wallpaper.h"
  #include "window.h"
  #include "xdg_decoration.h"
  #include "xdg_shell.h"
+@@ -222,10 +223,16 @@ swc_initialize(struct wl_display *display, struct wl_event_loop *event_loop, con
+ 		goto error14;
+ 	}
+ 
++	swc.wallpaper_manager = swc_wallpaper_manager_create(display);
++	if (!swc.wallpaper_manager) {
++		ERROR("Could not initialize wallpaper manager\n");
++		goto error15;
++	}
++
+ #ifdef ENABLE_XWAYLAND
+ 	if (!xserver_initialize()) {
+ 		ERROR("Could not initialize xwayland\n");
+-		goto error15;
++		goto error16;
+ 	}
+ #endif
+ 
+@@ -234,9 +241,11 @@ swc_initialize(struct wl_display *display, struct wl_event_loop *event_loop, con
+ 	return true;
+ 
+ #ifdef ENABLE_XWAYLAND
++error16:
++	wl_global_destroy(swc.wallpaper_manager);
++#endif
+ error15:
+ 	wl_global_destroy(swc.snap_manager);
+-#endif
+ error14:
+ 	wl_global_destroy(swc.panel_manager);
+ error13:
+@@ -275,6 +284,7 @@ swc_finalize(void)
+ #ifdef ENABLE_XWAYLAND
+ 	xserver_finalize();
+ #endif
++	wl_global_destroy(swc.wallpaper_manager);
+ 	wl_global_destroy(swc.snap_manager);
+ 	wl_global_destroy(swc.panel_manager);
+ 	wl_global_destroy(swc.xdg_decoration_manager);
 diff --git a/libswc/swc.h b/libswc/swc.h
 index 033bdd4..f2a8ae1 100644
 --- a/libswc/swc.h

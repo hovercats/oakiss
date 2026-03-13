@@ -1,4 +1,4 @@
-From af4e4ebba3d7fd5840c200c26e339246242bbee7 Mon Sep 17 00:00:00 2001
+From a86a27f5fac950e085a5069f72d4737f26ded3ba Mon Sep 17 00:00:00 2001
 From: uint <abhinav.prsai@gmail.com>
 Date: Sun, 15 Feb 2026 14:24:18 +0000
 Subject: [PATCH] add min/max window width/height
@@ -11,10 +11,10 @@ fixes swc wm dying if resize value is too large
  2 files changed, 41 insertions(+)
 
 diff --git a/libswc/swc.h b/libswc/swc.h
-index 3776929..dde7ef0 100644
+index 058ff2c..033bdd4 100644
 --- a/libswc/swc.h
 +++ b/libswc/swc.h
-@@ -193,6 +193,10 @@ struct swc_window {
+@@ -250,6 +250,10 @@ struct swc_window {
  
  	struct swc_window *parent;
  	uint32_t motion_throttle_ms;
@@ -26,10 +26,10 @@ index 3776929..dde7ef0 100644
  
  /**
 diff --git a/libswc/window.c b/libswc/window.c
-index bfbbbbd..60432ae 100644
+index 1e9ee2b..728243d 100644
 --- a/libswc/window.c
 +++ b/libswc/window.c
-@@ -53,6 +53,36 @@ should_throttle_motion(uint32_t throttle_ms, uint32_t *last_time, uint32_t time)
+@@ -55,6 +55,36 @@ should_throttle_motion(uint32_t throttle_ms, uint32_t *last_time, uint32_t time)
  	return false;
  }
  
@@ -66,7 +66,7 @@ index bfbbbbd..60432ae 100644
  static void
  handle_window_enter(struct wl_listener *listener, void *data)
  {
-@@ -241,6 +271,8 @@ swc_window_set_size(struct swc_window *base, uint32_t width, uint32_t height)
+@@ -254,6 +284,8 @@ swc_window_set_size(struct swc_window *base, uint32_t width, uint32_t height)
  	struct window *window = INTERNAL(base);
  	struct swc_rectangle *geom = &window->view->base.geometry;
  
@@ -75,7 +75,7 @@ index bfbbbbd..60432ae 100644
  	if ((window->configure.pending && width == window->configure.width && height == window->configure.height)
  	 || (!window->configure.pending && width == geom->width && height == geom->height))
  	{
-@@ -345,6 +377,7 @@ resize_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t fx, wl_
+@@ -358,6 +390,7 @@ resize_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t fx, wl_
  	else if (window->resize.edges & SWC_WINDOW_EDGE_BOTTOM)
  		height = wl_fixed_to_int(fy) + window->resize.offset.y - geometry->y;
  
@@ -83,7 +83,7 @@ index bfbbbbd..60432ae 100644
  	window->impl->configure(window, width, height);
  
  	return true;
-@@ -412,6 +445,10 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
+@@ -431,6 +464,10 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
  	window->view_handler.impl = &view_handler_impl;
  	window->view->window = window;
  	window->base.motion_throttle_ms = def_motion_throttle_ms;

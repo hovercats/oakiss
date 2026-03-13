@@ -1,4 +1,4 @@
-From c04d6b835bc440cb56babfc63e45c705c1723820 Mon Sep 17 00:00:00 2001
+From 53714281024d80814f9884a01ba232cf0342e15b Mon Sep 17 00:00:00 2001
 From: shrub <maybeshrub@gmail.com>
 Date: Sat, 31 Jan 2026 21:34:22 +0000
 Subject: [PATCH] initial subsurface implementation add basic wl_subsurface
@@ -19,7 +19,7 @@ Subject: [PATCH] initial subsurface implementation add basic wl_subsurface
  9 files changed, 346 insertions(+), 21 deletions(-)
 
 diff --git a/libswc/compositor.c b/libswc/compositor.c
-index d70377d..d2321b9 100644
+index c8786b5..477af8b 100644
 --- a/libswc/compositor.c
 +++ b/libswc/compositor.c
 @@ -219,11 +219,18 @@ repaint_view(struct target *target, struct compositor_view *view, pixman_region3
@@ -189,10 +189,10 @@ index d70377d..d2321b9 100644
  	pixman_region32_fini(&surface_opaque);
  }
 diff --git a/libswc/compositor.h b/libswc/compositor.h
-index 9046f0b..e079d92 100644
+index 2e70b38..1d6b9e2 100644
 --- a/libswc/compositor.h
 +++ b/libswc/compositor.h
-@@ -52,6 +52,8 @@ struct compositor_view {
+@@ -55,6 +55,8 @@ struct compositor_view {
  	struct wld_buffer *buffer;
  	struct window *window;
  	struct compositor_view *parent;
@@ -623,10 +623,10 @@ index 039ed4c..5eb751c 100644
  
  struct surface *surface_new(struct wl_client *client, uint32_t version, uint32_t id);
 diff --git a/libswc/window.c b/libswc/window.c
-index 6322502..728243d 100644
+index 84e97b0..d539d3c 100644
 --- a/libswc/window.c
 +++ b/libswc/window.c
-@@ -450,8 +450,14 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
+@@ -395,8 +395,14 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
  	window->base.app_id = NULL;
  	window->base.parent = NULL;
  

@@ -30,8 +30,12 @@ waylandproto('protocol/server-decoration.xml', {
 	code='server-decoration-protocol.c',
 })
 
+waylandproto('protocol/swc_snap.xml', {
+       server='include/swc_snap-server-protocol.h',
+       code='swc_snap-protocol.c',
+})
+
 waylandproto('protocol/swc_wallpaper.xml', {
-       client='include/swc_wallpaper-client-protocol.h',
        server='include/swc_wallpaper-server-protocol.h',
        code='swc_wallpaper-protocol.c',
 })
@@ -56,6 +60,7 @@ build('convert_font', '$outdir/cursor/cursor_data.h', {'$srcdir/cursor/cursor.pc
 
 pkg.deps = {
 	'$gendir/headers',
+	'$outdir/include/swc_snap-server-protocol.h',
 	'$outdir/include/swc_wallpaper-server-protocol.h',
 	'$outdir/wayland-drm-server-protocol.h',
 	'$outdir/cursor/cursor_data.h',
@@ -96,6 +101,7 @@ lib('libswc.a', [[
 		shell_surface.c
 		seat.c
 		shm.c
+		snap.c
 		subcompositor.c
 		subsurface.c
 		surface.c
@@ -111,6 +117,7 @@ lib('libswc.a', [[
 	launch/protocol.c.o
 	server-decoration-protocol.c.o
 	swc-protocol.c.o
+	swc_snap-protocol.c.o
 	swc_wallpaper-protocol.c.o
 	$builddir/(
 		pkg/libinput/libinput.a.d

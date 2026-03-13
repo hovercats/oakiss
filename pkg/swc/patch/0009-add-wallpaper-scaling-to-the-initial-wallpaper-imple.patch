@@ -1,7 +1,7 @@
-From 5be9ee4cbc06aefed8fe11360df8cc9d045c3587 Mon Sep 17 00:00:00 2001
+From 8e7afcd98a761cdf53006de0db703412dac56310 Mon Sep 17 00:00:00 2001
 From: shrub <maybeshrub@gmail.com>
 Date: Sat, 20 Dec 2025 20:40:26 +0000
-Subject: [PATCH] this adds wallpaper scaling to the initial wallpaper
+Subject: [PATCH] add wallpaper scaling to the initial wallpaper
  implementation, so the wallpaper scales to screen size.
 
 ---

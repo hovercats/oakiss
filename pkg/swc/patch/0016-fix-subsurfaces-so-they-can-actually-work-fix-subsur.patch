@@ -1,4 +1,4 @@
-From 13a2200f15510e837ce2631592856f4f0a0ede2b Mon Sep 17 00:00:00 2001
+From 78df047f81cf877eab899fe44b3f350f13015703 Mon Sep 17 00:00:00 2001
 From: shrub <maybeshrub@gmail.com>
 Date: Tue, 10 Feb 2026 21:34:58 +0000
 Subject: [PATCH] fix subsurfaces, so they can actually work fix subsurface
@@ -18,7 +18,7 @@ Subject: [PATCH] fix subsurfaces, so they can actually work fix subsurface
  8 files changed, 383 insertions(+), 80 deletions(-)
 
 diff --git a/libswc/compositor.c b/libswc/compositor.c
-index d2321b9..4875af8 100644
+index 477af8b..4333d99 100644
 --- a/libswc/compositor.c
 +++ b/libswc/compositor.c
 @@ -41,6 +41,7 @@
@@ -309,10 +309,10 @@ index d2321b9..4875af8 100644
  
  	pixman_region32_fini(&surface_opaque);
 diff --git a/libswc/compositor.h b/libswc/compositor.h
-index e079d92..529c360 100644
+index 1d6b9e2..94de9e3 100644
 --- a/libswc/compositor.h
 +++ b/libswc/compositor.h
-@@ -92,6 +92,7 @@ void compositor_view_destroy(struct compositor_view *view);
+@@ -95,6 +95,7 @@ void compositor_view_destroy(struct compositor_view *view);
  struct compositor_view *compositor_view(struct view *view);
  
  void compositor_view_set_parent(struct compositor_view *view, struct compositor_view *parent);

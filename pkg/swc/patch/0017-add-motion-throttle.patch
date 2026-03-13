@@ -1,4 +1,4 @@
-From 6c4cfa23f28c67ae588423bdb2f3842848972ac7 Mon Sep 17 00:00:00 2001
+From ed94892107d6a6a84c4c68910c702708f18508a6 Mon Sep 17 00:00:00 2001
 From: uint <abhinav.prsai@gmail.com>
 Date: Sun, 15 Feb 2026 12:40:13 +0000
 Subject: [PATCH] add motion throttle
@@ -13,10 +13,10 @@ def_motion_throttle_ms=60 and should even fix some
  3 files changed, 30 insertions(+)
 
 diff --git a/libswc/swc.h b/libswc/swc.h
-index 2aa06c8..3776929 100644
+index 1f4ada4..058ff2c 100644
 --- a/libswc/swc.h
 +++ b/libswc/swc.h
-@@ -192,6 +192,7 @@ struct swc_window {
+@@ -249,6 +249,7 @@ struct swc_window {
  	char *app_id;
  
  	struct swc_window *parent;
@@ -25,10 +25,10 @@ index 2aa06c8..3776929 100644
  
  /**
 diff --git a/libswc/window.c b/libswc/window.c
-index b1fdeb9..bfbbbbd 100644
+index d539d3c..1e9ee2b 100644
 --- a/libswc/window.c
 +++ b/libswc/window.c
-@@ -36,8 +36,23 @@
+@@ -38,8 +38,23 @@
  
  #define INTERNAL(w) ((struct window *)(w))
  
@@ -52,7 +52,7 @@ index b1fdeb9..bfbbbbd 100644
  static void
  handle_window_enter(struct wl_listener *listener, void *data)
  {
-@@ -299,6 +314,10 @@ static bool
+@@ -312,6 +327,10 @@ static bool
  move_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t fx, wl_fixed_t fy)
  {
  	struct window *window = wl_container_of(handler, window, move.interaction.handler);
@@ -63,7 +63,7 @@ index b1fdeb9..bfbbbbd 100644
  	int32_t x = wl_fixed_to_int(fx) + window->move.offset.x,
  	        y = wl_fixed_to_int(fy) + window->move.offset.y;
  
-@@ -313,6 +332,9 @@ resize_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t fx, wl_
+@@ -326,6 +345,9 @@ resize_motion(struct pointer_handler *handler, uint32_t time, wl_fixed_t fx, wl_
  	const struct swc_rectangle *geometry = &window->view->base.geometry;
  	uint32_t width = geometry->width, height = geometry->height;
  
@@ -73,7 +73,7 @@ index b1fdeb9..bfbbbbd 100644
  	if (window->resize.edges & SWC_WINDOW_EDGE_LEFT)
  		width -= wl_fixed_to_int(fx) + window->resize.offset.x - geometry->x;
  	else if (window->resize.edges & SWC_WINDOW_EDGE_RIGHT)
-@@ -389,9 +411,11 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
+@@ -408,9 +430,11 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
  	window->handler = &null_handler;
  	window->view_handler.impl = &view_handler_impl;
  	window->view->window = window;
@@ -85,7 +85,7 @@ index b1fdeb9..bfbbbbd 100644
  	window->move.interaction.active = false;
  	window->move.interaction.handler = (struct pointer_handler){
  		.motion = move_motion,
-@@ -405,6 +429,7 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
+@@ -424,6 +448,7 @@ window_initialize(struct window *window, const struct window_impl *impl, struct
  		.motion = resize_motion,
  		.button = handle_button,
  	};
@@ -93,7 +93,7 @@ index b1fdeb9..bfbbbbd 100644
  
  	wl_list_insert(&window->view->base.handlers, &window->view_handler.link);
  
-@@ -491,6 +516,7 @@ window_begin_move(struct window *window, struct button *button)
+@@ -510,6 +535,7 @@ window_begin_move(struct window *window, struct button *button)
  	        py = wl_fixed_to_int(swc.seat->pointer->y);
  
  	begin_interaction(&window->move.interaction, button);
@@ -101,7 +101,7 @@ index b1fdeb9..bfbbbbd 100644
  	window->move.offset.x = geometry->x - px;
  	window->move.offset.y = geometry->y - py;
  }
-@@ -509,6 +535,7 @@ window_begin_resize(struct window *window, uint32_t edges, struct button *button
+@@ -528,6 +554,7 @@ window_begin_resize(struct window *window, uint32_t edges, struct button *button
  	        py = wl_fixed_to_int(swc.seat->pointer->y);
  
  	begin_interaction(&window->resize.interaction, button);
@@ -110,10 +110,10 @@ index b1fdeb9..bfbbbbd 100644
  	if (!edges) {
  		edges |= (px < geometry->x + geometry->width / 2) ? SWC_WINDOW_EDGE_LEFT : SWC_WINDOW_EDGE_RIGHT;
 diff --git a/libswc/window.h b/libswc/window.h
-index 08c9d36..d6684a8 100644
+index d8f6bfa..71a597f 100644
 --- a/libswc/window.h
 +++ b/libswc/window.h
-@@ -61,6 +61,7 @@ struct window {
+@@ -66,6 +66,7 @@ struct window {
  
  		bool pending;
  		int32_t x, y;
@@ -121,7 +121,7 @@ index 08c9d36..d6684a8 100644
  	} move;
  
  	struct {
-@@ -69,6 +70,7 @@ struct window {
+@@ -74,6 +75,7 @@ struct window {
  			int32_t x, y;
  		} offset;
  		uint32_t edges;

@@ -1,4 +1,4 @@
-From 3a2c4c613b15106497ea464b2ee613a30ca2f112 Mon Sep 17 00:00:00 2001
+From 52e195daf74388d29d3b20d1ffd9ca3ffbfe929f Mon Sep 17 00:00:00 2001
 From: dalem <lain@dalem.foo>
 Date: Tue, 27 Jan 2026 17:36:27 +0100
 Subject: [PATCH] add fullscreen support
@@ -9,10 +9,10 @@ Subject: [PATCH] add fullscreen support
  2 files changed, 21 insertions(+), 5 deletions(-)
 
 diff --git a/libswc/window.c b/libswc/window.c
-index 3e3a714..6322502 100644
+index f46793d..84e97b0 100644
 --- a/libswc/window.c
 +++ b/libswc/window.c
-@@ -239,12 +239,23 @@ EXPORT void
+@@ -194,12 +194,23 @@ EXPORT void
  swc_window_set_fullscreen(struct swc_window *base, struct swc_screen *screen)
  {
  	struct window *window = INTERNAL(base);
@@ -42,7 +42,7 @@ index 3e3a714..6322502 100644
  
  EXPORT void
 diff --git a/libswc/window.h b/libswc/window.h
-index d6684a8..71a597f 100644
+index 08c9d36..d8f6bfa 100644
 --- a/libswc/window.h
 +++ b/libswc/window.h
 @@ -52,6 +52,11 @@ struct window {

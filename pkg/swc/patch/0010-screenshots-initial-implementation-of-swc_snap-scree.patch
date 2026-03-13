@@ -1,0 +1,475 @@
+From a6b60a7c94dd00a9900b05e932e2ffb8612f05bd Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Mon, 29 Dec 2025 20:58:33 +0000
+Subject: [PATCH] screenshots initial implementation of swc_snap screenshot
+ protocol
+
+---
+ libswc/compositor.c   | 116 +++++++++++++++++++++++++
+ libswc/compositor.h   |  15 ++++
+ libswc/internal.h     |   1 +
+ libswc/snap.c         | 193 ++++++++++++++++++++++++++++++++++++++++++
+ libswc/snap.h         |   9 ++
+ libswc/swc.c          |  14 ++-
+ protocol/swc_snap.xml |  15 ++++
+ 7 files changed, 361 insertions(+), 2 deletions(-)
+ create mode 100644 libswc/snap.c
+ create mode 100644 libswc/snap.h
+ create mode 100644 protocol/swc_snap.xml
+
+diff --git a/libswc/compositor.c b/libswc/compositor.c
+index fae7991..0bf3210 100644
+--- a/libswc/compositor.c
++++ b/libswc/compositor.c
+@@ -1189,3 +1189,119 @@ compositor_finalize(void)
+ 	pixman_region32_fini(&compositor.opaque);
+ 	wl_global_destroy(compositor.global);
+ }
++
++struct wld_buffer *
++compositor_get_buffer(struct screen *screen)
++{
++	struct target *target = target_get(screen);
++	if (!target)
++		return NULL;
++	return target->current_buffer;
++}
++
++struct wld_buffer *
++compositor_render_to_shm(struct screen *screen)
++{
++	uint32_t width = screen->base.geometry.width;
++	uint32_t height = screen->base.geometry.height;
++	struct wld_buffer *buffer;
++	struct compositor_view *view;
++	pixman_region32_t region;
++	pixman_region32_t damage;
++	uint32_t caps;
++
++	/* create shm buf */
++	buffer = wld_create_buffer(swc.shm->context, width, height,
++	                           WLD_FORMAT_ARGB8888, WLD_FLAG_MAP);
++	if (!buffer)
++		return NULL;
++
++	caps = wld_capabilities(swc.shm->renderer, buffer);
++	if (!(caps & WLD_CAPABILITY_WRITE) ||
++	    !wld_set_target_buffer(swc.shm->renderer, buffer)) {
++		wld_buffer_unreference(buffer);
++		return NULL;
++	}
++
++	/* set reigon */
++	pixman_region32_init_rect(&region, 0, 0, width, height);
++	pixman_region32_init_rect(&damage, screen->base.geometry.x, screen->base.geometry.y, width, height);
++
++	/* background */
++	if (wallbuf)
++		wld_copy_region(swc.shm->renderer, wallbuf, 0, 0, &region);
++	else
++		wld_fill_region(swc.shm->renderer, bgcolor, &region);
++
++	wl_list_for_each_reverse(view, &compositor.views, link) {
++		struct wld_buffer *src = view->buffer;
++
++		if (!view->visible)
++			continue;
++
++		if (src && !(wld_capabilities(swc.shm->renderer, src) & WLD_CAPABILITY_READ))
++			src = view->base.buffer;
++
++		if (src && (wld_capabilities(swc.shm->renderer, src) & WLD_CAPABILITY_READ)) {
++			int32_t x = view->base.geometry.x - screen->base.geometry.x;
++			int32_t y = view->base.geometry.y - screen->base.geometry.y;
++
++			wld_copy_rectangle(swc.shm->renderer, src,
++			                   x, y, 0, 0,
++			                   view->base.geometry.width, view->base.geometry.height);
++		}
++
++		if ((view->border.outwidth > 0 || view->border.inwidth > 0) && view->base.buffer) {
++			pixman_region32_t view_region, view_damage, border_damage;
++			const struct swc_rectangle *geom = &view->base.geometry;
++			const struct swc_rectangle *target_geom = &screen->base.geometry;
++
++			pixman_region32_init_rect(&view_region, geom->x, geom->y, geom->width, geom->height);
++			pixman_region32_init_with_extents(&view_damage, &view->extents);
++			pixman_region32_init(&border_damage);
++
++			pixman_region32_intersect(&view_damage, &view_damage, &damage);
++			pixman_region32_subtract(&view_damage, &view_damage, &view->clip);
++			pixman_region32_subtract(&border_damage, &view_damage, &view_region);
++
++			pixman_region32_t in_rect;
++			pixman_region32_init_rect(&in_rect,
++			                          geom->x - view->border.inwidth,
++			                          geom->y - view->border.inwidth,
++			                          geom->width + (2 * view->border.inwidth),
++			                          geom->height + (2 * view->border.inwidth));
++
++			pixman_region32_t out_border;
++			pixman_region32_init(&out_border);
++			pixman_region32_subtract(&out_border, &border_damage, &in_rect);
++
++			pixman_region32_t in_border;
++			pixman_region32_init(&in_border);
++			pixman_region32_subtract(&in_border, &in_rect, &view_region);
++			pixman_region32_intersect(&in_border, &in_border, &border_damage);
++
++			if (view->border.outwidth > 0 && pixman_region32_not_empty(&out_border)) {
++				pixman_region32_translate(&out_border, -target_geom->x, -target_geom->y);
++				wld_fill_region(swc.shm->renderer, view->border.outcolor, &out_border);
++			}
++
++			if (view->border.inwidth > 0 && pixman_region32_not_empty(&in_border)) {
++				pixman_region32_translate(&in_border, -target_geom->x, -target_geom->y);
++				wld_fill_region(swc.shm->renderer, view->border.incolor, &in_border);
++			}
++
++			pixman_region32_fini(&border_damage);
++			pixman_region32_fini(&view_region);
++			pixman_region32_fini(&view_damage);
++			pixman_region32_fini(&in_rect);
++			pixman_region32_fini(&out_border);
++			pixman_region32_fini(&in_border);
++		}
++	}
++
++	wld_flush(swc.shm->renderer);
++	pixman_region32_fini(&region);
++	pixman_region32_fini(&damage);
++
++	return buffer;
++}
+diff --git a/libswc/compositor.h b/libswc/compositor.h
+index 9046f0b..2e70b38 100644
+--- a/libswc/compositor.h
++++ b/libswc/compositor.h
+@@ -30,6 +30,9 @@
+ #include <pixman.h>
+ #include <wayland-server.h>
+ 
++struct screen;
++struct wld_buffer;
++
+ struct swc_compositor {
+ 	struct pointer_handler *const pointer_handler;
+ 	struct {
+@@ -97,4 +100,16 @@ void compositor_view_hide(struct compositor_view *view);
+ void compositor_view_set_border_color(struct compositor_view *view, uint32_t outcolor, uint32_t incolor);
+ void compositor_view_set_border_width(struct compositor_view *view, uint32_t outwidth, uint32_t inwidth);
+ 
++/**
++ * get the current composited buffer for a screen for screenshotss.
++ * returns null if no buffer
++ */
++struct wld_buffer *compositor_get_buffer(struct screen *screen);
++
++/**
++ * render the compositor scene into a shm buffer 
++ * caller must free with wld_buffer_unreference()
++ */
++struct wld_buffer *compositor_render_to_shm(struct screen *screen);
++
+ #endif
+diff --git a/libswc/internal.h b/libswc/internal.h
+index 8efba6d..243b75f 100644
+--- a/libswc/internal.h
++++ b/libswc/internal.h
+@@ -49,6 +49,7 @@ struct swc {
+ 	struct wl_global *kde_decoration_manager;
+ 	struct wl_global *panel_manager;
+ 	struct wl_global *shell;
++	struct wl_global *snap_manager;
+ 	struct wl_global *subcompositor;
+ 	struct wl_global *xdg_decoration_manager;
+ 	struct wl_global *xdg_shell;
+diff --git a/libswc/snap.c b/libswc/snap.c
+new file mode 100644
+index 0000000..f977649
+--- /dev/null
++++ b/libswc/snap.c
+@@ -0,0 +1,193 @@
++#include "snap.h"
++#include "internal.h"
++#include "screen.h"
++#include "compositor.h"
++#include "shm.h"
++#include "seat.h"
++#include "pointer.h"
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdint.h>
++#include <string.h>
++#include <unistd.h>
++#include <wayland-server.h>
++#include <wld/wld.h>
++#include "swc_snap-server-protocol.h"
++
++static void
++ppm(int fd, const uint8_t *pixels, uint32_t width, uint32_t height,
++    uint32_t pitch)
++{
++	FILE *f = fdopen(fd, "wb");
++	if (!f) {
++		close(fd);
++		return;
++	}
++
++	/* ppm  header */
++	fprintf(f, "P6\n%u %u\n255\n", width, height);
++
++	/* pixel data convert argb8888 to rgb) */
++	for (uint32_t y = 0; y < height; y++) {
++		const uint32_t *row = (const uint32_t *)(pixels + ((size_t)y * pitch));
++
++		for (uint32_t x = 0; x < width; x++) {
++			uint32_t pixel = row[x];
++			unsigned char rgb[3] = {
++				(pixel >> 16) & 0xFF,  
++				(pixel >> 8) & 0xFF,   
++				pixel & 0xFF           
++			};
++			fwrite(rgb, 1, 3, f);
++		}
++	}
++
++	fclose(f); 
++}
++
++
++/* get cursor */
++static void
++cursor(uint8_t *dst, uint32_t dst_width, uint32_t dst_height,
++       uint32_t dst_pitch, struct screen *screen)
++{
++	struct pointer *pointer = swc.seat ? swc.seat->pointer : NULL;
++	struct wld_buffer *cursor_buf;
++	const uint8_t *src;
++	int32_t dst_x, dst_y;
++	int32_t src_x = 0, src_y = 0;
++	uint32_t copy_w, copy_h;
++
++	if (!pointer || !pointer->cursor.buffer || !pointer->cursor.view.buffer)
++		return;
++
++	if (!(pointer->cursor.view.screens & screen_mask(screen)))
++		return;
++
++	cursor_buf = pointer->cursor.buffer;
++	if (!wld_map(cursor_buf) || !cursor_buf->map)
++		return;
++
++	dst_x = pointer->cursor.view.geometry.x - screen->base.geometry.x;
++	dst_y = pointer->cursor.view.geometry.y - screen->base.geometry.y;
++
++	if (dst_x >= (int32_t)dst_width || dst_y >= (int32_t)dst_height ||
++	    dst_x + (int32_t)cursor_buf->width <= 0 ||
++	    dst_y + (int32_t)cursor_buf->height <= 0) {
++		wld_unmap(cursor_buf);
++		return;
++	}
++
++	if (dst_x < 0) {
++		src_x = -dst_x;
++		dst_x = 0;
++	}
++	if (dst_y < 0) {
++		src_y = -dst_y;
++		dst_y = 0;
++	}
++
++	copy_w = cursor_buf->width - (uint32_t)src_x;
++	if (copy_w > dst_width - (uint32_t)dst_x)
++		copy_w = dst_width - (uint32_t)dst_x;
++	copy_h = cursor_buf->height - (uint32_t)src_y;
++	if (copy_h > dst_height - (uint32_t)dst_y)
++		copy_h = dst_height - (uint32_t)dst_y;
++
++	src = cursor_buf->map;
++
++	for (uint32_t y = 0; y < copy_h; y++) {
++		const uint32_t *src_row = (const uint32_t *)(src + ((size_t)(src_y + (int32_t)y) * cursor_buf->pitch)) + src_x;
++		uint32_t *dst_row = (uint32_t *)(dst + ((size_t)(dst_y + (int32_t)y) * dst_pitch)) + dst_x;
++
++		for (uint32_t x = 0; x < copy_w; x++) {
++			uint32_t src_px = src_row[x];
++			uint32_t a = src_px >> 24;
++
++			if (a == 0)
++				continue;
++			if (a == 255) {
++				dst_row[x] = 0xFF000000 | (src_px & 0x00FFFFFF);
++				continue;
++			}
++
++			uint32_t dst_px = dst_row[x];
++			uint32_t inv = 255 - a;
++			uint32_t r = ((src_px >> 16) & 0xFF) + ((((dst_px >> 16) & 0xFF) * inv + 127) / 255);
++			uint32_t g = ((src_px >> 8) & 0xFF) + ((((dst_px >> 8) & 0xFF) * inv + 127) / 255);
++			uint32_t b = (src_px & 0xFF) + (((dst_px & 0xFF) * inv + 127) / 255);
++
++			dst_row[x] = 0xFF000000 | (r << 16) | (g << 8) | b;
++		}
++	}
++
++	wld_unmap(cursor_buf);
++}
++
++static void
++capture(struct wl_client *client, struct wl_resource *resource, int32_t fd)
++{
++	struct screen *screen;
++	struct wld_buffer *shm_buffer;
++	uint8_t *pixels;
++	uint32_t width, height;
++
++	if (wl_list_empty(&swc.screens)) {
++		fprintf(stderr, "snap: no screens available\n");
++		close(fd);
++		return;
++	}
++
++	screen = wl_container_of(swc.screens.next, screen, link);
++	width = screen->base.geometry.width;
++	height = screen->base.geometry.height;
++
++	/* put compositor in shm*/
++	shm_buffer = compositor_render_to_shm(screen);
++	if (!shm_buffer) {
++		fprintf(stderr, "snap: failed to render to SHM\n");
++		close(fd);
++		return;
++	}
++
++	/* get pixel data from shm */
++	if (!wld_map(shm_buffer) || !shm_buffer->map) {
++		fprintf(stderr, "snap: failed to map buffer data\n");
++		wld_buffer_unreference(shm_buffer);
++		close(fd);
++		return;
++	}
++
++	pixels = shm_buffer->map;
++
++	cursor(pixels, width, height, shm_buffer->pitch, screen);
++
++	ppm(fd, pixels, width, height, shm_buffer->pitch);
++
++	wld_unmap(shm_buffer);
++	wld_buffer_unreference(shm_buffer);
++}
++
++static const struct swc_snap_interface snap_impl = {
++	.capture = capture,
++};
++
++static void
++bind_snap(struct wl_client *client, void *data, uint32_t version, uint32_t id)
++{
++	struct wl_resource *resource;
++
++	resource = wl_resource_create(client, &swc_snap_interface, version, id);
++	if (!resource) {
++		wl_client_post_no_memory(client);
++		return;
++	}
++	wl_resource_set_implementation(resource, &snap_impl, NULL, NULL);
++}
++
++struct wl_global *
++snap_manager_create(struct wl_display *display)
++{
++	return wl_global_create(display, &swc_snap_interface, 1, NULL, &bind_snap);
++}
+diff --git a/libswc/snap.h b/libswc/snap.h
+new file mode 100644
+index 0000000..62c6fe5
+--- /dev/null
++++ b/libswc/snap.h
+@@ -0,0 +1,9 @@
++#ifndef SWC_SNAP_H
++#define SWC_SNAP_H
++
++struct wl_display;
++struct wl_global;
++
++struct wl_global *snap_manager_create(struct wl_display *display);
++
++#endif
+diff --git a/libswc/swc.c b/libswc/swc.c
+index cf82913..6d3f871 100644
+--- a/libswc/swc.c
++++ b/libswc/swc.c
+@@ -37,6 +37,7 @@
+ #include "seat.h"
+ #include "shell.h"
+ #include "shm.h"
++#include "snap.h"
+ #include "subcompositor.h"
+ #include "util.h"
+ #include "window.h"
+@@ -215,10 +216,16 @@ swc_initialize(struct wl_display *display, struct wl_event_loop *event_loop, con
+ 		goto error13;
+ 	}
+ 
++	swc.snap_manager = snap_manager_create(display);
++	if (!swc.snap_manager) {
++		ERROR("Could not initialize snap manager\n");
++		goto error14;
++	}
++
+ #ifdef ENABLE_XWAYLAND
+ 	if (!xserver_initialize()) {
+ 		ERROR("Could not initialize xwayland\n");
+-		goto error14;
++		goto error15;
+ 	}
+ #endif
+ 
+@@ -227,9 +234,11 @@ swc_initialize(struct wl_display *display, struct wl_event_loop *event_loop, con
+ 	return true;
+ 
+ #ifdef ENABLE_XWAYLAND
++error15:
++	wl_global_destroy(swc.snap_manager);
++#endif
+ error14:
+ 	wl_global_destroy(swc.panel_manager);
+-#endif
+ error13:
+ 	wl_global_destroy(swc.kde_decoration_manager);
+ error12:
+@@ -266,6 +275,7 @@ swc_finalize(void)
+ #ifdef ENABLE_XWAYLAND
+ 	xserver_finalize();
+ #endif
++	wl_global_destroy(swc.snap_manager);
+ 	wl_global_destroy(swc.panel_manager);
+ 	wl_global_destroy(swc.xdg_decoration_manager);
+ 	wl_global_destroy(swc.xdg_shell);
+diff --git a/protocol/swc_snap.xml b/protocol/swc_snap.xml
+new file mode 100644
+index 0000000..e8d8622
+--- /dev/null
++++ b/protocol/swc_snap.xml
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<protocol name="swc_snap">
++    <interface name="swc_snap" version="1">
++        <description summary="simple screenshot to file descriptor">
++            provides a minimal screenshot capability.
++        </description>
++
++        <request name="capture">
++            <description summary="capture screenshot to fd">
++                captures the current screen and writes it as ppm formay
++            </description>
++            <arg name="fd" type="fd" summary="file descriptor to write ppm data"/>
++        </request>
++    </interface>
++</protocol>
+-- 
+2.49.0
+

@@ -1,4 +1,4 @@
-From 6d3e048dfc11209f32891ef9fc39586b83eff974 Mon Sep 17 00:00:00 2001
+From 840a07ecb240c2944f359cbde277c10ab65aa135 Mon Sep 17 00:00:00 2001
 From: shrub <maybeshrub@gmail.com>
 Date: Tue, 20 Jan 2026 22:31:55 +0000
 Subject: [PATCH] zoom! swc_set_zoom and get_zoom api added zoom does a
@@ -10,7 +10,7 @@ Subject: [PATCH] zoom! swc_set_zoom and get_zoom api added zoom does a
  2 files changed, 254 insertions(+), 8 deletions(-)
 
 diff --git a/libswc/compositor.c b/libswc/compositor.c
-index 263da39..0f978d9 100644
+index 0bf3210..c8786b5 100644
 --- a/libswc/compositor.c
 +++ b/libswc/compositor.c
 @@ -108,6 +108,10 @@ static struct {
@@ -24,7 +24,7 @@ index 263da39..0f978d9 100644
  } compositor;
  
  static struct {
-@@ -452,6 +456,17 @@ schedule_updates(uint32_t screens)
+@@ -456,6 +460,17 @@ schedule_updates(uint32_t screens)
  			screens |= screen_mask(screen);
  	}
  
@@ -42,7 +42,7 @@ index 263da39..0f978d9 100644
  	compositor.scheduled_updates |= screens;
  }
  
-@@ -499,6 +514,202 @@ swc_overlay_clear(void)
+@@ -503,6 +518,202 @@ swc_overlay_clear(void)
  	schedule_updates(-1);
  }
  
@@ -245,7 +245,7 @@ index 263da39..0f978d9 100644
  static bool
  update(struct view *base)
  {
-@@ -992,14 +1203,32 @@ update_screen(struct screen *screen)
+@@ -996,14 +1207,32 @@ update_screen(struct screen *screen)
  		return;
  	}
  
@@ -286,7 +286,7 @@ index 263da39..0f978d9 100644
  
  	switch (target_swap_buffers(target)) {
  	case -EACCES:
-@@ -1158,6 +1387,8 @@ compositor_initialize(void)
+@@ -1162,6 +1391,8 @@ compositor_initialize(void)
  	compositor.scheduled_updates = 0;
  	compositor.pending_flips = 0;
  	compositor.updating = false;
@@ -295,7 +295,7 @@ index 263da39..0f978d9 100644
  	pixman_region32_init(&compositor.damage);
  	pixman_region32_init(&compositor.opaque);
  	wl_list_init(&compositor.views);
-@@ -1181,6 +1412,8 @@ compositor_initialize(void)
+@@ -1185,6 +1416,8 @@ compositor_initialize(void)
  void
  compositor_finalize(void)
  {
@@ -305,7 +305,7 @@ index 263da39..0f978d9 100644
  	pixman_region32_fini(&compositor.opaque);
  	wl_global_destroy(compositor.global);
 diff --git a/libswc/swc.h b/libswc/swc.h
-index f3bd453..505391d 100644
+index 5d0d9a0..b95fc4c 100644
 --- a/libswc/swc.h
 +++ b/libswc/swc.h
 @@ -121,6 +121,19 @@ void swc_overlay_set_box(int32_t x1, int32_t y1, int32_t x2, int32_t y2, uint32_

@@ -1,7 +1,9 @@
-From 73322f31c68b0ef38e16534b80aae31a75ef712c Mon Sep 17 00:00:00 2001
+From 42b049150c64e99da7e5ccaea0bba87dfbf7e102 Mon Sep 17 00:00:00 2001
 From: dalem <lain@dalem.foo>
 Date: Sat, 20 Dec 2025 21:09:41 +0100
-Subject: [PATCH] add wallpaper support.
+Subject: [PATCH] add wallpaper support this was the initial wallpaper
+ implementation using stb image header. it has since been changed and mostly
+ moved to the client.
 
 ---
  libswc/compositor.c |  8 ++++++--
@@ -11,10 +13,10 @@ Subject: [PATCH] add wallpaper support.
  create mode 100644 libswc/wallpaper.c
 
 diff --git a/libswc/compositor.c b/libswc/compositor.c
-index 0f978d9..d70377d 100644
+index 263da39..fae7991 100644
 --- a/libswc/compositor.c
 +++ b/libswc/compositor.c
-@@ -287,10 +287,14 @@ renderer_repaint(struct target *target, pixman_region32_t *damage, pixman_region
+@@ -283,10 +283,14 @@ renderer_repaint(struct target *target, pixman_region32_t *damage, pixman_region
  
  	wld_set_target_surface(swc.drm->renderer, target->surface);
  
@@ -32,10 +34,10 @@ index 0f978d9..d70377d 100644
  
  	wl_list_for_each_reverse (view, views, link) {
 diff --git a/libswc/swc.h b/libswc/swc.h
-index 505391d..a23e556 100644
+index 03c3cbc..bbade8f 100644
 --- a/libswc/swc.h
 +++ b/libswc/swc.h
-@@ -436,6 +436,29 @@ int swc_add_axis_binding(uint32_t modifiers, uint32_t axis, swc_axis_binding_han
+@@ -410,6 +410,29 @@ int swc_add_axis_binding(uint32_t modifiers, uint32_t axis, swc_axis_binding_han
  
  /* }}} */
  
