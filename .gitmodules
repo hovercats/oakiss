@@ -116,10 +116,6 @@
 	path = pkg/ubase/src
 	url = https://github.com/michaelforney/ubase
 	ignore = all
-[submodule "pkg/util-linux/src"]
-	path = pkg/util-linux/src
-	url = https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git
-	ignore = all
 [submodule "pkg/vis/src"]
 	path = pkg/vis/src
 	url = https://github.com/martanne/vis
