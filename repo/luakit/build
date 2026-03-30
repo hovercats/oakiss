@@ -5,6 +5,9 @@ export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 make PREFIX=/usr USE_LUAJIT=1
 make DESTDIR="$1" PREFIX=/usr install
 
+# Compress manpages
+find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
+
 rm -rf \
 	"$1/usr/share/pixmaps" \
 	"$1/usr/share/applications" \
