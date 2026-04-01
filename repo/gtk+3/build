@@ -26,7 +26,7 @@ meson setup \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Dx11_backend=true \
-	-Dwayland_backend=false \
+	-Dwayland_backend=true \
 	-Dxinerama=yes \
 	-Dprint_backends=file,lpr \
 	-Dcolord=no \

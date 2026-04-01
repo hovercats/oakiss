@@ -13,7 +13,7 @@ muon setup \
 	-Db_colorout=never \
 	-Ddefault_library=static \
 	-Denable-docs=false \
-	-Denable-wayland=false \
+	-Denable-wayland=true \
 	-Denable-xkbregistry=false \
 	-Dpkg_config_path=/usr/lib/pkgconfig \
 	build

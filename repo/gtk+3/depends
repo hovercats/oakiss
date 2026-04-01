@@ -16,3 +16,5 @@ libxkbcommon
 mesa
 pango
 python  make
+wayland
+wayland-protocols make

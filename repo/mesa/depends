@@ -12,5 +12,7 @@ libxshmfence
 meson       make
 python      make
 python-mako make
+wayland
+wayland-protocols make
 xorgproto
 zlib

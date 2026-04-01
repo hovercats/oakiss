@@ -26,7 +26,7 @@ meson setup \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Dglx-read-only-text=true \
-	-Dplatforms=x11 \
+	-Dplatforms=x11,wayland \
 	-Dglx=auto \
 	-Degl=enabled \
 	-Dgallium-drivers=radeonsi \

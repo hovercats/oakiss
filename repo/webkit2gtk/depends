@@ -18,3 +18,5 @@ python-packaging make
 ruby             make
 sqlite
 unifdef          make
+wayland
+wayland-protocols make
