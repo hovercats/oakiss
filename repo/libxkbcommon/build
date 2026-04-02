@@ -11,7 +11,7 @@ muon setup \
 	-Dlibexecdir=/usr/lib \
 	-Dbuildtype=release \
 	-Db_colorout=never \
-	-Ddefault_library=static \
+	-Ddefault_library=both \
 	-Denable-docs=false \
 	-Denable-wayland=true \
 	-Denable-xkbregistry=false \
