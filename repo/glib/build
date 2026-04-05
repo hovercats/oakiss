@@ -17,6 +17,7 @@ muon setup \
 	-Dlibelf=disabled \
 	-Dnls=disabled \
 	-Dsysprof=disabled \
+	-Dglib_debug=disabled \
 	-Dpkg_config_path=/usr/lib/pkgconfig \
 	-Ddefault_library=shared \
 	build
