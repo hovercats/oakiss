@@ -1,11 +1,26 @@
-local version = setmetatable({2, 39}, {__index=function() return 0 end})
-local defvec = 'x86_64_elf64_vec'
-local selvecs = {[defvec]=true, i386_elf32_vec=true}
-local selarchs = {i386=true}
-local emuls = {
-	'elf_x86_64',
-	'elf_i386',
+local targets = {
+	-- when adding a new target, check that archs[1] matches gas cpu_type
+	x86_64={
+		vecs={'x86_64_elf64_vec', 'i386_elf32_vec'},
+		archs={'i386'},
+		emuls={'elf_x86_64', 'elf_i386'},
+	},
+	aarch64={
+		vecs={'aarch64_elf64_le_vec'},
+		archs={'aarch64'},
+		emuls={'aarch64elf', 'aarch64linux', 'aarch64elfb'},
+	}
 }
+local arch = config.target.platform:match('[^-]*')
+local targ = targets[arch]
+if not targ then
+	return
+end
+
+local version = setmetatable({2, 39}, {__index=function() return 0 end})
+local emuls = targets[arch].emuls
+local selarchs = {}
+for _, a in pairs(targets[arch].archs) do selarchs[a] = true end
 
 cflags{
 	'-std=c99', '-Wall', '-Wno-return-local-addr', '-Wno-stringop-truncation',
@@ -87,9 +102,12 @@ sub('bfd.ninja', function()
 	build('sed', '$outdir/bfd/elf64-target.h', '$srcdir/bfd/elfxx-target.h', {expr='-e s,NN,64,g'})
 	build('sed', '$outdir/bfd/pex64igen.c', '$srcdir/bfd/peXXigen.c', {expr='-e s,XX,pex64,g'})
 	build('sed', '$outdir/bfd/peigen.c', '$srcdir/bfd/peXXigen.c', {expr='-e s,XX,pe,g'})
+	build('sed', '$outdir/bfd/elf64-aarch64.c', '$srcdir/bfd/elfnn-aarch64.c', {expr='-e s,NN,64,g'})
 
 	-- src/bfd/config.bfd
-	for _, vec in ipairs(table.keys(selvecs)) do
+	local selvecs = {}
+	for _, vec in ipairs(targets[arch].vecs) do
+		selvecs[vec] = true
 		if vec:find('elf64') or vec:find('mips_elf32_n') then
 			selvecs.elf64_le_vec = true
 			selvecs.elf64_be_vec = true
@@ -107,6 +125,7 @@ sub('bfd.ninja', function()
 		['dwarf2.c']='bfd/dwarf2.c.o',
 		['peigen.c']='$outdir/bfd/peigen.c',
 		['pex64igen.c']='$outdir/bfd/pex64igen.c',
+		['elf64-aarch64.c']='$outdir/bfd/elf64-aarch64.c',
 	}
 	for vec, vecsrcs in pairs(load 'vec.lua') do
 		if selvecs[vec] then
@@ -127,7 +146,7 @@ sub('bfd.ninja', function()
 	local selvecnames = table.keys(selvecs)
 	cc('bfd/targets.c', nil, {cflags={
 		'$cflags',
-		'-D DEFAULT_VECTOR='..defvec,
+		'-D DEFAULT_VECTOR='..selvecnames[1],
 		'-D HAVE_'..table.concat(selvecnames, ' -D HAVE_'),
 		string.format([[-D 'SELECT_VECS=&%s']], table.concat(selvecnames, ',&')),
 	}})
@@ -176,6 +195,7 @@ end)
 sub('binutils.ninja', function()
 	cflags{
 		string.format([[-D 'LOCALEDIR="%s/share/locale"']], config.prefix),
+		string.format([[-D 'TARGET="%s-unknown-linux-musl"']], arch),
 		'-D bin_dummy_emulation=bin_vanilla_emulation',
 		'-I $dir/binutils',
 		'-I $srcdir/binutils',
@@ -220,16 +240,24 @@ sub('binutils.ninja', function()
 end)
 
 sub('gas.ninja', function()
+
 	cflags{
 		'-I $dir/gas',
 		'-I $outdir/gas',
 		'-I $srcdir/gas',
 		'-I $srcdir/gas/config',
 		'-I $srcdir',
+		string.format([[-D 'DEFAULT_ARCH="%s"']], arch),
+		string.format([[-D 'DEFAULT_EMULATION="%s"']], emuls[1]),
+		string.format([[-D 'EMULATIONS=&%s,']], table.concat(emuls, ',&')),
+		string.format([[-D 'TARGET_ALIAS="%s-linux-musl"']], arch),
+		string.format([[-D 'TARGET_CANONICAL="%s-unknown-linux-musl"']], arch),
+		string.format([[-D 'TARGET_CPU="%s"']], arch),
 	}
-	build('copy', '$outdir/gas/targ-cpu.h', '$srcdir/gas/config/tc-i386.h')
+	build('copy', '$outdir/gas/targ-cpu.h', '$srcdir/gas/config/tc-'..targ.archs[1]..'.h')
 	build('copy', '$outdir/gas/targ-env.h', '$srcdir/gas/config/te-linux.h')
 	build('copy', '$outdir/gas/obj-format.h', '$srcdir/gas/config/obj-elf.h')
+
 	local deps = {
 		'$gendir/deps',
 		'$outdir/gas/targ-cpu.h',
@@ -237,7 +265,7 @@ sub('gas.ninja', function()
 		'$outdir/gas/obj-format.h',
 	}
 	-- src/gas/Makefile.am:/^GAS_CFILES
-	exe('bin/as', [[
+	local srcs = paths[[
 		gas/(
 			app.c
 			as.c
@@ -270,11 +298,15 @@ sub('gas.ninja', function()
 			symbols.c
 			write.c
 
-			config/(tc-i386.c obj-elf.c atof-ieee.c)
+			config/(obj-elf.c atof-ieee.c)
 		)
-		libopcodes.a
-		libbfd.a.d
-	]], deps)
+	]]
+	exe('bin/as', {
+		srcs,
+		'gas/config/tc-'..targ.archs[1]..'.c',
+		'libopcodes.a',
+		'libbfd.a.d',
+	}, deps)
 	file('bin/as', '755', '$outdir/bin/as')
 	sym(string.format('bin/%s-as', config.target.platform), 'as')
 	man{'gas/doc/as.1'}
@@ -314,7 +346,7 @@ sub('ld.ninja', function()
 	cc('ld/ldmain.c', nil, {cflags={
 		'$cflags',
 		string.format([[-D 'DEFAULT_EMULATION="%s"']], emuls[1]),
-		string.format([[-D 'TARGET="%s"']], 'x86_64-pc-linux-musl'),
+		string.format([[-D 'TARGET="%s-unknown-linux-musl"']], arch)
 	}})
 	exe('bin/ld', {
 		-- src/ld/Makefile.am:/^ld_new_SOURCES
