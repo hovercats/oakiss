@@ -14,10 +14,25 @@ static const struct config cfg = {
 
 static const char* termcmd[] = { "st", NULL };
 static const char* menucmd[] = { "dmenu_run", NULL };
+
+static const char* cplay[] = { "cmus-remote", "--play", NULL };
+static const char* cpause[] = { "cmus-remote", "--pause", NULL };
+static const char* cnext[] = { "cmus-remote", "--next", NULL };
+static const char* cprev[] = { "cmus-remote", "--prev", NULL };
+
+static const char* voli[] = { "vol", "-i", NULL };
+static const char* vold[] = { "vol", "-d", NULL };
+
 static struct bind binds[] = {
 	/* keyboard */
 	{ SWC_BINDING_KEY,    MOD1,       XKB_KEY_Return, { .v = termcmd }, spawn },
 	{ SWC_BINDING_KEY,    MOD1,       XKB_KEY_r,      { .v = menucmd }, spawn },
+	{ SWC_BINDING_KEY,    MOD1,       XKB_KEY_i,      { .v = cpause },  spawn },
+	{ SWC_BINDING_KEY,    MOD1|SHFT,  XKB_KEY_i,      { .v = cplay },   spawn },
+	{ SWC_BINDING_KEY,    MOD1,       XKB_KEY_o,      { .v = cnext },   spawn },
+	{ SWC_BINDING_KEY,    MOD1|SHFT,  XKB_KEY_o,      { .v = cprev },   spawn },
+	{ SWC_BINDING_KEY,    MOD1,       XKB_KEY_9,      { .v = vold },    spawn },
+	{ SWC_BINDING_KEY,    MOD1,       XKB_KEY_0,      { .v = voli },    spawn },
 	{ SWC_BINDING_KEY,    MOD1|SHFT,  XKB_KEY_q,      { .v = NULL },    quit },
 	{ SWC_BINDING_KEY,    MOD1,       XKB_KEY_k,      { .v = NULL },    focus_next },
 	{ SWC_BINDING_KEY,    MOD1,       XKB_KEY_j,      { .v = NULL },    focus_prev },
