@@ -1,4 +1,4 @@
-From f31bd43c2a8629d2e1aaa93b86b903190eea2e9f Mon Sep 17 00:00:00 2001
+From eb4798bb606fcb2a76eecf8b5008d19a1053df48 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Thu, 12 Mar 2026 12:33:06 +0100
 Subject: [PATCH] dont set path to config.h so we can override it
@@ -8,7 +8,7 @@ Subject: [PATCH] dont set path to config.h so we can override it
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/hevel.h b/src/hevel.h
-index 0c5577c..91cea4d 100644
+index 466aee7..491d34f 100644
 --- a/src/hevel.h
 +++ b/src/hevel.h
 @@ -23,7 +23,7 @@
@@ -19,7 +19,7 @@ index 0c5577c..91cea4d 100644
 +#include "config.h"
  #include "nein_cursor.h"
  
- typedef enum {
+ #include "input.h"
 -- 
 2.49.0
 

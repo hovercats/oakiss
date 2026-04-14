@@ -29,6 +29,11 @@ pkg.deps = {
 
 exe('hevel', {
 	'src/hevel.c',
+	'src/input.c',
+	'src/scroll.c',
+	'src/select.c',
+	'src/window.c',
+	'src/zoom.c',
 	'$builddir/pkg/swc/libswc.a',
 	'$builddir/pkg/wld/libwld.a',
 	'$builddir/pkg/wayland/libwayland-server.a.d',
