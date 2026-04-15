@@ -183,7 +183,8 @@ static Shortcut shortcuts[] = {
 	{ MODKEY|MOD_MASK_SHIFT,        XKB_KEY_Prior,          wlzoom,         {.f = +1} },
 	{ MODKEY|MOD_MASK_SHIFT,        XKB_KEY_Next,           wlzoom,         {.f = -1} },
 	{ MODKEY|MOD_MASK_SHIFT,        XKB_KEY_Home,           wlzoomreset,    {.f =  0} },
-	{ MOD_MASK_SHIFT,               XKB_KEY_Insert,         selpaste,       {.i =  0} },
+	{ MODKEY|MOD_MASK_SHIFT,        XKB_KEY_V,              selpaste,       {.i =  0} },
+	{ MODKEY|MOD_MASK_SHIFT,        XKB_KEY_C,              printsel,       {.i =  0} },
 	{ MODKEY,                       XKB_KEY_Num_Lock,       numlock,        {.i =  0} },
 	{ MODKEY,                       XKB_KEY_Control_L,      iso14755,       {.i =  0} },
 };
