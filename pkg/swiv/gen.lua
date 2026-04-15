@@ -2,6 +2,7 @@ cflags{
 	'-std=c99',
 	'-I $outdir',
 	'-isystem $builddir/pkg/fontconfig/include',
+	'-isystem $builddir/pkg/libxkbcommon/include',
 	'-isystem $builddir/pkg/pixman/include',
 	'-isystem $builddir/pkg/wayland/include',
 	'-isystem $builddir/pkg/wld/include',
@@ -10,6 +11,7 @@ cflags{
 pkg.deps = {
 	'$outdir/protocol/xdg-shell-client-protocol.h',
 	'pkg/fontconfig/headers',
+	'pkg/libxkbcommon/headers',
 	'pkg/pixman/headers',
 	'pkg/wayland/headers',
 	'pkg/wld/headers',
@@ -23,7 +25,9 @@ waylandproto('protocol/xdg-shell.xml', {
 exe('swiv', {
 	'swiv.c',
 	'image.c',
+	'wayland.c',
 	'$outdir/protocol/xdg-shell.c.o',
+	'$builddir/pkg/libxkbcommon/libxkbcommon.a',
 	'$builddir/pkg/wld/libwld.a.d',
 })
 

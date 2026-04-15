@@ -1,4 +1,4 @@
-From 5822d39a37db7993e726af7f2e97f152b9593044 Mon Sep 17 00:00:00 2001
+From 7b8a28f27fb21a749e0d451fd1e68887969994dd Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Tue, 10 Mar 2026 12:42:54 +0100
 Subject: [PATCH] fix path for pixman header
@@ -8,18 +8,18 @@ Subject: [PATCH] fix path for pixman header
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/swiv.c b/swiv.c
-index a10dd8d..c7d7cdd 100644
+index afc9136..bc9e4ec 100644
 --- a/swiv.c
 +++ b/swiv.c
 @@ -2,7 +2,7 @@
- 
- #include "image.h"
+ #include <stdlib.h>
+ #include <string.h>
  
 -#include <pixman-1/pixman.h>
 +#include <pixman.h>
- #include <wayland-client.h>
+ #include <xkbcommon/xkbcommon.h>
  
- #include <wld/wld.h>
+ #include "swiv.h"
 -- 
 2.49.0
 
