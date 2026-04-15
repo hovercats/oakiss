@@ -19,9 +19,10 @@ pkg.deps = {
 exe('sacc', [[
 	io_tls.c sacc.c ui_ti.c
 
-	$builddir/pkg/libtls-bearssl/libtls.a
-	$builddir/pkg/bearssl/libbearssl.a
-	$builddir/pkg/netbsd-curses/libterminfo.a
+	$builddir/pkg/(
+		libtls-bearssl/libtls.a.d
+		netbsd-curses/libterminfo.a
+	)
 ]]
 )
 

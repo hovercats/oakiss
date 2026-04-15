@@ -24,10 +24,7 @@ exe('swiv', {
 	'swiv.c',
 	'image.c',
 	'$outdir/protocol/xdg-shell.c.o',
-	'$builddir/pkg/pixman/libpixman.a',
 	'$builddir/pkg/wld/libwld.a.d',
-	'$builddir/pkg/wayland/libwayland-client.a.d',
-	'$builddir/pkg/fontconfig/libfontconfig.a.d',
 })
 
 file('bin/swiv', '755', '$outdir/swiv')

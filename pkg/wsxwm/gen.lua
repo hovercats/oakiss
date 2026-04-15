@@ -29,14 +29,7 @@ pkg.deps = {
 exe('wsxwm', {
 	'source/wsxwm.c',
 	'source/util.c',
-	'$builddir/pkg/swc/libswc.a',
-	'$builddir/pkg/wld/libwld.a',
-	'$builddir/pkg/pixman/libpixman.a',
-	'$builddir/pkg/libinput/libinput.a.d',
-	'$builddir/pkg/libxkbcommon/libxkbcommon.a',
-	'$builddir/pkg/libdrm/libdrm.a',
-	'$builddir/pkg/wayland/libwayland-server.a.d',
-	'$builddir/pkg/fontconfig/libfontconfig.a.d',
+	'$builddir/pkg/swc/libswc.a.d',
 })
 
 file('bin/wsxwm', '755', '$outdir/wsxwm')

@@ -34,14 +34,7 @@ exe('hevel', {
 	'src/select.c',
 	'src/window.c',
 	'src/zoom.c',
-	'$builddir/pkg/swc/libswc.a',
-	'$builddir/pkg/wld/libwld.a',
-	'$builddir/pkg/wayland/libwayland-server.a.d',
-	'$builddir/pkg/libinput/libinput.a.d',
-	'$builddir/pkg/pixman/libpixman.a',
-	'$builddir/pkg/libxkbcommon/libxkbcommon.a',
-	'$builddir/pkg/libdrm/libdrm.a',
-	'$builddir/pkg/fontconfig/libfontconfig.a.d',
+	'$builddir/pkg/swc/libswc.a.d',
 })
 
 file('bin/hevel', '755', '$outdir/hevel')
