@@ -3,6 +3,7 @@
 patch -p1 < 0001-util-remove-malloc-stats.patch
 
 export DESTDIR="$1"
+export LIBRARY_PATH=/usr/lib
 
 muon setup \
 	-Dprefix=/usr \

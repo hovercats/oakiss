@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
+export LIBRARY_PATH=/usr/lib
 
 # muon seems to make the check fail, and files seems to no be generated before
 # check is ran. prompty making the build fail because pc files is missing.
