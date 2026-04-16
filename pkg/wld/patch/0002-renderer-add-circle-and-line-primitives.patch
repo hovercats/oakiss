@@ -1,0 +1,166 @@
+From c4801596c8ecc0f6476d0bf14582d2086f531853 Mon Sep 17 00:00:00 2001
+From: dalem <lain@dalem.foo>
+Date: Sat, 14 Mar 2026 19:30:03 +0100
+Subject: [PATCH] renderer: add circle and line primitives
+
+---
+ interface/renderer.h |  2 +
+ renderer.c           | 95 ++++++++++++++++++++++++++++++++++++++++++++
+ wld-private.h        |  4 ++
+ wld.h                |  6 +++
+ 4 files changed, 107 insertions(+)
+
+diff --git a/interface/renderer.h b/interface/renderer.h
+index 021aea1..0dabbfd 100644
+--- a/interface/renderer.h
++++ b/interface/renderer.h
+@@ -61,6 +61,8 @@ static const struct wld_renderer_impl wld_renderer_impl = {
+ 	.fill_region = &default_fill_region,
+ 	.copy_region = &default_copy_region,
+ #endif
++	.draw_circle = &wld_draw_circle,
++	.draw_line = &wld_draw_line,
+ 	.draw_text = &renderer_draw_text,
+ 	.flush = &renderer_flush,
+ 	.destroy = &renderer_destroy
+diff --git a/renderer.c b/renderer.c
+index 569d6ba..e8a59c9 100644
+--- a/renderer.c
++++ b/renderer.c
+@@ -139,6 +139,101 @@ wld_copy_region(struct wld_renderer *renderer,
+ 	                            dst_x, dst_y, region);
+ }
+ 
++static void
++circle_points(struct wld_renderer *renderer, uint32_t color, 
++              int32_t x1, int32_t y1, 
++              int32_t x2, int32_t y2, bool fill)
++{
++	if (fill) {
++		renderer->impl->fill_rectangle(renderer, color, x1-x2, y1+y2,
++				                       2*x2+1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1-x2, y1-y2,
++				                       2*x2+1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1-y2, y1+x2,
++				                       2*y2+1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1-y2, y1-x2,
++				                       2*y2+1, 1);
++	} else {
++		renderer->impl->fill_rectangle(renderer, color, x1+x2, y1+y2, 1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1-x2, y1+y2, 1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1+x2, y1-y2, 1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1-x2, y1-y2, 1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1+y2, y1+x2, 1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1-y2, y1+x2, 1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1+y2, y1-x2, 1, 1);
++		renderer->impl->fill_rectangle(renderer, color, x1-y2, y1-x2, 1, 1);
++	}
++}
++
++EXPORT
++void
++wld_draw_circle(struct wld_renderer *renderer, uint32_t color,
++                int32_t x1, int32_t y1, 
++                uint32_t r, bool fill)
++{
++	int32_t x2 = 0, y2 = r;
++	int32_t d = 3 - (2*r);
++
++	circle_points(renderer, color, x1, y1, x2, y2, fill);
++
++	while (y2 >= x2) {
++		if (d > 0) {
++			y2--;
++			d = d + 4*(x2-y2) + 10;
++		}
++		else
++			d = d + 4*x2 + 6;
++
++		x2++;
++
++		circle_points(renderer, color, x1, y1, x2, y2, fill);
++	}
++}
++
++
++EXPORT
++void
++wld_draw_line(struct wld_renderer *renderer, uint32_t color,
++              int32_t x1, int32_t y1,
++              int32_t x2, int32_t y2)
++{
++	int32_t dx = abs(x2-x1),  sx = x1 < x2 ? 1 : -1;
++	int32_t dy = -abs(y2-y1), sy = y1 < y2 ? 1 : -1;
++	int32_t err = dx + dy, e2;
++
++	/* just use fill_rectangle for purely vertical and horizontal line */
++	if (y1 == y2) {
++		int32_t lx = sx > 0 ? x1 : x2;
++		renderer->impl->fill_rectangle(renderer, color, lx, y1, dx + 1, 1);
++		return;
++	}
++
++	if (x1 == x2) {
++		int32_t ly = sy > 0 ? y1 : y2;
++		renderer->impl->fill_rectangle(renderer, color, x1, ly, 1, -dy + 1);
++		return;
++	}
++
++	while (true) {
++		renderer->impl->fill_rectangle(renderer, color, x1, y1, 1, 1);
++
++		if (x1 == x2 && y1 == y2)
++			break;
++
++		e2 = 2 * err;
++
++		if (e2 >= dy) {
++			err += dy;
++			x1 += sx;
++		}
++
++		if (e2 <= dx) {
++			err += dx;
++			y1 += sy;
++		}
++	}
++}
++
+ EXPORT
+ void
+ wld_draw_text(struct wld_renderer *renderer,
+diff --git a/wld-private.h b/wld-private.h
+index 5bdaed3..0953edb 100644
+--- a/wld-private.h
++++ b/wld-private.h
+@@ -108,6 +108,10 @@ struct wld_renderer_impl {
+ 	void (*copy_region)(struct wld_renderer *renderer, struct buffer *src,
+ 	                    int32_t dst_x, int32_t dst_y,
+ 	                    pixman_region32_t *region);
++	void (*draw_circle)(struct wld_renderer *renderer, uint32_t color,
++                        int32_t x1, int32_t y1, uint32_t r, bool fill);
++	void (*draw_line)(struct wld_renderer *renderer, uint32_t color,
++                      int32_t x1, int32_t y1, int32_t x2, int32_t y2);
+ 	void (*draw_text)(struct wld_renderer *renderer,
+ 	                  struct font *font, uint32_t color,
+ 	                  int32_t x, int32_t y, const char *text, uint32_t length,
+diff --git a/wld.h b/wld.h
+index 9eabdd6..b1c53c6 100644
+--- a/wld.h
++++ b/wld.h
+@@ -249,6 +249,12 @@ void wld_copy_rectangle(struct wld_renderer *renderer,
+                         int32_t src_x, int32_t src_y,
+                         uint32_t width, uint32_t height);
+ 
++void wld_draw_circle(struct wld_renderer *renderer, uint32_t color,
++                     int32_t x1, int32_t y1, uint32_t r, bool fill);
++
++void wld_draw_line(struct wld_renderer *renderer, uint32_t color,
++                   int32_t x1, int32_t y1, int32_t x2, int32_t y2);
++
+ void wld_copy_region(struct wld_renderer *renderer,
+                      struct wld_buffer *buffer,
+                      int32_t dst_x, int32_t dst_y, pixman_region32_t *region);
+-- 
+2.49.0
+

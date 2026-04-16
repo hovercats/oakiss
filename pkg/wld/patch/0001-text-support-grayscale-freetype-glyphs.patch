@@ -1,0 +1,296 @@
+From f3798978fc437ef7c6f62cc5be226332bc73a3e2 Mon Sep 17 00:00:00 2001
+From: shrub <maybeshrub@gmail.com>
+Date: Sun, 1 Feb 2026 18:24:41 +0000
+Subject: [PATCH] text: support grayscale freetype glyphs
+
+---
+ font.c    |  5 ++--
+ intel.c   | 26 +++++++++++++++++--
+ nouveau.c | 72 +++++++++++++++++++++++++++++++++++++++++++---------
+ pixman.c  | 76 ++++++++++++++++++++++++++++++++++++++++---------------
+ 4 files changed, 142 insertions(+), 37 deletions(-)
+
+diff --git a/font.c b/font.c
+index 41fd9ca..cbb187c 100644
+--- a/font.c
++++ b/font.c
+@@ -172,7 +172,8 @@ font_ensure_glyph(struct font *font, FT_UInt glyph_index)
+ 			if (!glyph)
+ 				return false;
+ 
+-			FT_Load_Glyph(font->face, glyph_index, FT_LOAD_RENDER | FT_LOAD_MONOCHROME | FT_LOAD_TARGET_MONO);
++			FT_Load_Glyph(font->face, glyph_index,
++			              FT_LOAD_RENDER | FT_LOAD_TARGET_NORMAL);
+ 
+ 			FT_Bitmap_New(&glyph->bitmap);
+ 
+@@ -217,7 +218,7 @@ wld_font_text_extents_n(struct wld_font *font_base,
+ 
+ 	extents->advance = 0;
+ 
+-	while ((ret = FcUtf8ToUcs4((FcChar8 *)text, &c, length) > 0) && c != '\0') {
++	while ((ret = FcUtf8ToUcs4((FcChar8 *)text, &c, length)) > 0 && c != '\0') {
+ 		length -= ret;
+ 		text += ret;
+ 		glyph_index = FT_Get_Char_Index(font->face, c);
+diff --git a/intel.c b/intel.c
+index 95624e9..8cf0a21 100644
+--- a/intel.c
++++ b/intel.c
+@@ -29,6 +29,7 @@
+ 
+ #include <i915_drm.h>
+ #include <intel_bufmgr.h>
++#include <string.h>
+ #include <unistd.h>
+ 
+ struct intel_context {
+@@ -57,6 +58,20 @@ IMPL(intel_context, wld_context)
+ IMPL(intel_renderer, wld_renderer)
+ IMPL(intel_buffer, wld_buffer)
+ 
++static void
++pack_gray_row_to_mono(uint8_t *dst, const uint8_t *src, uint32_t width)
++{
++	uint32_t x, bytes_per_row;
++
++	bytes_per_row = (width + 7) / 8;
++	memset(dst, 0, bytes_per_row);
++
++	for (x = 0; x < width; ++x) {
++		if (src[x] >= 128)
++			dst[x / 8] |= 0x80 >> (x & 7);
++	}
++}
++
+ /**** DRM driver ****/
+ bool
+ driver_device_supported(uint32_t vendor_id, uint32_t device_id)
+@@ -315,8 +330,15 @@ renderer_draw_text(struct wld_renderer *base,
+ 
+ 		/* XY_TEXT_IMMEDIATE requires a pitch with no extra bytes */
+ 		for (row = 0; row < glyph->bitmap.rows; ++row) {
+-			memcpy(byte, glyph->bitmap.buffer + (row * glyph->bitmap.pitch),
+-			       (glyph->bitmap.width + 7) / 8);
++			const uint8_t *src = glyph->bitmap.buffer +
++			                     (row * glyph->bitmap.pitch);
++			uint32_t bytes_per_row = (glyph->bitmap.width + 7) / 8;
++
++			if (glyph->bitmap.pixel_mode == FT_PIXEL_MODE_MONO) {
++				memcpy(byte, src, bytes_per_row);
++			} else {
++				pack_gray_row_to_mono(byte, src, glyph->bitmap.width);
++			}
+ 			byte += (glyph->bitmap.width + 7) / 8;
+ 		}
+ 
+diff --git a/nouveau.c b/nouveau.c
+index 6742f25..6bd7ab1 100644
+--- a/nouveau.c
++++ b/nouveau.c
+@@ -34,6 +34,7 @@
+ #include "pixman.h"
+ 
+ #include <nouveau.h>
++#include <string.h>
+ #include <sys/mman.h>
+ 
+ enum nv_architecture {
+@@ -75,6 +76,20 @@ IMPL(nouveau_context, wld_context)
+ IMPL(nouveau_renderer, wld_renderer)
+ IMPL(nouveau_buffer, wld_buffer)
+ 
++static void
++pack_gray_row_to_mono(uint8_t *dst, const uint8_t *src, uint32_t width)
++{
++	uint32_t x, bytes_per_row;
++
++	bytes_per_row = (width + 7) / 8;
++	memset(dst, 0, bytes_per_row);
++
++	for (x = 0; x < width; ++x) {
++		if (src[x] >= 128)
++			dst[x / 8] |= 0x80 >> (x & 7);
++	}
++}
++
+ /**** DRM driver ****/
+ bool
+ driver_device_supported(uint32_t vendor_id, uint32_t device_id)
+@@ -594,22 +609,55 @@ renderer_draw_text(struct wld_renderer *base,
+ 		if (glyph->bitmap.width == 0 || glyph->bitmap.rows == 0)
+ 			goto advance;
+ 
+-		count = (glyph->bitmap.pitch * glyph->bitmap.rows + 3) / 4;
++		if (glyph->bitmap.pixel_mode == FT_PIXEL_MODE_MONO) {
++			count = (glyph->bitmap.pitch * glyph->bitmap.rows + 3) / 4;
++		} else {
++			uint32_t bytes_per_row = (glyph->bitmap.width + 7) / 8;
++			count = (bytes_per_row * glyph->bitmap.rows + 3) / 4;
++		}
+ 
+ 		if (!ensure_space(renderer->pushbuf, 12 + count))
+ 			return;
+ 
+-		nvc0_2d(renderer->pushbuf, G80_2D_SIFC_WIDTH, 10,
+-		        /* Use the pitch instead of width to ensure the correct
+-			 * alignment is used. */
+-		        glyph->bitmap.pitch * 8, glyph->bitmap.rows,
+-		        0, 1, 0, 1,
+-		        0, origin_x + glyph->x, 0, y + glyph->y);
+-		nv_add_dword(renderer->pushbuf,
+-		             nvc0_command(GF100_COMMAND_TYPE_NON_INCREASING,
+-		                          GF100_SUBCHANNEL_2D,
+-		                          G80_2D_SIFC_DATA, count));
+-		nv_add_data(renderer->pushbuf, glyph->bitmap.buffer, count);
++		if (glyph->bitmap.pixel_mode == FT_PIXEL_MODE_MONO) {
++			nvc0_2d(renderer->pushbuf, G80_2D_SIFC_WIDTH, 10,
++			        /* Use the pitch instead of width to ensure the correct
++				 * alignment is used. */
++			        glyph->bitmap.pitch * 8, glyph->bitmap.rows,
++			        0, 1, 0, 1,
++			        0, origin_x + glyph->x, 0, y + glyph->y);
++			nv_add_dword(renderer->pushbuf,
++			             nvc0_command(GF100_COMMAND_TYPE_NON_INCREASING,
++			                          GF100_SUBCHANNEL_2D,
++			                          G80_2D_SIFC_DATA, count));
++			nv_add_data(renderer->pushbuf, glyph->bitmap.buffer, count);
++		} else {
++			uint32_t bytes_per_row = (glyph->bitmap.width + 7) / 8;
++			uint32_t row;
++			uint8_t *mono = malloc(bytes_per_row * glyph->bitmap.rows);
++			uint8_t *dst = mono;
++
++			if (!mono)
++				return;
++
++			for (row = 0; row < glyph->bitmap.rows; ++row) {
++				const uint8_t *src = glyph->bitmap.buffer +
++				                     (row * glyph->bitmap.pitch);
++				pack_gray_row_to_mono(dst, src, glyph->bitmap.width);
++				dst += bytes_per_row;
++			}
++
++			nvc0_2d(renderer->pushbuf, G80_2D_SIFC_WIDTH, 10,
++			        bytes_per_row * 8, glyph->bitmap.rows,
++			        0, 1, 0, 1,
++			        0, origin_x + glyph->x, 0, y + glyph->y);
++			nv_add_dword(renderer->pushbuf,
++			             nvc0_command(GF100_COMMAND_TYPE_NON_INCREASING,
++			                          GF100_SUBCHANNEL_2D,
++			                          G80_2D_SIFC_DATA, count));
++			nv_add_data(renderer->pushbuf, mono, count);
++			free(mono);
++		}
+ 
+ 	advance:
+ 		origin_x += glyph->advance;
+diff --git a/pixman.c b/pixman.c
+index bd95f8b..3012ecd 100644
+--- a/pixman.c
++++ b/pixman.c
+@@ -24,6 +24,8 @@
+ #include "pixman.h"
+ #include "wld-private.h"
+ 
++#include <string.h>
++
+ #define PIXMAN_COLOR(c)                              \
+ 	{                                            \
+ 		.alpha = ((c >> 24) & 0xff) * 0x101, \
+@@ -344,6 +346,58 @@ reverse(uint8_t byte)
+ 	return byte;
+ }
+ 
++static pixman_image_t *
++glyph_bitmap_to_pixman_image(struct glyph *glyph)
++{
++	FT_Bitmap *bitmap = &glyph->bitmap;
++	pixman_image_t *image;
++	uint8_t *src, *dst;
++	uint32_t row, byte_index, bytes_per_row, pitch;
++
++	switch (bitmap->pixel_mode) {
++	case FT_PIXEL_MODE_MONO:
++		image = pixman_image_create_bits(PIXMAN_a1, bitmap->width,
++		                                 bitmap->rows, NULL, bitmap->pitch);
++		if (!image)
++			return NULL;
++
++		pitch = pixman_image_get_stride(image);
++		bytes_per_row = (bitmap->width + 7) / 8;
++		src = bitmap->buffer;
++		dst = (uint8_t *)pixman_image_get_data(image);
++
++		for (row = 0; row < bitmap->rows; ++row) {
++			/* Pixman's A1 format expects the bits in the opposite order
++			 * that Freetype gives us. */
++			for (byte_index = 0; byte_index < bytes_per_row; ++byte_index)
++				dst[byte_index] = reverse(src[byte_index]);
++
++			dst += pitch;
++			src += bitmap->pitch;
++		}
++		return image;
++	case FT_PIXEL_MODE_GRAY:
++		image = pixman_image_create_bits(PIXMAN_a8, bitmap->width,
++		                                 bitmap->rows, NULL, 0);
++		if (!image)
++			return NULL;
++
++		pitch = pixman_image_get_stride(image);
++		src = bitmap->buffer;
++		dst = (uint8_t *)pixman_image_get_data(image);
++
++		for (row = 0; row < bitmap->rows; ++row) {
++			memset(dst, 0, pitch);
++			memcpy(dst, src, bitmap->width);
++			dst += pitch;
++			src += bitmap->pitch;
++		}
++		return image;
++	default:
++		return NULL;
++	}
++}
++
+ void
+ renderer_draw_text(struct wld_renderer *base,
+                    struct font *font, uint32_t color,
+@@ -385,32 +439,12 @@ renderer_draw_text(struct wld_renderer *base,
+ 		/* If we don't have the glyph in our cache, do some conversions to make
+ 		 * pixman happy, and then insert it. */
+ 		if (!glyphs[index].glyph) {
+-			uint8_t *src, *dst;
+-			uint32_t row, byte_index, bytes_per_row, pitch;
+ 			pixman_image_t *image;
+-			FT_Bitmap *bitmap;
+-
+-			bitmap = &glyph->bitmap;
+-			image = pixman_image_create_bits(PIXMAN_a1, bitmap->width, bitmap->rows, NULL, bitmap->pitch);
++			image = glyph_bitmap_to_pixman_image(glyph);
+ 
+ 			if (!image)
+ 				goto advance;
+ 
+-			pitch = pixman_image_get_stride(image);
+-			bytes_per_row = (bitmap->width + 7) / 8;
+-			src = bitmap->buffer;
+-			dst = (uint8_t *)pixman_image_get_data(image);
+-
+-			for (row = 0; row < bitmap->rows; ++row) {
+-				/* Pixman's A1 format expects the bits in the opposite order
+-				 * that Freetype gives us. Sigh... */
+-				for (byte_index = 0; byte_index < bytes_per_row; ++byte_index)
+-					dst[byte_index] = reverse(src[byte_index]);
+-
+-				dst += pitch;
+-				src += bitmap->pitch;
+-			}
+-
+ 			/* Insert the glyph into the cache. */
+ 			pixman_glyph_cache_freeze(renderer->glyph_cache);
+ 			glyphs[index].glyph = pixman_glyph_cache_insert(renderer->glyph_cache, font, glyph,
+-- 
+2.49.0
+

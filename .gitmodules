@@ -167,6 +167,7 @@
 [submodule "pkg/wld/src"]
 	path = pkg/wld/src
 	url = https://github.com/michaelforney/wld
+	ignore = all
 [submodule "pkg/wayland-protocols/src"]
 	path = pkg/wayland-protocols/src
 	url = https://gitlab.freedesktop.org/wayland/wayland-protocols.git
