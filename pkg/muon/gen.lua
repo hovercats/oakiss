@@ -6,11 +6,9 @@ cflags{
 	'-D MUON_ENDIAN=0',
 	'-D MUON_STATIC',
 	'-D MUON_BOOTSTRAPPED',
-	'-D MUON_HAVE_LIBPKGCONF=1',
 	'-I $outdir',
 	'-I $srcdir/include',
 	'-I $srcdir/subprojects/tinyjson',
-	'-isystem $builddir/pkg/libpkgconf',
 }
 
 sub('tools.ninja', function()
@@ -50,7 +48,6 @@ build('embedder', '$outdir/embedded_files.h', {expand{'$srcdir/src/script', embe
 build('copy', '$outdir/version.c', '$dir/version.c')
 
 pkg.deps = {
-	'pkg/libpkgconf/headers',
 	'$outdir/embedded_files.h',
 }
 
@@ -119,13 +116,11 @@ src/(
     )
     external/(
     	libarchive_null.c libcurl_null.c 
-    	pkgconfig_libpkgconf.c samurai_null.c
-    	readline_builtin.c pkgconfig.c
-    	pkgconfig_exec.c
+    	samurai_null.c readline_builtin.c
+    	pkgconfig.c pkgconfig_exec.c
     )
 )
 libtinyjson.a
-$builddir/pkg/libpkgconf/libpkgconf.a
 ]])
 
 file('bin/muon', '755', '$outdir/muon')
