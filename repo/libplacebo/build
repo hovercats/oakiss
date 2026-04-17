@@ -2,6 +2,9 @@
 
 export DESTDIR="$1"
 
+# Override PATH to avoid /bin/python3 here, as we need /usr/bin/python3
+export PATH=/usr/bin:$PATH
+
 patch -p1 < 0001-remove-the-need-for-vulkan-headers.patch
 
 muon setup \
