@@ -27,7 +27,7 @@ static const int scrollpx = 64;
 static const int scrollease = 4;
 static const int scrollcap = 64;
 static const bool scroll_drag_mode = true;
-static const bool enable_zoom = true;
+static const bool enable_zoom = false;
 #define FOCUS_CENTER true
 #define JUMP
 #endif
