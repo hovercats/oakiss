@@ -2,6 +2,7 @@
 
 export DESTDIR="$1"
 export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+export PATH=/usr/bin:$PATH
 
 # byacc is only installed as yacc
 sed 's/byacc/yacc/g' meson.build > _
