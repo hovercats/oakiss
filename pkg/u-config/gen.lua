@@ -1,13 +1,7 @@
 cflags{
-	'-fno-builtin',
-	'-fno-asynchronous-unwind-tables',
-	'-ffreestanding',
+	'-std=c99',
+	'-Wall', '-Wpedantic',
 }
-
-set('ldflags', {
-	'$ldflags',
-	'-Wl,--gc-sections',
-})
 
 exe('u-config', {'main_posix.c'})
 
