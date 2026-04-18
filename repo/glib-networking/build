@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
 patch -p1 < 0001-remove-gio-querymodule-post-install.patch
 
@@ -20,7 +21,6 @@ muon setup \
 	-Dopenssl=disabled \
 	-Dgnutls=enabled \
 	-Dgnome_proxy=disabled \
-	-Dpkg_config_path=/usr/lib/pkgconfig \
 	-Ddefault_library=shared \
 	build
 

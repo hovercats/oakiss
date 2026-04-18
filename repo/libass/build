@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
 patch -p1 < 0001-remove-fribidi-dependency.patch
 
@@ -10,7 +11,6 @@ muon setup \
 	-Db_colorout=never \
 	-Dfontconfig=enabled \
 	-Ddefault_library=both \
-	-Dpkg_config_path=/usr/lib/pkgconfig \
 	build
 
 samu -C build

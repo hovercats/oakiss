@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
-export LIBRARY_PATH=/usr/lib
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
 muon setup \
 	-Dprefix=/usr \
@@ -9,7 +9,6 @@ muon setup \
 	-Db_colorout=never \
 	-Ddoc=disabled \
 	-Dtests=disabled \
-	-Dpkg_config_path=/usr/lib/pkgconfig \
 	-Ddefault_library=shared \
 	build
 

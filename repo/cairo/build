@@ -3,7 +3,7 @@
 patch -p1 < 0001-util-remove-malloc-stats.patch
 
 export DESTDIR="$1"
-export LIBRARY_PATH=/usr/lib
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
 muon setup \
 	-Dprefix=/usr \
@@ -14,7 +14,6 @@ muon setup \
 	-Dxlib=enabled \
 	-Dxlib-xcb=enabled \
 	-Dtests=disabled \
-	-Dpkg_config_path=/usr/lib/pkgconfig \
 	-Ddefault_library=shared \
 	build
 

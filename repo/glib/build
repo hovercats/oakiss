@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
-export LIBRARY_PATH=/usr/lib
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
 : > fuzzing/meson.build
 : > subprojects/gvdb.wrap
@@ -19,7 +19,6 @@ muon setup \
 	-Dnls=disabled \
 	-Dsysprof=disabled \
 	-Dglib_debug=disabled \
-	-Dpkg_config_path=/usr/lib/pkgconfig \
 	-Ddefault_library=shared \
 	build
 

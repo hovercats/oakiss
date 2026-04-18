@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
 patch -p1 < 0001-fix-enum-types-for-muon.patch
 
@@ -15,7 +16,6 @@ muon setup \
 	-Db_colorout=never \
 	-Ddocs=false \
 	-Dintrospection=false \
-	-Dpkg_config_path=/usr/lib/pkgconfig \
 	-Ddefault_library=shared \
 	build
 
