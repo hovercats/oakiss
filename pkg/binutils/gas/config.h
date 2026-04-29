@@ -7,26 +7,32 @@
 /* #undef BROKEN_ASSERT */
 /* #undef CROSS_COMPILE */
 /* #undef DEFAULT_ARCH */
+#define DEFAULT_COMPRESSED_DEBUG_ALGORITHM COMPRESS_DEBUG_GABI_ZLIB
 /* #undef DEFAULT_CRIS_ARCH */
 /* #undef DEFAULT_EMULATION */
 #define DEFAULT_FLAG_COMPRESS_DEBUG 1
 #define DEFAULT_GENERATE_BUILD_NOTES 0
 #define DEFAULT_GENERATE_ELF_STT_COMMON 0
-#define DEFAULT_GENERATE_X86_RELAX_RELOCATIONS 1
 #define DEFAULT_MIPS_FIX_LOONGSON3_LLSC 0
 /* #undef DEFAULT_RISCV_ARCH_WITH_EXT */
 #define DEFAULT_RISCV_ATTR 1
 /* #undef DEFAULT_RISCV_ISA_SPEC */
 /* #undef DEFAULT_RISCV_PRIV_SPEC */
+#define DEFAULT_SFRAME 0
+#define DEFAULT_X86_TLS_CHECK 1
 #define DEFAULT_X86_USED_NOTE 1
 /* #undef EMULATIONS */
 /* #undef ENABLE_CHECKING */
 /* #undef ENABLE_NLS */
-#define HAVE_DECL_ASPRINTF 1
+/* #undef HAVE_CFLOCALECOPYPREFERREDLANGUAGES */
+/* #undef HAVE_CFPREFERENCESCOPYAPPVALUE */
+/* #undef HAVE_DCGETTEXT */
 #define HAVE_DECL_GETOPT 1
 #define HAVE_DECL_MEMPCPY 1
 #define HAVE_DECL_STPCPY 1
 #define HAVE_DLFCN_H 1
+/* #undef HAVE_GETTEXT */
+/* #undef HAVE_ICONV */
 #define HAVE_INTTYPES_H 1
 #define HAVE_LC_MESSAGES 1
 #define HAVE_MEMORY_H 1
@@ -42,6 +48,7 @@
 /* #undef HAVE_TM_GMTOFF */
 #define HAVE_UNISTD_H 1
 /* #undef HAVE_WINDOWS_H */
+/* #undef HAVE_ZSTD */
 /* #undef I386COFF */
 #define LT_OBJDIR ".libs/"
 /* #undef MIPS_CPU_STRING_DEFAULT */
@@ -67,10 +74,10 @@
 #define PACKAGE "gas"
 #define PACKAGE_BUGREPORT ""
 #define PACKAGE_NAME "gas"
-#define PACKAGE_STRING "gas 2.39"
+#define PACKAGE_STRING "gas 2.46.0"
 #define PACKAGE_TARNAME "gas"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "2.39"
+#define PACKAGE_VERSION "2.46.0"
 #define STDC_HEADERS 1
 /* #undef STRICTCOFF */
 /* #undef TARGET_ALIAS */
@@ -78,12 +85,11 @@
 /* #undef TARGET_CANONICAL */
 /* #undef TARGET_CPU */
 #define TARGET_OS "linux-musl"
-/* #undef TARGET_SOLARIS_COMMENT */
 #define TARGET_VENDOR "unknown"
 /* #undef TARGET_WITH_CPU */
 /* #undef USE_BINARY_FOPEN */
+/* #undef USE_EF_MIPS_ABI_O32 */
 /* #undef USE_EMULATIONS */
-/* #undef USE_E_MIPS_ABI_O32 */
 #ifndef _ALL_SOURCE
 # define _ALL_SOURCE 1
 #endif
@@ -100,7 +106,7 @@
 # define __EXTENSIONS__ 1
 #endif
 /* #undef USING_CGEN */
-#define VERSION "2.39"
+#define VERSION "2.46.0"
 #if defined AC_APPLE_UNIVERSAL_BUILD
 # if defined __BIG_ENDIAN__
 #  define WORDS_BIGENDIAN 1

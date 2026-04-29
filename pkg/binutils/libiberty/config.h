@@ -43,6 +43,7 @@
 #define HAVE_INSQUE 1
 #define HAVE_INTPTR_T 1
 #define HAVE_INTTYPES_H 1
+#define HAVE_LIBGEN_H 1
 #define HAVE_LIMITS_H 1
 #define HAVE_LONG_LONG 1
 /* #undef HAVE_MACHINE_HAL_SYSINFO_H */
@@ -53,12 +54,14 @@
 #define HAVE_MEMMEM 1
 #define HAVE_MEMMOVE 1
 #define HAVE_MEMORY_H 1
+#define HAVE_MEMRCHR 1
 #define HAVE_MEMSET 1
 #define HAVE_MKSTEMPS 1
 #define HAVE_MMAP 1
 /* #undef HAVE_ON_EXIT */
 #define HAVE_PIPE2 1
 #define HAVE_POSIX_SPAWN 1
+#define HAVE_POSIX_SPAWNP 1
 /* #undef HAVE_PROCESS_H */
 #define HAVE_PSIGNAL 1
 /* #undef HAVE_PSTAT_GETDYNAMIC */
@@ -138,6 +141,7 @@
 #define HAVE_WAITPID 1
 #define HAVE_WORKING_FORK 1
 #define HAVE_WORKING_VFORK 1
+/* #undef HAVE_X86_SHA1_HW_SUPPORT */
 /* #undef HAVE__DOPRNT */
 /* #undef HAVE__SYSTEM_CONFIGURATION */
 #define HAVE___FSETLOCKING 1

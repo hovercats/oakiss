@@ -2,14 +2,18 @@
 #  error config.h must be #included before system headers
 #endif
 #define __CONFIG_H__ 1
+/* #undef AC_APPLE_UNIVERSAL_BUILD */
 #ifdef __x86_64__
 #define CORE_HEADER "hosts/x86-64linux.h"
 #endif
 #define DEFAULT_LD_Z_SEPARATE_CODE 1
 /* #undef ENABLE_CHECKING */
 /* #undef ENABLE_NLS */
+/* #undef HAVE_CFLOCALECOPYPREFERREDLANGUAGES */
+/* #undef HAVE_CFPREFERENCESCOPYAPPVALUE */
+/* #undef HAVE_DCGETTEXT */
 #define HAVE_DECL_ASPRINTF 1
-#define HAVE_DECL_BASENAME 1
+#define HAVE_DECL_BASENAME 0
 #define HAVE_DECL_FFS 1
 #define HAVE_DECL_FOPEN64 0
 #define HAVE_DECL_FSEEKO 1
@@ -18,7 +22,9 @@
 #define HAVE_DECL_FTELLO64 0
 #define HAVE_DECL_STPCPY 1
 #define HAVE_DECL_STRNLEN 1
+#define HAVE_DECL_STRTOULL 1
 #define HAVE_DECL_VASPRINTF 1
+#define HAVE_DECL____LC_CODEPAGE_FUNC 0
 #define HAVE_DLFCN_H 1
 #define HAVE_FCNTL 1
 #define HAVE_FCNTL_H 1
@@ -33,8 +39,10 @@
 #define HAVE_GETGID 1
 #define HAVE_GETPAGESIZE 1
 #define HAVE_GETRLIMIT 1
+/* #undef HAVE_GETTEXT */
 #define HAVE_GETUID 1
 #define HAVE_HIDDEN 1
+/* #undef HAVE_ICONV */
 #define HAVE_INTTYPES_H 1
 /* #undef HAVE_LWPSTATUS_T */
 /* #undef HAVE_LWPSTATUS_T_PR_CONTEXT */
@@ -75,25 +83,27 @@
 #define HAVE_UNISTD_H 1
 /* #undef HAVE_WIN32_PSTATUS_T */
 /* #undef HAVE_WINDOWS_H */
+/* #undef HAVE_ZSTD */
 #define LT_OBJDIR ".libs/"
 #define PACKAGE "bfd"
 #define PACKAGE_BUGREPORT ""
 #define PACKAGE_NAME "bfd"
-#define PACKAGE_STRING "bfd 2.39"
+#define PACKAGE_STRING "bfd 2.46.0"
 #define PACKAGE_TARNAME "bfd"
 #define PACKAGE_URL ""
-#define PACKAGE_VERSION "2.39"
+#define PACKAGE_VERSION "2.46.0"
 #define SIZEOF_INT 4
 #define SIZEOF_LONG 8
 #define SIZEOF_LONG_LONG 8
 #define SIZEOF_OFF_T 8
 #define SIZEOF_VOID_P 8
 #define STDC_HEADERS 1
+#define TLS _Thread_local
 /* #undef TRAD_HEADER */
 /* #undef USE_64_BIT_ARCHIVE */
 /* #undef USE_BINARY_FOPEN */
 /* #undef USE_MINGW64_LEADING_UNDERSCORES */
-/* #undef USE_MMAP */
+#define USE_MMAP 1
 #define USE_SECUREPLT 1
 #ifndef _ALL_SOURCE
 # define _ALL_SOURCE 1
@@ -110,7 +120,16 @@
 #ifndef __EXTENSIONS__
 # define __EXTENSIONS__ 1
 #endif
-#define VERSION "2.39"
+#define VERSION "2.46.0"
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+/* #  undef WORDS_BIGENDIAN */
+# endif
+#endif
 #ifndef _DARWIN_USE_64_BIT_INODE
 # define _DARWIN_USE_64_BIT_INODE 1
 #endif

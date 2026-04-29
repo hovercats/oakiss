@@ -1,33 +1,27 @@
-#if defined(__GLIBC__) && !defined(__FreeBSD_kernel__) && !defined(__CONFIG_H__)
-#  error config.h must be #included before system headers
-#endif
-#define __CONFIG_H__ 1
-/* #undef ENABLE_CHECKING */
-/* #undef ENABLE_NLS */
-/* #undef HAVE_CFLOCALECOPYPREFERREDLANGUAGES */
-/* #undef HAVE_CFPREFERENCESCOPYAPPVALUE */
-/* #undef HAVE_DCGETTEXT */
-#define HAVE_DECL_BASENAME 0
-#define HAVE_DECL_STPCPY 1
+#define HAVE_BYTESWAP_H 1
+#define HAVE_DECL_BSWAP_16 1
+#define HAVE_DECL_BSWAP_32 1
+#define HAVE_DECL_BSWAP_64 1
 #define HAVE_DLFCN_H 1
-/* #undef HAVE_GETTEXT */
-/* #undef HAVE_ICONV */
+#define HAVE_ENDIAN_H 1
+#define HAVE_GETPAGESIZE 1
 #define HAVE_INTTYPES_H 1
 #define HAVE_MEMORY_H 1
-#define HAVE_SIGSETJMP 1
+#define HAVE_MMAP 1
 #define HAVE_STDINT_H 1
 #define HAVE_STDLIB_H 1
 #define HAVE_STRINGS_H 1
 #define HAVE_STRING_H 1
+#define HAVE_SYS_PARAM_H 1
 #define HAVE_SYS_STAT_H 1
 #define HAVE_SYS_TYPES_H 1
 #define HAVE_UNISTD_H 1
 #define LT_OBJDIR ".libs/"
-#define PACKAGE "opcodes"
+#define PACKAGE "libsframe"
 #define PACKAGE_BUGREPORT ""
-#define PACKAGE_NAME "opcodes"
-#define PACKAGE_STRING "opcodes 2.46.0"
-#define PACKAGE_TARNAME "opcodes"
+#define PACKAGE_NAME "libsframe"
+#define PACKAGE_STRING "libsframe 2.46.0"
+#define PACKAGE_TARNAME "libsframe"
 #define PACKAGE_URL ""
 #define PACKAGE_VERSION "2.46.0"
 #define STDC_HEADERS 1
@@ -47,6 +41,11 @@
 # define __EXTENSIONS__ 1
 #endif
 #define VERSION "2.46.0"
+#ifndef _DARWIN_USE_64_BIT_INODE
+# define _DARWIN_USE_64_BIT_INODE 1
+#endif
+/* #undef _FILE_OFFSET_BITS */
+/* #undef _LARGE_FILES */
 /* #undef _MINIX */
 /* #undef _POSIX_1_SOURCE */
 /* #undef _POSIX_SOURCE */

@@ -1,23 +1,23 @@
 local elf = {
 	'elf.c', 'elflink.c', 'elf-attrs.c', 'elf-strtab.c', 'elf-eh-frame.c',
-	'dwarf1.c', 'dwarf2.c'
+	'elf-properties.c', 'elf-sframe.c', 'dwarf1.c', 'dwarf2.c'
 }
 local coffgen = {'coffgen.c', 'dwarf2.c'}
 local coff = {'cofflink.c', coffgen}
 local ecoff = {'ecofflink.c', coffgen}
 local xcoff = {'xcofflink.c', coffgen}
-local elfxx_x86 = {'elfxx-x86.c', 'elf-ifunc.c', 'elf-nacl.c', 'elf-vxworks.c'}
+local elfxx_x86 = {'elfxx-x86.c', 'elf-ifunc.c', 'elf-vxworks.c'}
 
 -- src/bfd/configure.ac:/for vec in/
 return {
 	aarch64_elf32_be_vec={'elf32-aarch64.c', 'elfxx-aarch64.c', 'elf-ifunc.c', 'elf32.c', elf},
 	aarch64_elf32_le_vec={'elf32-aarch64.c', 'elfxx-aarch64.c', 'elf-ifunc.c', 'elf32.c', elf},
 	aarch64_elf64_be_vec={'elf64-aarch64.c', 'elfxx-aarch64.c', 'elf-ifunc.c', 'elf64.c', elf},
-	aarch64_elf64_be_cloudabi_vec={'elf64-aarch64.c', 'elfxx-aarch64.c', 'elf-ifunc.c', 'elf64.c', elf},
 	aarch64_elf64_le_vec={'elf64-aarch64.c', 'elfxx-aarch64.c', 'elf-ifunc.c', 'elf64.c', elf},
-	aarch64_elf64_le_cloudabi_vec={'elf64-aarch64.c', 'elfxx-aarch64.c', 'elf-ifunc.c', 'elf64.c', elf},
 	aarch64_mach_o_vec={'mach-o-aarch64.c'},
-	aarch64_pei_vec={'pei-aarch64.c', 'pe-aarch64igen.c', coff},
+	aarch64_pei_le_vec={'pei-aarch64.c', 'pe-aarch64igen.c', coff},
+	aarch64_pe_le_vec={'pe-aarch64.c', 'pe-aarch64igen.c', coff},
+	aarch64_pe_bigobj_le_vec={'pe-aarch64.c', 'pe-aarch64igen.c', coff},
 	alpha_ecoff_le_vec={'coff-alpha.c', 'ecoff.c', ecoff},
 	alpha_elf64_vec={'elf64-alpha.c', 'elf64.c', elf},
 	alpha_elf64_fbsd_vec={'elf64-alpha.c', 'elf64.c', elf},
@@ -30,14 +30,12 @@ return {
 	aout_vec={'host-aout.c', 'aout32.c'},
 	arc_elf32_be_vec={'elf32-arc.c', 'elf32.c', elf},
 	arc_elf32_le_vec={'elf32-arc.c', 'elf32.c', elf},
-	arm_elf32_be_vec={'elf32-arm.c', 'elf32.c', 'elf-nacl.c', 'elf-vxworks.c', elf},
-	arm_elf32_le_vec={'elf32-arm.c', 'elf32.c', 'elf-nacl.c', 'elf-vxworks.c', elf},
-	arm_elf32_fdpic_be_vec={'elf32-arm.c', 'elf32.c', 'elf-nacl.c', 'elf-vxworks.c', elf},
-	arm_elf32_fdpic_le_vec={'elf32-arm.c', 'elf32.c', 'elf-nacl.c', 'elf-vxworks.c', elf},
-	arm_elf32_nacl_be_vec={'elf32-arm.c', 'elf32.c', 'elf-nacl.c', 'elf-vxworks.c', elf},
-	arm_elf32_nacl_le_vec={'elf32-arm.c', 'elf32.c', 'elf-nacl.c', 'elf-vxworks.c', elf},
-	arm_elf32_vxworks_be_vec={'elf32-arm.c', 'elf32.c', 'elf-nacl.c', 'elf-vxworks.c', elf},
-	arm_elf32_vxworks_le_vec={'elf32-arm.c', 'elf32.c', 'elf-nacl.c', 'elf-vxworks.c', elf},
+	arm_elf32_be_vec={'elf32-arm.c', 'elf32.c', 'elf-vxworks.c', elf},
+	arm_elf32_le_vec={'elf32-arm.c', 'elf32.c', 'elf-vxworks.c', elf},
+	arm_elf32_fdpic_be_vec={'elf32-arm.c', 'elf32.c', 'elf-vxworks.c', elf},
+	arm_elf32_fdpic_le_vec={'elf32-arm.c', 'elf32.c', 'elf-vxworks.c', elf},
+	arm_elf32_vxworks_be_vec={'elf32-arm.c', 'elf32.c', 'elf-vxworks.c', elf},
+	arm_elf32_vxworks_le_vec={'elf32-arm.c', 'elf32.c', 'elf-vxworks.c', elf},
 	arm_pe_be_vec={'pe-arm.c', 'peigen.c', coff},
 	arm_pe_le_vec={'pe-arm.c', 'peigen.c', coff},
 	arm_pe_wince_be_vec={'pe-arm-wince.c', 'pe-arm.c', 'peigen.c', coff},
@@ -104,10 +102,14 @@ return {
 	ia64_pei_vec={'pei-ia64.c', 'pepigen.c', coff},
 	ip2k_elf32_vec={'elf32-ip2k.c', 'elf32.c', elf},
 	iq2000_elf32_vec={'elf32-iq2000.c', 'elf32.c', elf},
+	-- TODO: possible binutils bug. where is ipa defined?
+	--kvx_elf32_vec={'elf32-kvx.c', 'elfxx-kvx.c', 'elf32.c', elf, ipa},
+	--kvx_elf64_vec={'elf64-kvx.c', 'elfxx-kvx.c', 'elf64.c', elf, ipa},
 	lm32_elf32_vec={'elf32-lm32.c', 'elf32.c', elf},
 	lm32_elf32_fdpic_vec={'elf32-lm32.c', 'elf32.c', elf},
 	loongarch_elf32_vec={'elf32-loongarch.c', 'elfxx-loongarch.c', 'elf32.c', 'elf-ifunc.c', elf},
 	loongarch_elf64_vec={'elf64-loongarch.c', 'elf64.c', 'elfxx-loongarch.c', 'elf32.c', 'elf-ifunc.c', elf},
+	loongarch64_pei_vec={'pei-loongarch64.c', 'pe-loongarch64igen.c', coff},
 	m32c_elf32_vec={'elf32-m32c.c', 'elf32.c', elf},
 	m32r_elf32_vec={'elf32-m32r.c', 'elf32.c', elf},
 	m32r_elf32_le_vec={'elf32-m32r.c', 'elf32.c', elf},
@@ -168,11 +170,10 @@ return {
 	nds32_elf32_linux_be_vec={'elf32-nds32.c', 'elf32.c', elf},
 	nds32_elf32_linux_le_vec={'elf32-nds32.c', 'elf32.c', elf},
 	nfp_elf64_vec={'elf64-nfp.c', 'elf64.c', elf},
-	nios2_elf32_be_vec={'elf32-nios2.c', 'elf32.c', elf},
-	nios2_elf32_le_vec={'elf32-nios2.c', 'elf32.c', elf},
 	ns32k_aout_pc532mach_vec={'pc532-mach.c', 'aout-ns32k.c'},
 	ns32k_aout_pc532nbsd_vec={'ns32knetbsd.c', 'aout-ns32k.c'},
 	or1k_elf32_vec={'elf32-or1k.c', 'elf32.c', elf},
+	pdb_vec={'pdb.c'},
 	pdp11_aout_vec={'pdp11.c'},
 	pef_vec={'pef.c'},
 	pef_xlib_vec={'pef.c'},
@@ -193,6 +194,7 @@ return {
 	riscv_elf64_vec={'elf64-riscv.c', 'elf64.c', 'elfxx-riscv.c', 'elf-ifunc.c', 'elf32.c', elf},
 	riscv_elf32_be_vec={'elf32-riscv.c', 'elfxx-riscv.c', 'elf-ifunc.c', 'elf32.c', elf},
 	riscv_elf64_be_vec={'elf64-riscv.c', 'elf64.c', 'elfxx-riscv.c', 'elf-ifunc.c', 'elf32.c', elf},
+	riscv64_pei_vec={'pei-riscv64.c', 'pe-riscv64igen.c', coff},
 	rl78_elf32_vec={'elf32-rl78.c', 'elf32.c', elf},
 	rs6000_xcoff64_vec={'coff64-rs6000.c', 'aix5ppc-core.c', xcoff},
 	rs6000_xcoff64_aix_vec={'coff64-rs6000.c', 'aix5ppc-core.c', xcoff},
@@ -265,7 +267,6 @@ return {
 	x86_64_coff_vec={'coff-x86_64.c', coff},
 	x86_64_elf32_vec={'elf64-x86-64.c', elfxx_x86, 'elf64.c', 'elf32.c', elf},
 	x86_64_elf64_vec={'elf64-x86-64.c', elfxx_x86, 'elf64.c', elf},
-	x86_64_elf64_cloudabi_vec={'elf64-x86-64.c', elfxx_x86, 'elf64.c', elf},
 	x86_64_elf64_fbsd_vec={'elf64-x86-64.c', elfxx_x86, 'elf64.c', elf},
 	x86_64_elf64_sol2_vec={'elf64-x86-64.c', elfxx_x86, 'elf64.c', elf},
 	x86_64_mach_o_vec={'mach-o-x86-64.c'},
@@ -274,8 +275,8 @@ return {
 	x86_64_pei_vec={'pei-x86_64.c', 'pex64igen.c', coff},
 	xgate_elf32_vec={'elf32-xgate.c', 'elf32.c', elf},
 	xstormy16_elf32_vec={'elf32-xstormy16.c', 'elf32.c', elf},
-	xtensa_elf32_be_vec={'xtensa-isa.c', 'xtensa-modules.c', 'elf32-xtensa.c', 'elf32.c', elf},
-	xtensa_elf32_le_vec={'xtensa-isa.c', 'xtensa-modules.c', 'elf32-xtensa.c', 'elf32.c', elf},
+	xtensa_elf32_be_vec={'xtensa-dynconfig.c', 'xtensa-isa.c', 'xtensa-modules.c', 'elf32-xtensa.c', 'elf32.c', elf},
+	xtensa_elf32_le_vec={'xtensa-dynconfig.c', 'xtensa-isa.c', 'xtensa-modules.c', 'elf32-xtensa.c', 'elf32.c', elf},
 	z80_coff_vec={'coff-z80.c', 'reloc16.c', coffgen},
 	z80_elf32_vec={'elf32-z80.c', 'elf32.c', elf},
 	z8k_coff_vec={'coff-z8k.c', 'reloc16.c', coff},

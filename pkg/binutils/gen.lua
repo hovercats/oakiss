@@ -17,7 +17,7 @@ if not targ then
 	return
 end
 
-local version = setmetatable({2, 39}, {__index=function() return 0 end})
+local version = {2, 46, 0}
 local emuls = targets[arch].emuls
 local selarchs = {}
 for _, a in pairs(targets[arch].archs) do selarchs[a] = true end
@@ -55,7 +55,7 @@ sub('libiberty.ninja', function()
 		fnmatch.c fopen_unlocked.c
 		getopt.c getopt1.c getpwd.c
 		getruntime.c hashtab.c hex.c
-		lbasename.c lrealpath.c
+		lbasename.c ldirname.c lrealpath.c
 		make-relative-prefix.c make-temp-file.c
 		objalloc.c
 		obstack.c
@@ -78,8 +78,19 @@ sub('libiberty.ninja', function()
 	)]])
 end)
 
+sub('libsframe.ninja', function()
+	cflags{
+		'-I $dir/libsframe',
+		'-I $srcdir/libctf',  -- for swap.h
+	}
+	lib('libsframe.a', 'libsframe/(sframe.c sframe-dump.c sframe-error.c)')
+end)
+
 sub('bfd.ninja', function()
-	cflags{'-I $dir/bfd'}
+	cflags{
+		'-D OBJ_MAYBE_ELF',
+		'-I $dir/bfd',
+	}
 	build('sed', '$outdir/bfd/bfd.h', '$srcdir/bfd/bfd-in2.h', {expr={
 		'-e s,@supports_plugins@,0,',
 		'-e s,@wordsize@,64,',
@@ -89,7 +100,7 @@ sub('bfd.ninja', function()
 		'-e s,@bfd_ufile_ptr@,uint64_t,',
 	}})
 	build('sed', '$outdir/bfd/bfdver.h', '$srcdir/bfd/version.h', {expr={
-		string.format('-e s,@bfd_version@,%d%02d%02d%02d%02d,', version[1], version[2], version[3], version[4], version[5]),
+		string.format('-e s,@bfd_version@,%d%02d%02d,', version[1], version[2], version[3]),
 		string.format([[-e 's,@bfd_version_string@,"%s",']], table.concat(version, '.')),
 		[[-e 's,@bfd_version_package@,"(GNU Binutils) ",']],
 		[[-e 's,@report_bugs_to@,"<http://www.sourceware.org/bugzilla/>",']],
@@ -159,15 +170,16 @@ sub('bfd.ninja', function()
 		-- src/bfd/Makefile.am:/^BFD32_LIBS_CFILES
 		-- src/bfd/Makefile.am:/^BFD64_LIBS_CFILES
 		paths[[bfd/(
-			archive.c archures.c.o bfd.c bfdio.c bfdwin.c cache.c coff-bfd.c
-			compress.c corefile.c elf-properties.c format.c hash.c
-			init.c libbfd.c linker.c merge.c opncls.c reloc.c
+			archive.c archures.c.o bfd.c bfdio.c cache.c
+			coff-bfd.c compress.c corefile.c format.c
+			hash.c libbfd.c linker.c merge.c opncls.c reloc.c
 			section.c simple.c stab-syms.c stabs.c syms.c targets.c.o
 			binary.c ihex.c srec.c tekhex.c verilog.c
 
 			archive64.c
 		)]],
 		table.keys(srcs),
+		'libsframe.a',
 		'libiberty.a',
 		'$builddir/pkg/zlib/libz.a',
 	}, deps)
@@ -213,18 +225,18 @@ sub('binutils.ninja', function()
 
 	cc('binutils/objdump.c', nil, {cflags='$cflags -D OBJDUMP_PRIVATE_VECTORS='})
 	exe('bin/size',    [[binutils/size.c                    libcommon.a.d]])
-	exe('bin/objcopy', [[binutils/(objcopy.c not-strip.c)   libcommon.a.d]])
+	exe('bin/objcopy', [[binutils/not-strip.c               libcommon.a.d]])
 	exe('bin/strings', [[binutils/strings.c                 libcommon.a.d]])
 	exe('bin/readelf', [[binutils/(readelf.c unwind-ia64.c) libcommon.a.d]])
 	exe('bin/elfedit', [[binutils/elfedit.c                 libcommon.a.d]])
-	exe('bin/strip',   [[binutils/(objcopy.c.o is-strip.c)  libcommon.a.d]])
+	exe('bin/strip',   [[binutils/is-strip.c                libcommon.a.d]])
 	exe('bin/nm',      [[binutils/nm.c                      libcommon.a.d]])
 	exe('bin/objdump', [[binutils/(objdump.c.o prdbg.c)     libcommon.a.d libopcodes.a]])
 	exe('bin/addr2line', [[binutils/addr2line.c             libcommon.a.d]])
 
 	local arobjs = objects[[
 		binutils/(
-			arparse.c arlex.c ar.c arsup.c binemul.c
+			arparse.c arlex.c arsup.c binemul.c
 			emul_vanilla.c
 		)
 		libcommon.a.d
@@ -270,6 +282,7 @@ sub('gas.ninja', function()
 			app.c
 			as.c
 			atof-generic.c
+			codeview.c
 			compress-debug.c
 			cond.c
 			depend.c
@@ -282,6 +295,8 @@ sub('gas.ninja', function()
 			flonum-konst.c
 			flonum-mult.c
 			frags.c
+			gen-sframe.c
+			ginsn.c
 			hash.c
 			input-file.c
 			input-scrub.c
@@ -293,6 +308,9 @@ sub('gas.ninja', function()
 			read.c
 			remap.c
 			sb.c
+			scfidw2gen.c
+			scfi.c
+			sframe-opt.c
 			stabs.c
 			subsegs.c
 			symbols.c
@@ -317,6 +335,7 @@ sub('ld.ninja', function()
 		'-D ELF_LIST_OPTIONS=true',
 		'-D ELF_SHLIB_LIST_OPTIONS=true',
 		'-D ELF_PLT_UNWIND_LIST_OPTIONS=true',
+		'-D ELF_SFRAME_LIST_OPTIONS=true',
 		string.format([[-D 'BINDIR="%s/bin"']], config.prefix),
 		string.format([[-D 'SCRIPTDIR="%s/%s/lib"']], config.prefix, config.target.platform),
 		string.format([[-D 'TOOLBINDIR="%s/%s/bin"']], config.prefix, config.target.platform),
@@ -332,15 +351,12 @@ sub('ld.ninja', function()
 	rule('ldemul', 'sh $dir/ldemul.sh $emuls >$out')
 	build('ldemul', '$outdir/ld/ldemul-list.h', {'|', '$dir/ldemul.sh'}, {emuls=emuls})
 
-	build('copy', '$outdir/ld/stringify.sed', '$srcdir/ld/emultempl/astring.sed')
-	rule('genscripts', string.format([[cd $outdir/ld && LIB_PATH= sh $$OLDPWD/$srcdir/ld/genscripts.sh $$OLDPWD/$srcdir/ld /lib '' '' %s %s %s '' /lib '%s' /lib no yes $emul %s]], config.target.platform, config.target.platform, config.target.platform, table.concat(emuls, ' '), config.target.platform))
+	rule('genscripts', string.format([[cd $outdir/ld && mkdir -p ldscripts && LIB_PATH= sh $$OLDPWD/$srcdir/ld/genscripts.sh $$OLDPWD/$srcdir/ld /lib '' '' %s %s %s '' /lib '%s' /lib no yes $emul %s]], config.target.platform, config.target.platform, config.target.platform, table.concat(emuls, ' '), config.target.platform))
 	local srcs = {}
 	for _, emul in ipairs(emuls) do
 		local out = string.format('$outdir/ld/e%s.c', emul)
 		table.insert(srcs, out)
-		build('genscripts', string.format('$outdir/ld/e%s.c', emul), {'|', '$srcdir/ld/genscripts.sh', '$outdir/ld/stringify.sed'}, {
-			emul=emul,
-		})
+		build('genscripts', string.format('$outdir/ld/e%s.c', emul), {'|', '$srcdir/ld/genscripts.sh'}, {emul=emul})
 	end
 
 	cc('ld/ldmain.c', nil, {cflags={
