@@ -61,7 +61,7 @@ sub('libiberty.ninja', function()
 		obstack.c
 		partition.c pexecute.c physmem.c
 		pex-common.c pex-one.c
-		pex-unix.c vprintf-support.c
+		pex-unix.c
 		rust-demangle.c
 		safe-ctype.c
 		simple-object.c simple-object-coff.c

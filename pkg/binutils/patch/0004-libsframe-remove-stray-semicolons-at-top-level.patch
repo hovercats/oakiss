@@ -1,0 +1,36 @@
+From 290e477112bdf59ff1b4bd93b5fe6d039a2ec385 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Sat, 25 Apr 2026 17:23:44 -0700
+Subject: [PATCH] libsframe: remove stray semicolons at top-level
+
+The SFRAME_ABI_REG_MAP ends with the closing brace of a function
+definition, and the ISO C grammar does not allow empty declarations.
+
+libsframe/
+	* sframe-dump.c: Remove stray semicolons at top-level.
+
+Signed-off-by: Michael Forney <mforney@mforney.org>
+---
+ libsframe/sframe-dump.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/libsframe/sframe-dump.c b/libsframe/sframe-dump.c
+index 56cf963566e..b43ceec5b89 100644
+--- a/libsframe/sframe-dump.c
++++ b/libsframe/sframe-dump.c
+@@ -50,9 +50,9 @@ typedef struct
+ 
+ /* Create a map for each supported arch specifying DWARF register numbers for
+    stack pointer and frame pointer.  */
+-SFRAME_ABI_REG_MAP (amd64, SFRAME_SP (7), SFRAME_FP (6));
+-SFRAME_ABI_REG_MAP (aarch64, SFRAME_SP (31), SFRAME_FP (29));
+-SFRAME_ABI_REG_MAP (s390x, SFRAME_SP (15), SFRAME_FP (11));
++SFRAME_ABI_REG_MAP (amd64, SFRAME_SP (7), SFRAME_FP (6))
++SFRAME_ABI_REG_MAP (aarch64, SFRAME_SP (31), SFRAME_FP (29))
++SFRAME_ABI_REG_MAP (s390x, SFRAME_SP (15), SFRAME_FP (11))
+ 
+ static const char *
+ sframe_get_reg_name (uint8_t abi_arch, unsigned int reg_num, char *buf,
+-- 
+2.49.0
+

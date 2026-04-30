@@ -1,0 +1,27 @@
+From 69576e75720d7a1c847791c575df2ec7f97495a7 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Wed, 29 Apr 2026 18:20:37 -0700
+Subject: [PATCH] libiberty: use vasprintf to implement xvasprintf
+
+---
+ libiberty/xvasprintf.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/libiberty/xvasprintf.c b/libiberty/xvasprintf.c
+index 3f022d1814b..26eaa6a25ff 100644
+--- a/libiberty/xvasprintf.c
++++ b/libiberty/xvasprintf.c
+@@ -54,8 +54,7 @@ xvasprintf (const char *format,
+ #endif
+ {
+   char *result;
+-  int total_width = libiberty_vprintf_buffer_size (format, args);
+-  result = (char *) xmalloc (total_width);
+-  vsprintf (result, format, args);
++  if (vasprintf (&result, format, args) < 0)
++    xmalloc_failed (0);
+   return result;
+ }
+-- 
+2.49.0
+
