@@ -319,6 +319,9 @@ sub('gas.ninja', function()
 			config/(obj-elf.c atof-ieee.c)
 		)
 	]]
+	if arch == 'aarch64' then
+		table.insert(srcs, 'gas/config/obj-elf-attr.c')
+	end
 	exe('bin/as', {
 		srcs,
 		'gas/config/tc-'..targ.archs[1]..'.c',
