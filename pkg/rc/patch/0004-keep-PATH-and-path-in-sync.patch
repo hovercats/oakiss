@@ -1,4 +1,4 @@
-From 4a4ebe30b0b2a46027451bc8b86459961f30bbd1 Mon Sep 17 00:00:00 2001
+From bc1444426b57c30af71af6a26fa1674984d414a4 Mon Sep 17 00:00:00 2001
 From: hovercats <hovercatswithlasereyes@protonmail.com>
 Date: Sat, 25 Apr 2026 16:54:31 +0200
 Subject: [PATCH] keep $PATH and $path in sync
@@ -11,10 +11,10 @@ Subject: [PATCH] keep $PATH and $path in sync
  4 files changed, 99 insertions(+), 8 deletions(-)
 
 diff --git a/exec.c b/exec.c
-index e499d9f..ba11796 100644
+index ce9872a..987960d 100644
 --- a/exec.c
 +++ b/exec.c
-@@ -244,6 +244,7 @@ main(int argc, char *argv[])
+@@ -265,6 +265,7 @@ main(int argc, char *argv[])
  	Trapinit();
  	Vinit();
  	inttoascii(num, mypid = getpid());
@@ -22,7 +22,7 @@ index e499d9f..ba11796 100644
  	setvar("pid", newword(num, (word *)0));
  	setvar("cflag", flag['c']?newword(flag['c'][0], (word *)0)
  				:(word *)0);
-@@ -737,16 +738,15 @@ void
+@@ -758,16 +759,15 @@ void
  Xassign(void)
  {
  	var *v;
