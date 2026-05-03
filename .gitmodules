@@ -203,6 +203,7 @@
 [submodule "pkg/libpng/src"]
 	path = pkg/libpng/src
 	url = https://github.com/glennrp/libpng
+	ignore = all
 [submodule "pkg/mupdf/src"]
 	path = pkg/mupdf/src
 	url = https://github.com/oasislinux/mupdf.git
