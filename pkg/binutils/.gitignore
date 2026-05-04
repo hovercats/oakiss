@@ -5,5 +5,6 @@
 /ld/ldemul-list.h
 /libctf.ninja
 /libiberty.ninja
+/libsframe.ninja
 /opcodes.ninja
 /src
