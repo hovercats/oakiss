@@ -186,7 +186,7 @@ static Shortcut shortcuts[] = {
 	{ MODKEY|MOD_MASK_SHIFT,        XKB_KEY_V,              selpaste,       {.i =  0} },
 	{ MODKEY|MOD_MASK_SHIFT,        XKB_KEY_C,              printsel,       {.i =  0} },
 	{ MODKEY,                       XKB_KEY_Num_Lock,       numlock,        {.i =  0} },
-	{ MODKEY,                       XKB_KEY_Control_L,      iso14755,       {.i =  0} },
+	{ MODKEY,				        XKB_KEY_Control_R,      iso14755,       {.i =  0} },
 };
 
 /*
