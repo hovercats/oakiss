@@ -4,13 +4,6 @@ fontconfig
 freetype-harfbuzz
 gdk-pixbuf
 glib
-libXcomposite
-libXcursor
-libXdamage
-libXext
-libXi
-libXinerama
-libXrandr
 libepoxy
 libxkbcommon
 mesa
