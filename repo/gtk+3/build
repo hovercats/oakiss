@@ -22,7 +22,7 @@ sed '/<atk-bridge.h>/d;/atk_bridge_adaptor_init/d' \
     gtk/a11y/gtkaccessibility.c > _
 mv -f _ gtk/a11y/gtkaccessibility.c
 
-meson setup \
+muon setup \
 	-Dprefix=/usr \
 	-Dbuildtype=release \
 	-Db_colorout=never \
@@ -35,10 +35,11 @@ meson setup \
 	-Ddemos=false \
 	-Dexamples=false \
 	-Dtests=false \
+	-Ddefault_library=shared \
 	build
 
 samu -C build
-samu -C build install
+muon -C build install
 
 # We don't compile with librsvg which leads to this utility solely causing
 # compiler errors for some packages. It has no use at all.
