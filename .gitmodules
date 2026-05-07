@@ -345,10 +345,6 @@
 [submodule "pkg/swall/src"]
 	path = pkg/swall/src
 	url = https://git.sr.ht/~uint/swall
-[submodule "pkg/tohu/src"]
-	path = pkg/tohu/src
-	url = https://git.sr.ht/~shrub900/tohu
-	ignore = all
 [submodule "pkg/swiv/src"]
 	path = pkg/swiv/src
 	url = https://git.sr.ht/~shrub900/swiv
