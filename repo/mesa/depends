@@ -1,10 +1,4 @@
 expat
-libX11
-libXdamage
-libXext
-libXrandr
-libXrender
-libXxf86vm
 libdrm
 libelf
 libxcb
