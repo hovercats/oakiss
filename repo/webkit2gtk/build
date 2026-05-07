@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 export DESTDIR="$1"
-
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 export CCACHE_SLOPPINESS=time_macros,include_file_mtime
 
 # Silence loud warnings. Source: Chimera linux
@@ -76,6 +76,7 @@ cmake -G Ninja -B build \
     -DENABLE_SAMPLING_PROFILER=OFF \
     -DENABLE_SPELLCHECK=OFF \
     -DENABLE_WAYLAND_TARGET=ON \
+    -DENABLE_X11_TARGET=OFF \
     -DUSE_AVIF=OFF \
     -DUSE_GSTREAMER_GL=OFF \
     -DUSE_GTK4=OFF \
