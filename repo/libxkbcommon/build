@@ -15,6 +15,7 @@ muon setup \
 	-Ddefault_library=both \
 	-Denable-docs=false \
 	-Denable-wayland=true \
+	-Denable-x11=false \
 	-Denable-xkbregistry=false \
 	build
 
