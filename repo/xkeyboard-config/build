@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+export PATH=/usr/bin:$PATH
+
+# Swap to shell script instead of perl script
+# for conversion of rules files. See files/xml2lst.
+sed 's/xml2lst\.pl/xml2lst/' rules/meson.build > _
+mv -f _ rules/meson.build
+
+# Remove po/ dir.
+sed "/subdir('po')/d" meson.build > _
+mv -f _ meson.build
+
+export DESTDIR="$1"
+
+muon setup \
+    -Dprefix=/usr \
+    build
+
+samu -C build
+muon -C build install
