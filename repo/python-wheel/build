@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+export PATH=/usr/bin:$PATH
+
 patch -p1 < 0001-use-system-packaging.patch
 
 rm -rf src/wheel/vendored

@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+export PATH=/usr/bin:$PATH
+
 rm -rf flit_core/flit_core/vendor/
 python flit_core/build_dists.py
 

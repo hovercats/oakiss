@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+export PATH=/usr/bin:$PATH
+
 python3 setup.py build
 python3 setup.py install \
     --prefix=/usr \

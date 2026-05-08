@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+export PATH=/usr/bin:$PATH
+
 patch -p1 < 0001-change-default-opt-level-to-0.patch
 
 sitedir="$(python3 -c 'import site;print(site.getsitepackages()[0])')"
