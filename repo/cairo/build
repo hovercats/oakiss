@@ -10,9 +10,9 @@ muon setup \
 	-Dbuildtype=release \
 	-Db_colorout=never \
 	-Dtee=enabled \
-	-Dxcb=enabled \
-	-Dxlib=enabled \
-	-Dxlib-xcb=enabled \
+	-Dxcb=disabled \
+	-Dxlib=disabled \
+	-Dxlib-xcb=disabled \
 	-Dtests=disabled \
 	-Ddefault_library=shared \
 	build
