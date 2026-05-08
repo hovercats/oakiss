@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+export PATH=/usr/bin:$PATH
+
 python setup.py build
 python setup.py install \
     --root="$1" \
