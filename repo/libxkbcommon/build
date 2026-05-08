@@ -17,6 +17,7 @@ muon setup \
 	-Denable-wayland=true \
 	-Denable-x11=false \
 	-Denable-xkbregistry=false \
+	-Denable-bash-completion=false \
 	build
 
 samu -C build
