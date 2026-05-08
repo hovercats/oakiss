@@ -1,8 +1,0 @@
-freetype-harfbuzz make
-libXdmcp          make
-libXfont          make
-libXtst           make
-libfontenc        make
-libpng            make
-xtrans            make
-zlib              make

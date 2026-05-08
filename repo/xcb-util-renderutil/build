@@ -1,9 +1,0 @@
-#!/bin/sh -e
-
-./configure \
-    --prefix=/usr \
-    --disable-shared \
-    --enable-static
-
-make
-make DESTDIR="$1" install

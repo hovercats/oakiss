@@ -1,9 +1,0 @@
-#!/bin/sh -e
-
-./configure \
-    --prefix=/usr \
-    --with-shared-memory-dir=/dev/shm \
-    --disable-shared
-
-make
-make DESTDIR="$1" install

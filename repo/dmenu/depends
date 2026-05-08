@@ -1,8 +1,0 @@
-fontconfig        make
-freetype-harfbuzz make
-libX11            make
-libXft            make
-expat             make
-libXrender        make
-libxcb            make
-libXau            make

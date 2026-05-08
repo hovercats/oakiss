@@ -1,8 +1,0 @@
-freetype-harfbuzz make
-libX11            make
-libXau            make
-libXext           make
-libjpeg-turbo     make
-libpng            make
-libxcb            make
-zlib              make
