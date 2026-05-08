@@ -6,7 +6,5 @@ libogg
 libvorbis
 libvpx
 libwebp
-libxcb
 opus
-xvidcore
 zlib
