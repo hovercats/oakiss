@@ -2,5 +2,3 @@ cairo
 fontconfig
 freetype-harfbuzz
 glib
-libXft
-libXrender
