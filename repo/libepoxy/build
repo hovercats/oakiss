@@ -13,7 +13,7 @@ muon setup \
 	-Db_colorout=never \
 	-Dpkg_config_path=/usr/lib/pkgconfig \
 	-Ddefault_library=shared \
-	-Dx11=true \
+	-Dx11=false \
 	build
 
 samu -C build
