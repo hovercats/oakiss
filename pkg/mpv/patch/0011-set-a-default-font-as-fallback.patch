@@ -1,0 +1,27 @@
+From 2aadae0f537e88c9f6b14f3babe221f39f8bb682 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sat, 9 May 2026 23:25:30 +0200
+Subject: [PATCH] set a default font as fallback
+
+---
+ sub/ass_mp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sub/ass_mp.c b/sub/ass_mp.c
+index 3e9f83313f..b131b9e453 100644
+--- a/sub/ass_mp.c
++++ b/sub/ass_mp.c
+@@ -94,8 +94,8 @@ void mp_ass_configure_fonts(ASS_Renderer *priv, struct osd_style_opts *opts,
+     char *default_font = mp_find_config_file(tmp, global, "subfont.ttf");
+     char *config       = mp_find_config_file(tmp, global, "fonts.conf");
+ 
+-    if (default_font && !mp_path_exists(default_font))
+-        default_font = NULL;
++    if (!default_font || !mp_path_exists(default_font))
++        default_font = "/share/fonts/SourceSans3-Regular.otf";
+ 
+     int font_provider = ASS_FONTPROVIDER_AUTODETECT;
+     if (opts->font_provider == 1)
+-- 
+2.49.0
+
