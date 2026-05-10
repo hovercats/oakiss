@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+
 for p in *.patch; do
 	patch -p1 < "$p"
 done
