@@ -49,7 +49,7 @@
 /* #undef CURL_DISABLE_VERBOSE_STRINGS */
 /* #undef CURL_DISABLE_WEBSOCKETS */
 #define CURL_EXTERN_SYMBOL __attribute__((__visibility__("default")))
-#define CURL_OS "x86_64-pc-linux-musl"
+#define CURL_OS "oasis"
 /* #undef CURL_WITH_MULTI_SSL */
 #define GETHOSTNAME_TYPE_ARG2 size_t
 #define HAVE_ACCEPT4 1
