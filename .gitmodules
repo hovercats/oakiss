@@ -39,7 +39,7 @@
 [submodule "pkg/git/src"]
 	path = pkg/git/src
 	url = https://github.com/git/git
-	ignore = all
+	ignore = untracked
 [submodule "pkg/kiss/src"]
 	path = pkg/kiss/src
 	url = https://codeberg.org/kiss-community/kiss
