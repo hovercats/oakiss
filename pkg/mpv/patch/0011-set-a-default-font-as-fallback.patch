@@ -1,5 +1,5 @@
-From 2aadae0f537e88c9f6b14f3babe221f39f8bb682 Mon Sep 17 00:00:00 2001
-From: hovercats <hovercatswithlasereyes@protonmail.com>
+From bcc195becdb0c6b48fa398df5bbd2f46c98e265a Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
 Date: Sat, 9 May 2026 23:25:30 +0200
 Subject: [PATCH] set a default font as fallback
 
@@ -23,5 +23,5 @@ index 3e9f83313f..b131b9e453 100644
      int font_provider = ASS_FONTPROVIDER_AUTODETECT;
      if (opts->font_provider == 1)
 -- 
-2.49.0
+2.54.0
 
