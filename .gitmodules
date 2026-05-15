@@ -21,6 +21,7 @@
 [submodule "pkg/curl/src"]
 	path = pkg/curl/src
 	url = https://github.com/oasislinux/curl.git
+	ignore = all
 [submodule "pkg/dosfstools/src"]
 	path = pkg/dosfstools/src
 	url = https://github.com/dosfstools/dosfstools
