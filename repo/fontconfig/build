@@ -14,7 +14,7 @@ mv -f _ src/Makefile.in
     --prefix=/usr \
     --localstatedir=/var \
     --sysconfdir=/etc \
-    --with-default-fonts=/usr/share/fonts \
+    --with-default-fonts=/share/fonts \
     --with-xmldir=/etc/fonts \
     --enable-static \
     --disable-docs \
