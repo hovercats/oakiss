@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+patch -p1 < 0001-remove-checks-for-X11-and-keysymdef.h.patch
+
+./configure \
+    --prefix=/usr \
+    --disable-specs \
+    --disable-xkb \
+    --without-fop \
+    --without-xmlto
+
+make -C nls
+make -C nls DESTDIR="$1" install
