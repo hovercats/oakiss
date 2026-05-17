@@ -340,7 +340,7 @@
 	url = git://bitreich.org/iomenu
 [submodule "pkg/sndio/src"]
 	path = pkg/sndio/src
-	url = https://caoua.org/git/sndio
+	url = https://github.com/ratchov/sndio.git
 	ignore =  all
 [submodule "pkg/swall/src"]
 	path = pkg/swall/src
