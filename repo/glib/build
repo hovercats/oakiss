@@ -25,4 +25,8 @@ muon setup \
 samu -C build
 muon -C build install
 
-rm -rf "$1/usr/bin/gdbus"
+rm -rf \
+	"$1/usr/bin/gdbus" \
+	"$1/usr/share/bash-completions" \
+	"$1/usr/share/gettext"
+
