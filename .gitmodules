@@ -349,10 +349,6 @@
 	path = pkg/swiv/src
 	url = https://git.sr.ht/~shrub900/swiv
 	ignore = all
-[submodule "pkg/wsxwm/src"]
-	path = pkg/wsxwm/src
-	url = https://github.com/uint23/wsxwm
-	ignore = all
 [submodule "pkg/howl/src"]
 	path = pkg/howl/src
 	url = https://codeberg.org/wf/howl
