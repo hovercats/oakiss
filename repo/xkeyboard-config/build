@@ -15,6 +15,7 @@ export DESTDIR="$1"
 
 muon setup \
     -Dprefix=/usr \
+    -Dnls=false \
     build
 
 samu -C build
@@ -22,3 +23,6 @@ muon -C build install
 
 # Compress manpages
 find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
+
+# fix manpage symlink
+ln -sf xkeyboard-config-2.7.gz "$1/usr/share/man/man7/xkeyboard-config.7"
