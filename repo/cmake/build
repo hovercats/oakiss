@@ -37,4 +37,6 @@ fi
 rm -rf \
     "$1/usr/doc" \
     "$1/usr/share/cmake"*/Help \
-    "$1/usr/share/bash-completion"
+    "$1/usr/share/bash-completion" \
+    "$1/usr/share/vim" \
+    "$1/usr/share/emacs"
