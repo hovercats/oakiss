@@ -271,7 +271,7 @@
 	ignore = all
 [submodule "pkg/ffmpeg/src"]
 	path = pkg/ffmpeg/src
-	url = https://git.ffmpeg.org/ffmpeg.git
+	url = https://github.com/ffmpeg/ffmpeg.git
 	ignore = all
 [submodule "pkg/libplacebo/src"]
 	path = pkg/libplacebo/src
