@@ -352,3 +352,6 @@
 [submodule "pkg/howl/src"]
 	path = pkg/howl/src
 	url = https://codeberg.org/wf/howl
+[submodule "pkg/libspng/src"]
+	path = pkg/libspng/src
+	url = https://github.com/randy408/libspng
