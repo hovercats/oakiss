@@ -1,4 +1,10 @@
 #!/bin/sh -e
 
+# workaround for pdpmake placing lfs.o in toplevel srcdir, instead of src/
+make PREFIX=/usr src/lfs.o
+if test -f lfs.o; then
+	mv -f lfs.o src/
+fi
+
 make PREFIX=/usr
 make DESTDIR="$1" PREFIX=/usr install
