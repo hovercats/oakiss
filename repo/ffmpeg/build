@@ -17,7 +17,6 @@ patch -p1 < 0001-add-configure-check-for-Wno-error-incompatible-point.patch
     --enable-libdrm \
     --enable-libmp3lame \
     --enable-libopus \
-    --enable-libvorbis \
     --enable-libvpx \
     --enable-libwebp \
     --enable-nonfree \
