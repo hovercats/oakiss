@@ -1,8 +1,4 @@
 alsa-lib
-lame
 libdrm
-libogg
-libvpx
-libwebp
 opus
 zlib
