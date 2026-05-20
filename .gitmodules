@@ -1,6 +1,6 @@
 [submodule "pkg/awk/src"]
 	path = pkg/awk/src
-	url = https://github.com/onetrueawk/awk
+	url = https://github.com/onetrueawk/awk.git
 [submodule "pkg/b3sum/src"]
 	path = pkg/b3sum/src
 	url = https://git.sr.ht/~mcf/b3sum
@@ -24,7 +24,7 @@
 	ignore = all
 [submodule "pkg/dosfstools/src"]
 	path = pkg/dosfstools/src
-	url = https://github.com/dosfstools/dosfstools
+	url = https://github.com/dosfstools/dosfstools.git
 	ignore = all
 [submodule "pkg/e2fsprogs/src"]
 	path = pkg/e2fsprogs/src
@@ -36,13 +36,13 @@
 	ignore = all
 [submodule "pkg/file/src"]
 	path = pkg/file/src
-	url = https://github.com/file/file
+	url = https://github.com/file/file.git
 [submodule "pkg/fspec-sync/src"]
 	path = pkg/fspec-sync/src
 	url = https://github.com/oasislinux/fspec-sync.git
 [submodule "pkg/git/src"]
 	path = pkg/git/src
-	url = https://github.com/git/git
+	url = https://github.com/git/git.git
 	ignore = untracked
 [submodule "pkg/kiss/src"]
 	path = pkg/kiss/src
@@ -57,13 +57,13 @@
 	url = https://github.com/PJK/libcbor.git
 [submodule "pkg/libevent/src"]
 	path = pkg/libevent/src
-	url = https://github.com/libevent/libevent
+	url = https://github.com/libevent/libevent.git
 [submodule "pkg/libfido2/src"]
 	path = pkg/libfido2/src
 	url = https://github.com/oasislinux/libfido2.git
 [submodule "pkg/libnl/src"]
 	path = pkg/libnl/src
-	url = https://github.com/thom311/libnl
+	url = https://github.com/thom311/libnl.git
 	ignore = all
 [submodule "pkg/libtls-bearssl/src"]
 	path = pkg/libtls-bearssl/src
@@ -89,41 +89,41 @@
 	url = https://github.com/oasislinux/openssh.git
 [submodule "pkg/pigz/src"]
 	path = pkg/pigz/src
-	url = https://github.com/madler/pigz
+	url = https://github.com/madler/pigz.git
 [submodule "pkg/rc/src"]
 	path = pkg/rc/src
 	url = https://github.com/oasislinux/rc.git
 	ignore = all
 [submodule "pkg/rcinit/src"]
 	path = pkg/rcinit/src
-	url = https://github.com/hovercats/rcinit
+	url = https://github.com/hovercats/rcinit.git
 [submodule "pkg/rcsm/src"]
 	path = pkg/rcsm/src
-	url = https://github.com/hovercats/rcsm
+	url = https://github.com/hovercats/rcsm.git
 [submodule "pkg/samurai/src"]
 	path = pkg/samurai/src
-	url = https://github.com/michaelforney/samurai
+	url = https://github.com/michaelforney/samurai.git
 [submodule "pkg/sbase/src"]
 	path = pkg/sbase/src
 	url = https://git.suckless.org/sbase
 	ignore = all
 [submodule "pkg/sdhcp/src"]
 	path = pkg/sdhcp/src
-	url = https://github.com/michaelforney/sdhcp
+	url = https://github.com/michaelforney/sdhcp.git
 [submodule "pkg/tinyalsa/src"]
 	path = pkg/tinyalsa/src
 	url = https://github.com/tinyalsa/tinyalsa.git
 	ignore = all
 [submodule "pkg/tz/src"]
 	path = pkg/tz/src
-	url = https://github.com/eggert/tz
+	url = https://github.com/eggert/tz.git
 [submodule "pkg/ubase/src"]
 	path = pkg/ubase/src
-	url = https://github.com/michaelforney/ubase
+	url = https://github.com/michaelforney/ubase.git
 	ignore = all
 [submodule "pkg/vis/src"]
 	path = pkg/vis/src
-	url = https://github.com/martanne/vis
+	url = https://github.com/martanne/vis.git
 	ignore = all
 [submodule "pkg/xz/src"]
 	path = pkg/xz/src
@@ -131,7 +131,7 @@
 	ignore = all
 [submodule "pkg/zlib/src"]
 	path = pkg/zlib/src
-	url = https://github.com/madler/zlib
+	url = https://github.com/madler/zlib.git
 [submodule "pkg/qbe/src"]
 	path = pkg/qbe/src
 	url = git://c9x.me/qbe.git
@@ -141,18 +141,18 @@
 	url = git://git.suckless.org/quark
 [submodule "pkg/zstd/src"]
 	path = pkg/zstd/src
-	url = https://github.com/facebook/zstd
+	url = https://github.com/facebook/zstd.git
 	ignore = all
 [submodule "pkg/the_silver_searcher/src"]
 	path = pkg/the_silver_searcher/src
-	url = https://github.com/ggreer/the_silver_searcher
+	url = https://github.com/ggreer/the_silver_searcher.git
 	ignore = all
 [submodule "pkg/smu/src"]
 	path = pkg/smu/src
-	url = https://github.com/gottox/smu
+	url = https://github.com/gottox/smu.git
 [submodule "pkg/libinput/src"]
 	path = pkg/libinput/src
-	url = https://github.com/oasislinux/libinput
+	url = https://github.com/oasislinux/libinput.git
 [submodule "pkg/libevdev/src"]
 	path = pkg/libevdev/src
 	url = https://gitlab.freedesktop.org/libevdev/libevdev.git
@@ -181,15 +181,15 @@
 	ignore = all
 [submodule "pkg/velox/src"]
 	path = pkg/velox/src
-	url = https://github.com/michaelforney/velox
+	url = https://github.com/michaelforney/velox.git
 	ignore = all
 [submodule "pkg/swc/src"]
 	path = pkg/swc/src
-	url = https://github.com/michaelforney/swc
+	url = https://github.com/michaelforney/swc.git
 	ignore = all
 [submodule "pkg/utf8proc/src"]
 	path = pkg/utf8proc/src
-	url = https://github.com/JuliaLang/utf8proc
+	url = https://github.com/JuliaLang/utf8proc.git
 [submodule "pkg/st/src"]
 	path = pkg/st/src
 	url = git://git.suckless.org/st
@@ -202,18 +202,18 @@
 	url = git://git.ghostscript.com/jbig2dec.git
 [submodule "pkg/libffi/src"]
 	path = pkg/libffi/src
-	url = https://github.com/libffi/libffi
+	url = https://github.com/libffi/libffi.git
 	ignore = all
 [submodule "pkg/libpng/src"]
 	path = pkg/libpng/src
-	url = https://github.com/glennrp/libpng
+	url = https://github.com/glennrp/libpng.git
 	ignore = all
 [submodule "pkg/mupdf/src"]
 	path = pkg/mupdf/src
 	url = https://github.com/oasislinux/mupdf.git
 [submodule "pkg/expat/src"]
 	path = pkg/expat/src
-	url = https://github.com/libexpat/libexpat
+	url = https://github.com/libexpat/libexpat.git
 [submodule "pkg/libxkbcommon/src"]
 	path = pkg/libxkbcommon/src
 	url = https://github.com/xkbcommon/libxkbcommon.git
@@ -223,10 +223,10 @@
 	url = https://anongit.freedesktop.org/git/mesa/drm.git
 [submodule "pkg/libjpeg-turbo/src"]
 	path = pkg/libjpeg-turbo/src
-	url = https://github.com/libjpeg-turbo/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git
 [submodule "pkg/netsurf/src"]
 	path = pkg/netsurf/src
-	url = https://github.com/oasislinux/netsurf
+	url = https://github.com/oasislinux/netsurf.git
 [submodule "pkg/netsurf/libcss/src"]
 	path = pkg/netsurf/libcss/src
 	url = git://git.netsurf-browser.org/libcss.git
@@ -267,7 +267,7 @@
 	ignore = all
 [submodule "pkg/mpv/src"]
 	path = pkg/mpv/src
-	url = https://github.com/mpv-player/mpv
+	url = https://github.com/mpv-player/mpv.git
 	ignore = all
 [submodule "pkg/ffmpeg/src"]
 	path = pkg/ffmpeg/src
@@ -282,11 +282,11 @@
 	ignore = all
 [submodule "pkg/libass/src"]
 	path = pkg/libass/src
-	url = https://github.com/libass/libass
+	url = https://github.com/libass/libass.git
 	ignore = all
 [submodule "pkg/u-config/src"]
 	path = pkg/u-config/src
-	url = https://github.com/skeeto/u-config
+	url = https://github.com/skeeto/u-config.git
 [submodule "pkg/scdoc/src"]
 	path = pkg/scdoc/src
 	url = https://git.sr.ht/~sircmpwn/scdoc
@@ -295,30 +295,30 @@
 	url = https://git.sr.ht/~lattis/muon/
 [submodule "pkg/fuse/src"]
 	path = pkg/fuse/src
-	url = https://github.com/libfuse/libfuse
+	url = https://github.com/libfuse/libfuse.git
 	ignore = all
 [submodule "pkg/squashfs-tools-ng/src"]
 	path = pkg/squashfs-tools-ng/src
-	url = https://github.com/AgentD/squashfs-tools-ng
+	url = https://github.com/AgentD/squashfs-tools-ng.git
 [submodule "pkg/bubblewrap/src"]
 	path = pkg/bubblewrap/src
-	url = https://github.com/containers/bubblewrap
+	url = https://github.com/containers/bubblewrap.git
 	ignore = all
 [submodule "pkg/tamzen-font/src"]
 	path = pkg/tamzen-font/src
-	url = https://github.com/sunaku/tamzen-font
+	url = https://github.com/sunaku/tamzen-font.git
 [submodule "pkg/pdpmake/src"]
 	path = pkg/pdpmake/src
-	url = https://github.com/rmyorston/pdpmake
+	url = https://github.com/rmyorston/pdpmake.git
 [submodule "pkg/xxhash/src"]
 	path = pkg/xxhash/src
-	url = https://github.com/Cyan4973/xxHash
+	url = https://github.com/Cyan4973/xxHash.git
 [submodule "pkg/lz4/src"]
 	path = pkg/lz4/src
-	url = https://github.com/lz4/lz4
+	url = https://github.com/lz4/lz4.git
 [submodule "pkg/ncompress/src"]
 	path = pkg/ncompress/src
-	url = https://github.com/vapier/ncompress
+	url = https://github.com/vapier/ncompress.git
 	ignore = all
 [submodule "pkg/pax/src"]
 	path = pkg/pax/src
@@ -354,4 +354,4 @@
 	url = https://codeberg.org/wf/howl
 [submodule "pkg/libspng/src"]
 	path = pkg/libspng/src
-	url = https://github.com/randy408/libspng
+	url = https://github.com/randy408/libspng.git
