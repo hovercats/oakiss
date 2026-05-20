@@ -196,7 +196,7 @@
 	ignore = all
 [submodule "pkg/freetype/src"]
 	path = pkg/freetype/src
-	url = git://git.sv.nongnu.org/freetype/freetype2.git
+	url = https://gitlab.freedesktop.org/freetype/freetype.git
 [submodule "pkg/jbig2dec/src"]
 	path = pkg/jbig2dec/src
 	url = git://git.ghostscript.com/jbig2dec.git
