@@ -16,6 +16,7 @@ patch -p1 < 0001-add-configure-check-for-Wno-error-incompatible-point.patch
     --enable-gpl \
     --enable-libdrm \
     --enable-libopus \
+    --enable-libwebp \
     --disable-sndio \
     --enable-alsa \
     --enable-shared \
