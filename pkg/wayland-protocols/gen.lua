@@ -28,6 +28,12 @@ waylandproto('unstable/linux-dmabuf/linux-dmabuf-unstable-v1.xml', {
 	code='linux-dmabuf-unstable-v1-protocol.c',
 })
 
+waylandproto('unstable/primary-selection/primary-selection-unstable-v1.xml', {
+	client='include/primary-selection-unstable-v1-client-protocol.h',
+	server='include/primary-selection-unstable-v1-server-protocol.h',
+	code='primary-selection-unstable-v1-protocol.c',
+})
+
 waylandproto('unstable/xdg-decoration/xdg-decoration-unstable-v1.xml', {
 	client='include/xdg-decoration-unstable-v1-client-protocol.h',
 	server='include/xdg-decoration-unstable-v1-server-protocol.h',
@@ -66,6 +72,8 @@ pkg.hdrs = {
 	'$outdir/include/idle-inhibit-unstable-v1-server-protocol.h',
 	'$outdir/include/linux-dmabuf-unstable-v1-client-protocol.h',
 	'$outdir/include/linux-dmabuf-unstable-v1-server-protocol.h',
+	'$outdir/include/primary-selection-unstable-v1-client-protocol.h',
+	'$outdir/include/primary-selection-unstable-v1-server-protocol.h',
 	'$outdir/include/xdg-decoration-unstable-v1-client-protocol.h',
 	'$outdir/include/xdg-decoration-unstable-v1-server-protocol.h',
 	'$outdir/include/text-input-unstable-v3-client-protocol.h',
