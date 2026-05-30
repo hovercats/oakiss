@@ -1,0 +1,29 @@
+From 2497dd12efd47417406843f4b1310d15aaccb762 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Sat, 30 May 2026 04:44:04 +0200
+Subject: [PATCH] correct headernames so that it matches
+
+---
+ main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/main.c b/main.c
+index fecdd33..f9d4aa2 100644
+--- a/main.c
++++ b/main.c
+@@ -21,9 +21,9 @@
+ #include <wayland-cursor.h>
+ 
+ #include "tsm/libtsm.h"
+-#include "xdg-shell.h"
+-#include "primary-selection-unstable-v1.h"
+-#include "xdg-decoration-unstable-v1.h"
++#include "xdg-shell-client-protocol.h"
++#include "primary-selection-unstable-v1-client-protocol.h"
++#include "xdg-decoration-unstable-v1-client-protocol.h"
+ 
+ #define ARRAY_LENGTH(a) (sizeof (a) / sizeof (a)[0])
+ 
+-- 
+2.54.0
+

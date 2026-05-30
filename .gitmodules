@@ -462,3 +462,8 @@
 	path = pkg/kiss-find/src
 	url = https://github.com/aabacchus/kiss-find.git
 	shallow = true
+[submodule "pkg/havoc/src"]
+	path = pkg/havoc/src
+	url = https://github.com/ii8/havoc.git
+	ignore = all
+	shallow = true
