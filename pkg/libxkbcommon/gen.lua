@@ -8,6 +8,7 @@ cflags{
 pkg.hdrs = copy('$outdir/include/xkbcommon', '$srcdir/include/xkbcommon', {
 	'xkbcommon.h',
 	'xkbcommon-compat.h',
+	'xkbcommon-compose.h',
 	'xkbcommon-keysyms.h',
 	'xkbcommon-names.h',
 })
