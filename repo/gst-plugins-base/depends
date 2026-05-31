@@ -3,7 +3,6 @@ glib
 gstreamer
 libjpeg-turbo
 libpng
-libvorbis
 mesa
 opus
 pango
