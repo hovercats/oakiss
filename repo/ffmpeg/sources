@@ -1,2 +1,3 @@
 https://ffmpeg.org/releases/ffmpeg-7.0.2.tar.xz
 patches/0001-add-configure-check-for-Wno-error-incompatible-point.patch
+patches/0002-configure-add-f-flag-to-avoid-prompt-when-cleaning-u.patch

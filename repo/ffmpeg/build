@@ -3,7 +3,9 @@
 export LIBRARY_DIR=/usr/lib
 export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
-patch -p1 < 0001-add-configure-check-for-Wno-error-incompatible-point.patch
+for p in *.patch; do
+	patch -p1 < "$p"
+done
 
 ./configure \
     --cc="${CC:-cc}" \

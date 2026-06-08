@@ -1,0 +1,28 @@
+From c051954e53416280415c1d85f5bcb21280032b82 Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Mon, 8 Jun 2026 02:32:54 +0200
+Subject: [PATCH] configure: add -f flag to avoid prompt when cleaning up
+ $link_dest and $link_name
+
+---
+ configure | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure b/configure
+index f933a4e..4c187e2 100755
+--- a/configure
++++ b/configure
+@@ -5951,8 +5951,8 @@ else
+     source_link="$source_path"
+ fi
+ # cleanup
+-rm -r "$link_dest"
+-rm -r "$link_name"
++rm -rf "$link_dest"
++rm -rf "$link_name"
+ 
+ # determine libc flavour
+ 
+-- 
+2.54.0
+
