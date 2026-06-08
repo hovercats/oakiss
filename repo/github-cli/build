@@ -1,12 +1,3 @@
 #!/bin/sh -e
 
-export GOPATH="$PWD/go"
-export GO111MODULE=on
-
-CGO_ENABLED=0 go build -a -ldflags="-w -s -extldflags '-static'"\
-    -modcacherw \
-    -trimpath \
-    -buildvcs=false \
-    ./cmd/gh
-
-install -Dm755 gh "$1/usr/bin/gh"
+install -Dm755 bin/gh "$1/usr/bin/gh"
