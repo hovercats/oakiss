@@ -1,3 +1,0 @@
-#!/bin/sh -e
-
-install -Dm755 bin/gh "$1/usr/bin/gh"
