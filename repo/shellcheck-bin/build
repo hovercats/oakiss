@@ -1,3 +1,0 @@
-#!/bin/sh -e
-
-install -Dm755 shellcheck "$1/usr/bin/shellcheck"
