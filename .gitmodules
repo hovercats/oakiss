@@ -446,7 +446,7 @@
 	shallow = true
 [submodule "pkg/swiv/src"]
 	path = pkg/swiv/src
-	url = https://git.sr.ht/~shrub900/swiv
+	url = https://git.sr.ht/~pfr/swiv
 	ignore = all
 	shallow = true
 [submodule "pkg/howl/src"]
