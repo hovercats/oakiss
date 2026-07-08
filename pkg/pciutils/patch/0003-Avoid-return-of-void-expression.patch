@@ -1,0 +1,52 @@
+From f900e34e7b01e68449972652f7d0eef47262053f Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Sun, 16 Aug 2020 16:23:49 -0700
+Subject: [PATCH] Avoid return of void expression
+
+---
+ lib/filter.c   | 2 +-
+ lib/init.c     | 2 +-
+ lib/internal.h | 1 +
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/lib/filter.c b/lib/filter.c
+index 441eb51..145861a 100644
+--- a/lib/filter.c
++++ b/lib/filter.c
+@@ -309,7 +309,7 @@ pci_filter_match_v30(struct pci_filter_v30 *f, struct pci_dev *d)
+ // Version 3.3 is the same as version 3.8, only device_class_mask and prog_if were not implemented
+ // (their positions in struct pci_filter were declared as RFU).
+ 
+-STATIC_ALIAS(void pci_filter_init(struct pci_access *a, struct pci_filter *f), pci_filter_init_v38(a, f))
++STATIC_ALIAS_VOID(void pci_filter_init(struct pci_access *a, struct pci_filter *f), pci_filter_init_v38(a, f))
+ DEFINE_ALIAS(void pci_filter_init_v33(struct pci_access *a, struct pci_filter *f), pci_filter_init_v38)
+ SYMBOL_VERSION(pci_filter_init_v30, pci_filter_init@LIBPCI_3.0)
+ SYMBOL_VERSION(pci_filter_init_v33, pci_filter_init@LIBPCI_3.3)
+diff --git a/lib/init.c b/lib/init.c
+index 9867a47..232dba3 100644
+--- a/lib/init.c
++++ b/lib/init.c
+@@ -531,7 +531,7 @@ pci_init_v35(struct pci_access *a)
+     a->error("Cannot find any working access method.");
+ }
+ 
+-STATIC_ALIAS(void pci_init(struct pci_access *a), pci_init_v35(a))
++STATIC_ALIAS_VOID(void pci_init(struct pci_access *a), pci_init_v35(a))
+ DEFINE_ALIAS(void pci_init_v30(struct pci_access *a), pci_init_v35)
+ SYMBOL_VERSION(pci_init_v30, pci_init@LIBPCI_3.0)
+ SYMBOL_VERSION(pci_init_v35, pci_init@@LIBPCI_3.5)
+diff --git a/lib/internal.h b/lib/internal.h
+index 43be8d1..8fe9ad8 100644
+--- a/lib/internal.h
++++ b/lib/internal.h
+@@ -39,6 +39,7 @@
+ #else
+ #define VERSIONED_ABI
+ #define STATIC_ALIAS(_decl, _for) _decl { return _for; }
++#define STATIC_ALIAS_VOID(_decl, _for) _decl { _for; }
+ #define DEFINE_ALIAS(_decl, _for)
+ #define SYMBOL_VERSION(_int, _ext)
+ #endif
+-- 
+2.49.0
+

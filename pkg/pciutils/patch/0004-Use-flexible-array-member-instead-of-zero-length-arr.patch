@@ -1,0 +1,25 @@
+From e46d12ba3ac9ed1f06b59d000684cfbe3ed61180 Mon Sep 17 00:00:00 2001
+From: Michael Forney <mforney@mforney.org>
+Date: Sun, 16 Aug 2020 17:15:34 -0700
+Subject: [PATCH] Use flexible array member instead of zero-length array
+
+---
+ setpci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setpci.c b/setpci.c
+index 2a2c72a..3e98d49 100644
+--- a/setpci.c
++++ b/setpci.c
+@@ -41,7 +41,7 @@ struct op {
+   unsigned int width;			/* Byte width of the access */
+   unsigned int num_values;		/* Number of values to write; 0=read */
+   unsigned int number;                 /* The n-th capability of that id */
+-  struct value values[0];
++  struct value values[];
+ };
+ 
+ struct group {
+-- 
+2.49.0
+
