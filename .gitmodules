@@ -483,3 +483,7 @@
        path = pkg/uxn12/src
        url = https://srcdump.net/pita/uxn12.git
        shallow = true
+[submodule "pkg/uxnmin/src"]
+	path = pkg/uxnmin/src
+	url = https://git.sr.ht/~rabbits/uxnmin
+	shallow = true
