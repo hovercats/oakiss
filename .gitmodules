@@ -487,3 +487,7 @@
 	path = pkg/uxnmin/src
 	url = https://git.sr.ht/~rabbits/uxnmin
 	shallow = true
+[submodule "pkg/dtach/src"]
+	path = pkg/dtach/src
+	url = https://github.com/crigler/dtach
+	shallow = true
