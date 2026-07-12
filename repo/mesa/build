@@ -20,7 +20,7 @@ mv -f _ meson.build
 sed '/rust_std=2021/d' meson.build > _
 mv -f _ meson.build
 
-meson setup \
+muon setup \
 	-Dprefix=/usr \
 	-Dsysconfdir=/etc \
 	-Dmandir=/usr/share/man \
@@ -39,4 +39,4 @@ meson setup \
 	build
 
 samu -C build
-samu -C build install
+muon -C build install

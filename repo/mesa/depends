@@ -1,7 +1,6 @@
 expat
 libdrm
 libelf
-meson       make
 python      make
 python-mako make
 wayland
