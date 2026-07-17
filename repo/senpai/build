@@ -1,0 +1,34 @@
+#!/bin/sh -e
+
+export GOROOT=/usr/lib/go
+export GOPROXY=https://proxy.golang.org
+#export CGO_ENABLED=0
+#export GOFLAGS="-ldflags=-static-pie -ldflags=-s -ldflags=-w"
+#export GO_LDFLAGS="-buildmode=static-pie -s -w"
+#export CGO_CFLAGS="-O2 -pipe -static -static-pie -w -Wno-error"
+
+#go build -a \
+go build -a -ldflags="-w -s -extldflags '-static'" \
+    -trimpath \
+    -modcacherw \
+	-buildvcs=false \
+    ./cmd/senpai
+
+if command -v scdoc; then
+	scdoc < doc/senpai.1.scd > senpai.1
+	scdoc < doc/senpai.5.scd > senpai.5
+	
+	mkdir -p \
+		"$1/usr/share/man/man1" \
+		"$1/usr/share/man/man5"
+
+	cp senpai.1 "$1/usr/share/man/man1/"
+	cp senpai.5 "$1/usr/share/man/man5/"
+
+	# Compress manpages
+	find "$1/usr/share/man" -type f -exec gzip -n -9 {} +
+fi
+
+mkdir -p "$1/usr/bin"
+
+cp senpai "$1/usr/bin/"
