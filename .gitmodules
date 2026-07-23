@@ -390,10 +390,6 @@
 	url = https://github.com/containers/bubblewrap.git
 	ignore = all
 	shallow = true
-[submodule "pkg/tamzen-font/src"]
-	path = pkg/tamzen-font/src
-	url = https://github.com/sunaku/tamzen-font.git
-	shallow = true
 [submodule "pkg/pdpmake/src"]
 	path = pkg/pdpmake/src
 	url = https://github.com/rmyorston/pdpmake.git
