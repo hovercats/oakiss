@@ -72,7 +72,6 @@ return {
 		'yt-dlp',
 		},
 	desktop={
-		'liberation-fonts',
 		'adobe-source-fonts',
 		'dmenu',
 		'libinput',
@@ -80,6 +79,7 @@ return {
 		'netsurf',
 		'st',
 		'swc',
+		'terminus-font',
 		'velox',
 		'xkeyboard-config',
 	},
