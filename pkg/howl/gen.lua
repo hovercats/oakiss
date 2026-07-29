@@ -8,7 +8,7 @@ cflags{
 	'-isystem $builddir/pkg/libdrm/include',
 	'-isystem $builddir/pkg/libinput/include',
 	'-isystem $builddir/pkg/libxkbcommon/include',
-	'-isystem $builddir/pkg/swc/include',
+	'-isystem $builddir/pkg/neuswc/include',
 	'-isystem $builddir/pkg/wld/include',
 	'-isystem $builddir/pkg/pixman/include',
 	'-isystem $builddir/pkg/wayland-protocols/include',
@@ -20,7 +20,7 @@ pkg.deps = {
 	'pkg/libdrm/headers',
 	'pkg/libinput/headers',
 	'pkg/libxkbcommon/headers',
-	'pkg/swc/headers',
+	'pkg/neuswc/headers',
 	'pkg/wld/headers',
 	'pkg/pixman/headers',
 	'pkg/wayland/headers',
@@ -31,7 +31,7 @@ exe('howl', {
 	'src/ipc.c',
 	'src/log.c',
 	'src/howl.c',
-	'$builddir/pkg/swc/libswc.a.d',
+	'$builddir/pkg/neuswc/libswc.a.d',
 })
 
 exe('howlc', {
