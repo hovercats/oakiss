@@ -490,3 +490,7 @@
 [submodule "pkg/neuswc/src"]
 	path = pkg/neuswc/src
 	url = https://srcdump.net/shrub/neuswc.git
+[submodule "pkg/wawa/src"]
+	path = pkg/wawa/src
+	url = https://srcdump.net/sewn/wawa.git
+	shallow = true
