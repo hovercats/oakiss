@@ -48,7 +48,8 @@ waylandproto('protocol/wayland-drm.xml', {
 })
 
 waylandproto('protocol/wlr-layer-shell-unstable-v1.xml', {
-       client='include/wlr-layer-shell-unstable-v1-protocol.h',
+       client='include/wlr-layer-shell-unstable-v1-client-protocol.h',
+       server='include/wlr-layer-shell-unstable-v1-server-protocol.h',
        code='wlr-layer-shell-unstable-v1.c'
 })
 
@@ -67,11 +68,14 @@ build('convert_font', '$outdir/cursor/cursor_data.h', {'$srcdir/cursor/cursor.pc
 
 pkg.deps = {
 	'$gendir/headers',
+	'$outdir/include/swc-client-protocol.h',
+	'$outdir/include/swc-server-protocol.h',
 	'$outdir/include/swc_snap-server-protocol.h',
 	'$outdir/include/swc_snap-client-protocol.h',
 	'$outdir/include/server-decoration-server-protocol.h',
 	'$outdir/include/swc_select-server-protocol.h',
 	'$outdir/include/swc_select-client-protocol.h',
+	'$outdir/include/wlr-layer-shell-unstable-v1-client-protocol.h',
 	'$outdir/include/wlr-layer-shell-unstable-v1-server-protocol.h',
 	'$outdir/include/wayland-drm-server-protocol.h',
 	'$outdir/cursor/cursor_data.h',
