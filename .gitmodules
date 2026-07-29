@@ -436,10 +436,6 @@
 	url = https://github.com/ratchov/sndio.git
 	ignore =  all
 	shallow = true
-[submodule "pkg/swall/src"]
-	path = pkg/swall/src
-	url = https://git.sr.ht/~uint/swall
-	shallow = true
 [submodule "pkg/swiv/src"]
 	path = pkg/swiv/src
 	url = https://git.sr.ht/~pfr/swiv
