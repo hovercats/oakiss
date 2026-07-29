@@ -487,3 +487,6 @@
 	path = pkg/dtach/src
 	url = https://github.com/crigler/dtach
 	shallow = true
+[submodule "pkg/neuswc/src"]
+	path = pkg/neuswc/src
+	url = https://srcdump.net/shrub/neuswc.git
