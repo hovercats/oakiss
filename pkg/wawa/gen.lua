@@ -1,6 +1,5 @@
 cflags{
 	'-pedantic',
---	'-Wno-incompatible-pointer-types',
 	'-std=c17',
 	[[-D 'VERSION="1.0"']],
 	'-D _GNU_SOURCE',
