@@ -5,6 +5,7 @@ cflags{
 	'-I $outdir/include',
 	'-isystem $builddir/pkg/alsa-lib/include',
 	'-isystem $builddir/pkg/libxkbcommon/include',
+	'-isystem $builddir/pkg/linux-headers/include',
 	'-isystem $builddir/pkg/wayland/include',
 	'-isystem $builddir/pkg/wayland-protocols/include',
 }
@@ -18,6 +19,7 @@ pkg.deps = {
 	'$outdir/include/wlr-layer-shell-client-protocol.h',
 	'pkg/alsa-lib/headers',
 	'pkg/libxkbcommon/headers',
+	'pkg/linux-headers/headers',
 	'pkg/wayland/headers',
 	'pkg/wayland-protocols/headers',
 }
