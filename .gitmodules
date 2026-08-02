@@ -490,3 +490,6 @@
 	path = pkg/wawa/src
 	url = https://srcdump.net/sewn/wawa.git
 	shallow = true
+[submodule "pkg/chum/src"]
+	path = pkg/chum/src
+	url = https://git.sr.ht/~dlm/chum
