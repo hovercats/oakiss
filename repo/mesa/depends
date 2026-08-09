@@ -1,8 +1,0 @@
-expat
-libdrm
-libelf
-python      make
-python-mako make
-wayland
-wayland-protocols make
-zlib
