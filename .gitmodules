@@ -444,10 +444,6 @@
 	path = pkg/libspng/src
 	url = https://github.com/randy408/libspng.git
 	shallow = true
-[submodule "pkg/kiss-find/src"]
-	path = pkg/kiss-find/src
-	url = https://github.com/aabacchus/kiss-find.git
-	shallow = true
 [submodule "pkg/havoc/src"]
 	path = pkg/havoc/src
 	url = https://github.com/ii8/havoc.git
