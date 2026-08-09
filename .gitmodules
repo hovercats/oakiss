@@ -57,11 +57,6 @@
 	url = https://github.com/git/git.git
 	ignore = untracked
 	shallow = true
-[submodule "pkg/kiss/src"]
-	path = pkg/kiss/src
-	url = https://codeberg.org/kiss-community/kiss
-	ignore = all
-	shallow = true
 [submodule "pkg/iproute2/src"]
 	path = pkg/iproute2/src
 	url = https://git.kernel.org/pub/scm/linux/kernel/git/shemminger/iproute2.git

@@ -8,7 +8,6 @@ return {
 		'cacert',
 		'curl',
 		'git',
-		'kiss',
 		'lua',
 		'oksh',
 		'openbsd',
