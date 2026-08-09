@@ -1,16 +1,14 @@
 Oakiss
 ------
 
-A play on words. Oasis Linux, with a KISS repo included.
+An oasis[0] fork, initially it was made to be used with kiss, but ive since removed it.
 
-Whats this?
------------
-This is for the most part an attempt to replicate my setup on Kiss Linux[1].
-However, instead of using kiss to build the entire system, use oasis' 
-buildsystem to bootstrap a bootable system.
-Then use kiss to extend the system.
+Whats different now you ask? Well, not much now really. With the removal of kiss, the only few things left is the packages.
+Mainly rcinit[1] replaces sinit, and rcsm[2] replaces perp.
+Theres also a few differences in the number of packages. I opted not to get all packages from upstream, and ive packaged a few on my own aswell
+
 
 
 [0] https://github.com/oasislinux/oasis
-[1] https://github.com/hovercats/kiss-dumpsterfire
-[2] https://github.com/rnpnr/opkg
+[1] https://srcdump/hovercats/rcinit
+[2] https://srcdump/hovercats/rcsm
