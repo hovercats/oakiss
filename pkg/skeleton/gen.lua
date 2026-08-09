@@ -17,6 +17,7 @@ dir('var/db', '755')
 dir('var/empty', '755')
 dir('var/log', '755')
 sym('var/tmp', '../tmp')
+sym('usr/bin', '../bin')
 
 gitfile('.gitignore', '644', '$dir/gitignore')
 
