@@ -1,11 +1,16 @@
 Oakiss
 ------
 
-An oasis[0] fork, initially it was made to be used with kiss, but ive since removed it.
+An oasis[0] fork, initially it was made to be used with kiss, but ive since
+removed it.
 
-Whats different now you ask? Well, not much now really. With the removal of kiss, the only few things left is the packages.
+Whats different now you ask?
+Well, not much now really.
+With the removal of kiss, the only few things left is the packages.
 Mainly rcinit[1] replaces sinit, and rcsm[2] replaces perp.
-Theres also a few differences in the number of packages. I opted not to get all packages from upstream, and ive packaged a few on my own aswell
+Theres also a few differences in the number of packages.
+I opted not to get all packages from upstream, as I didnt need all of them,
+and ive packaged a few on my own aswell.
 
 
 
