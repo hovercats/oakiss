@@ -483,3 +483,6 @@
 [submodule "pkg/chum/src"]
 	path = pkg/chum/src
 	url = https://git.sr.ht/~dlm/chum
+[submodule "pkg/yap/src"]
+	path = pkg/yap/src
+	url = https://srcdump.net/shrub/yap.git
