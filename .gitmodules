@@ -462,9 +462,9 @@
 	url = https://git.sr.ht/~rabbits/uxncli
 	shallow = true
 [submodule "pkg/uxn12/src"]
-       path = pkg/uxn12/src
-       url = https://srcdump.net/pita/uxn12.git
-       shallow = true
+    path = pkg/uxn12/src
+    url = https://srcdump.net/pita/uxn12.git
+    shallow = true
 [submodule "pkg/uxnmin/src"]
 	path = pkg/uxnmin/src
 	url = https://git.sr.ht/~rabbits/uxnmin
@@ -476,6 +476,7 @@
 [submodule "pkg/neuswc/src"]
 	path = pkg/neuswc/src
 	url = https://srcdump.net/shrub/neuswc.git
+	shallow = true
 [submodule "pkg/wawa/src"]
 	path = pkg/wawa/src
 	url = https://srcdump.net/sewn/wawa.git
@@ -483,9 +484,11 @@
 [submodule "pkg/chum/src"]
 	path = pkg/chum/src
 	url = https://git.sr.ht/~dlm/chum
+	shallow = true
 [submodule "pkg/yap/src"]
 	path = pkg/yap/src
 	url = https://srcdump.net/shrub/yap.git
+	shallow = true
 [submodule "pkg/cterm/src"]
 	path = pkg/cterm/src
 	url = https://srcdump.net/uint/cterm.git
