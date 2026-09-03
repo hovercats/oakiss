@@ -486,3 +486,8 @@
 [submodule "pkg/yap/src"]
 	path = pkg/yap/src
 	url = https://srcdump.net/shrub/yap.git
+[submodule "pkg/cterm/src"]
+	path = pkg/cterm/src
+	url = https://srcdump.net/uint/cterm.git
+	ignore = all
+	shallow = true

@@ -1,0 +1,39 @@
+From 85f70e78d0e589361d873e5463b58bc73898508c Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Wed, 2 Sep 2026 14:15:15 +0200
+Subject: [PATCH] dont use relative path for config.h
+
+---
+ source/cterm.c | 2 +-
+ source/term.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/source/cterm.c b/source/cterm.c
+index 08993ce..8c0d734 100644
+--- a/source/cterm.c
++++ b/source/cterm.c
+@@ -19,7 +19,7 @@
+ 
+ #include <maus.h>
+ 
+-#include "../config.h"
++#include "config.h"
+ #include "draw.h"
+ #include "font.h"
+ #include "term.h"
+diff --git a/source/term.c b/source/term.c
+index d07558a..0af05cb 100644
+--- a/source/term.c
++++ b/source/term.c
+@@ -2,7 +2,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
+-#include "../config.h"
++#include "config.h"
+ #include "term.h"
+ #include "utils.h"
+ 
+-- 
+2.54.0
+
