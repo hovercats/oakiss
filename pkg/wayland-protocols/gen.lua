@@ -34,6 +34,18 @@ waylandproto('unstable/primary-selection/primary-selection-unstable-v1.xml', {
 	code='primary-selection-unstable-v1-protocol.c',
 })
 
+waylandproto('unstable/pointer-constraints/pointer-constraints-unstable-v1.xml', {
+	client='include/pointer-constraints-unstable-v1-client-protocol.h',
+	server='include/pointer-constraints-unstable-v1-server-protocol.h',
+	code='pointer-constraints-unstable-v1-protocol.c',
+})
+
+waylandproto('unstable/relative-pointer/relative-pointer-unstable-v1.xml', {
+	client='include/relative-pointer-unstable-v1-client-protocol.h',
+	server='include/relative-pointer-unstable-v1-server-protocol.h',
+	code='relative-pointer-unstable-v1-protocol.c',
+})
+
 waylandproto('unstable/xdg-decoration/xdg-decoration-unstable-v1.xml', {
 	client='include/xdg-decoration-unstable-v1-client-protocol.h',
 	server='include/xdg-decoration-unstable-v1-server-protocol.h',
@@ -80,6 +92,10 @@ pkg.hdrs = {
 	'$outdir/include/linux-dmabuf-unstable-v1-server-protocol.h',
 	'$outdir/include/primary-selection-unstable-v1-client-protocol.h',
 	'$outdir/include/primary-selection-unstable-v1-server-protocol.h',
+	'$outdir/include/pointer-constraints-unstable-v1-client-protocol.h',
+	'$outdir/include/pointer-constraints-unstable-v1-server-protocol.h',
+	'$outdir/include/relative-pointer-unstable-v1-client-protocol.h',
+	'$outdir/include/relative-pointer-unstable-v1-server-protocol.h',
 	'$outdir/include/xdg-decoration-unstable-v1-client-protocol.h',
 	'$outdir/include/xdg-decoration-unstable-v1-server-protocol.h',
 	'$outdir/include/xdg-output-unstable-v1-client-protocol.h',
