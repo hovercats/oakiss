@@ -140,15 +140,15 @@ lib('libswc.a', [[
 	swc_select-protocol.c.o
 	wayland-drm-protocol.c.o
 	wlr-layer-shell-unstable-v1.c.o
-	$builddir/(
-		pkg/libinput/libinput.a.d
-		pkg/libxkbcommon/libxkbcommon.a
-		pkg/wayland-protocols/xdg-decoration-unstable-v1-protocol.c.o
-		pkg/wayland-protocols/xdg-shell-protocol.c.o
-		pkg/wayland-protocols/xdg-output-unstable-v1-protocol.c.o
-		pkg/wayland-protocols/linux-dmabuf-unstable-v1-protocol.c.o
-		pkg/wayland/libwayland-server.a.d
-		pkg/wld/libwld.a.d
+	$builddir/pkg/(
+		libinput/libinput.a.d
+		libxkbcommon/libxkbcommon.a
+		wayland-protocols/xdg-decoration-unstable-v1-protocol.c.o
+		wayland-protocols/xdg-shell-protocol.c.o
+		wayland-protocols/xdg-output-unstable-v1-protocol.c.o
+		wayland-protocols/linux-dmabuf-unstable-v1-protocol.c.o
+		wayland/libwayland-server.a.d
+		wld/libwld.a.d
 	)
 ]])
 
