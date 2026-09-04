@@ -2,6 +2,7 @@ cflags{
 	'-std=c99',
 	'-pedantic',
 	'-D _POSIX_C_SOURCE=199309L',
+	'-D NDEBUG',
 	'-I $outdir/include',
 	'-isystem $builddir/pkg/alsa-lib/include',
 	'-isystem $builddir/pkg/libxkbcommon/include',
