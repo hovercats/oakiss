@@ -4,6 +4,10 @@ cflags{
 	'-isystem $builddir/pkg/util-linux/include/blkid',
 }
 
+pkg.deps = {
+	'pkg/util-linux/headers',
+}
+
 lib('libexfat.a', {
 	'lib/exfat_dir.c',
 	'lib/exfat_fs.c',
