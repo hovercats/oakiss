@@ -15,7 +15,7 @@ static const int   win_fps = 60;
 static const int   pad_x = 8;
 static const int   pad_y = 8;
 
-static const char* const shell = "/bin/ksh"; /* NULL uses $SHELL */
+static const char* const shell = "/bin/sh"; /* NULL uses $SHELL */
 static const char term_name[] = "vt100";
 
 #define CTRL_DOWN  (win->key_syms[MAUS_KEY_CONTROL_L] || win->key_syms[MAUS_KEY_CONTROL_R])
@@ -32,29 +32,29 @@ static const char term_name[] = "vt100";
                          ev->key.key == MAUS_KEY_R_UP))
 
 /* AARRGGBB */
-static const uint32_t default_fg = 0xffffffff;
-static const uint32_t default_bg = 0xff000000;
+static const uint32_t default_fg = 0xccccc6;
+static const uint32_t default_bg = 0x1d1d1d;
 static const uint32_t cursor_fg  = 0xff000000;
 static const uint32_t cursor_bg  = 0xffffffff;
 
 static const uint32_t color_table[16] = {
-	0xff000000, /* black */
-	0xffcc0000, /* red */
-	0xff4e9a06, /* green */
-	0xffc4a000, /* yellow */
-	0xff3465a4, /* blue */
-	0xff75507b, /* magenta */
-	0xff06989a, /* cyan */
-	0xffd3d7cf, /* white */
+	0x1d1d1d, /* black */
+	0x755a5b, /* red */
+	0x68755a, /* green */
+	0x756e5a, /* yellow */
+	0x5b6976, /* blue */
+	0x755b76, /* magenta */
+	0x465457, /* cyan */
+	0xccccc6, /* white */
 
-	0xff555753, /* bright black */
-	0xffef2929, /* bright red */
-	0xff8ae234, /* bright green */
-	0xfffce94f, /* bright yellow */
-	0xff729fcf, /* bright blue */
-	0xffad7fa8, /* bright magenta */
-	0xff34e2e2, /* bright cyan */
-	0xffffffff, /* bright white */
+	0x5a5b5c, /* bright black */
+	0xa37679, /* bright red */
+	0x87a376, /* bright green */
+	0xa39b76, /* bright yellow */
+	0x758ba3, /* bright blue */
+	0x9f76a3, /* bright magenta */
+	0x899ca1, /* bright cyan */
+	0xf8f8f2, /* bright white */
 };
 
 #endif /* CONFIG_H */
