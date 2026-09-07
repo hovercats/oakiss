@@ -1,7 +1,6 @@
 cflags{
 	'-std=c99',
 	'-pedantic',
-	'-D HAVE_CONFIG_H',
 	'-D _XOPEN_SOURCE=700',
 	'-D BACKEND_WAY',
 	'-I $dir',
