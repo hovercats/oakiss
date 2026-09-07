@@ -23,6 +23,9 @@ lib('libmaus.a', [[libmaus/source/(
 	maus_wayland.c utils.c
 	)
 	$builddir/pkg/(
+		wayland-protocols/xdg-shell-protocol.c.o
+		wayland-protocols/pointer-constraints-unstable-v1-protocol.c.o
+		wayland-protocols/relative-pointer-unstable-v1-protocol.c.o
 		libxkbcommon/libxkbcommon.a
 		wayland/libwayland-cursor.a.d
 		wayland/libwayland-client.a.d
@@ -32,11 +35,6 @@ lib('libmaus.a', [[libmaus/source/(
 exe('cterm', [[source/(
 	cterm.c utils.c font.c
 	term.c draw.c
-	)
-	$builddir/pkg/(
-		wayland-protocols/pointer-constraints-unstable-v1-protocol.c.o
-		wayland-protocols/relative-pointer-unstable-v1-protocol.c.o
-		wayland-protocols/xdg-shell-protocol.c.o
 	)
 	libmaus.a.d
 ]])
