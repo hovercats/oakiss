@@ -26,6 +26,7 @@ exe('wawa', {
 	'wawa.c',
 	'wlr-layer-shell-unstable-v1.c.o',
 	'$builddir/pkg/wayland-protocols/xdg-shell-protocol.c.o',
+	'$builddir/pkg/wayland-protocols/xdg-output-unstable-v1-protocol.c.o',
 	'$builddir/pkg/wayland/libwayland-client.a.d',
 	'$builddir/pkg/wayland/libwayland-server.a.d',
 })

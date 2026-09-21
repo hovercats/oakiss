@@ -480,6 +480,7 @@
 [submodule "pkg/wawa/src"]
 	path = pkg/wawa/src
 	url = https://srcdump.net/sewn/wawa.git
+	ignore = all
 	shallow = true
 [submodule "pkg/chum/src"]
 	path = pkg/chum/src
