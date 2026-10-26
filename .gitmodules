@@ -495,3 +495,7 @@
 	url = https://srcdump.net/uint/cterm.git
 	ignore = all
 	shallow = true
+[submodule "pkg/maus/src"]
+	path = pkg/maus/src
+	url = https://srcdump.net/uint/maus.git
+	shallow = true
