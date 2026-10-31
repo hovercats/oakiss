@@ -50,7 +50,7 @@ build('embedder', '$outdir/embedded_files.h', {expand{'$srcdir/src/script', embe
 
 build('sed', '$outdir/version.c', '$srcdir/src/version.c.in', {
 	expr={
-		'-e s,@version@,0.6.0,',
+		'-e s,@version@,0.7.0,',
 		'-e s,@vcs_tag@,,',
 		'-e s,@meson_compat@,1.7,',
 	},

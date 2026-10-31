@@ -3,9 +3,9 @@
 #include "version.h"
 
 const struct muon_version muon_version = {
-	.version = "0.6.0",
+	.version = "0.7.0",
 	.vcs_tag = "",
-	.meson_compat = "1.7.99",
+	.meson_compat = "1.11",
 	.platform = "posix",
 	.compiler = "cc",
 };
