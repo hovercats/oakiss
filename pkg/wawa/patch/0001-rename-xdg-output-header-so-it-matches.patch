@@ -1,0 +1,25 @@
+From f69a79c6728fcf39c88182cb012c646fd85ea25a Mon Sep 17 00:00:00 2001
+From: hovercats <hovercatswithlasereyes@protonmail.com>
+Date: Wed, 18 Nov 2026 07:53:04 +0100
+Subject: [PATCH] rename xdg-output header so it matches
+
+---
+ wawa.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/wawa.c b/wawa.c
+index 1e65cce..0df775e 100644
+--- a/wawa.c
++++ b/wawa.c
+@@ -20,7 +20,7 @@
+ #define STB_IMAGE_RESIZE_IMPLEMENTATION
+ #include "stb_image_resize2.h"
+ 
+-#include "xdg-output-unstable-v1-protocol.h"
++#include "xdg-output-unstable-v1-client-protocol.h"
+ #include "wlr-layer-shell-unstable-v1-protocol.h"
+ 
+ #define MAX(A, B) ((A) > (B) ? (A) : (B))
+-- 
+2.54.0
+
